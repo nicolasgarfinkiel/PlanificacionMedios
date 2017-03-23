@@ -1,0 +1,20 @@
+﻿<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="en" class="app" ng-app="@ViewBag.ngApp">
+<head>
+    <meta charset="utf-8">
+    <meta name="description" content="app, web app, responsive, admin dashboard, admin, flat, flat ui, ui kit, off screen nav" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <title>Planificación de Medios</title>
+
+    @Styles.Render("~/Content/css/styles")
+    @Scripts.Render("~/bundles/scripts/basicScripts")
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/3.4.5/select2.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.8.5/css/selectize.default.css">
+
+</head>
+<body>    
+    @Scripts.Render("~/bundles/scripts/angularScripts")
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

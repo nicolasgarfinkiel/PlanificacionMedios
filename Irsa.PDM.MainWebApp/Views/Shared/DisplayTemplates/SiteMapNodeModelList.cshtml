@@ -1,0 +1,20 @@
+﻿@model MvcSiteMapProvider.Web.Html.Models.SiteMapNodeModelList
+@using System.Web.Mvc.Html
+@using Irsa.PDM.MainWebApp.Models
+@using MvcSiteMapProvider.Web.Html.Models
+@using Irsa.PDM.MainWebApp.Models
+
+
+<ul class="nav lt" style="display: @Html.MenuParentDisplay(Model)">
+    @foreach (var node in Model)
+    {
+        <li class="@Html.MenuItemClass(node.Action, node.Controller, node.Children.Any())">
+            @Html.DisplayFor(m => node)
+            @if (node.Children.Any())
+            {
+                @Html.DisplayFor(m => node.Children)
+            }
+        </li>
+    }
+</ul>
+

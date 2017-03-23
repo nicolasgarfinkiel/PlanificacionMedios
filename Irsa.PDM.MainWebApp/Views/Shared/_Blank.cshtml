@@ -1,0 +1,33 @@
+﻿
+<html lang="en" class="bg-dark js no-touch no-android chrome no-firefox no-iemobile no-ie no-ie10 no-ie11 no-ios no-ios7 ipad">
+<head>
+    <meta charset="utf-8">
+    <title>Carta de Porte</title>
+    <meta name="description" content="app, web app, responsive, admin dashboard, admin, flat, flat ui, ui kit, off screen nav">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    @Styles.Render("~/Content/css/styles")
+    @Scripts.Render("~/bundles/scripts/basicScripts")
+</head>
+<body class="">
+    <section id="content" class="m-t-lg wrapper-md  fadeInUp">
+        <div class="container aside-xxl">
+            <a class="navbar-brand block" href="index.html">Planificación de Medios</a>
+            <section class="panel panel-default bg-white m-t-lg">
+                <form action="index.html" class="panel-body wrapper-lg" style=" min-height: 300px;">
+                    @RenderBody()
+                </form>
+            </section>
+        </div>
+    </section>
+    <!-- footer -->
+    <footer id="footer">
+        <div class="text-center padder">
+            <p>
+                <small><img src="~/Content/images/icon.png" class="m-r-xs" style="width: 50px; position: relative; top: -7px;left: -5px;" />© @DateTime.Now.Year</small>
+            </p>
+        </div>
+    </footer>
+    <!-- / footer -->
+</body>
+</html>

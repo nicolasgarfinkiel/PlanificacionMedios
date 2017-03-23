@@ -1,0 +1,10 @@
+﻿@model MvcSiteMapProvider.Web.Html.Models.SiteMapTitleHelperModel
+@using System.Web.Mvc.Html
+@using MvcSiteMapProvider.Web.Html.Models
+
+@if (Model.CurrentNode != null && !string.IsNullOrEmpty(Html.GetNodeClass(Model.CurrentNode)))
+{
+    <i class="@Html.GetNodeClass(Model.CurrentNode)"></i> @Model.CurrentNode.Title
+}
+
+

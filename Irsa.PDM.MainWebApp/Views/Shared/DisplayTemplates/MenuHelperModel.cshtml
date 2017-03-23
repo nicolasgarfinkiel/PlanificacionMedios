@@ -1,0 +1,37 @@
+﻿@model MvcSiteMapProvider.Web.Html.Models.MenuHelperModel
+@using System.Web.Mvc.Html
+@using Irsa.PDM.MainWebApp.Models
+@using MvcSiteMapProvider.Web.Html.Models
+@using Irsa.PDM.MainWebApp.Models
+
+<ul class="nav">
+    @foreach (var node in Model.Nodes)
+    {
+        <li class="@Html.MenuParentClass(node)">
+            @if (node.Children.Any())
+            {
+                <a href="javascript:void(0)" class="@Html.MenuParentClass(node)">
+                    <i class="@node.Attributes["Class"]">
+                        <b class="bg-info"></b>
+                    </i>
+                    <span class="pull-right">
+                        <i class="fa fa-angle-down text"></i>
+                        <i class="fa fa-angle-up text-active"></i>
+                    </span>
+                    <span>@node.Title</span>
+                </a>
+                @Html.DisplayFor(m => node.Children)
+            }
+            else
+            {
+                <a title="@node.Title" href="@Url.Action(node.Action, node.Controller)">
+                    <i class="@node.Attributes["Class"]">
+                        <b class="bg-primary"></b>
+                    </i>
+                    <span>@node.Title</span>
+                </a>
+            }
+        </li>
+    }
+</ul>
+

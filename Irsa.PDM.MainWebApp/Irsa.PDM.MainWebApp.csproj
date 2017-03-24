@@ -143,8 +143,69 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\css\animate.min.css" />
+    <Content Include="Content\css\awesome-bootstrap-checkbox.css" />
+    <Content Include="Content\css\bootstrap-datepicker.css" />
+    <Content Include="Content\css\bootstrap.min.css" />
+    <Content Include="Content\css\font-awesome.min.css" />
+    <Content Include="Content\css\font.css" />
+    <Content Include="Content\css\helper.css" />
+    <Content Include="Content\css\jquery.fileupload.css" />
+    <Content Include="Content\css\metisMenu.min.css" />
+    <Content Include="Content\css\ng-grid.min.css" />
+    <Content Include="Content\css\pe-icon-7-stroke.css" />
+    <Content Include="Content\css\select.css" />
+    <Content Include="Content\css\static_custom.css" />
+    <Content Include="Content\css\style.css" />
+    <Content Include="Content\fonts\fontawesome-webfont.svg" />
+    <Content Include="Content\fonts\Pe-icon-7-stroke.svg" />
+    <Content Include="Content\images\loading.gif" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
+    <Content Include="Scripts\angularJs\angular-dragdrop.min.js" />
+    <Content Include="Scripts\angularJs\angular-input-masks-standalone.min.js" />
+    <Content Include="Scripts\angularJs\angular-resizable.min.js" />
+    <Content Include="Scripts\angularJs\angular-resource.min.js" />
+    <Content Include="Scripts\angularJs\angular-route.min.js" />
+    <Content Include="Scripts\angularJs\angular-sanitize.js" />
+    <Content Include="Scripts\angularJs\angular-strap.min.js" />
+    <Content Include="Scripts\angularJs\angular-v1.2.2.min.js" />
+    <Content Include="Scripts\angularJs\angular.min.js" />
+    <Content Include="Scripts\angularJs\markdown.js" />
+    <Content Include="Scripts\angularJs\ng-grid-2.0.7.min.js" />
+    <Content Include="Scripts\angularJs\ng-map.min.js" />
+    <Content Include="Scripts\angularJs\quill\ng-quill.min.js" />
+    <Content Include="Scripts\angularJs\quill\quill.min.js" />
+    <Content Include="Scripts\angularJs\select.min.js" />
+    <Content Include="Scripts\angularJs\ui-utils.min.js" />
+    <Content Include="Scripts\app\choferes\choferesEditCtrl.js" />
+    <Content Include="Scripts\app\choferes\choferesListCtrl.js" />
+    <Content Include="Scripts\app\choferes\choferesModule.js" />
+    <Content Include="Scripts\app\shared\baseService.js" />
+    <Content Include="Scripts\app\shared\base\baseNavigationService.js" />
+    <Content Include="Scripts\app\shared\base\baseService.js" />
+    <Content Include="Scripts\app\shared\choferesService.js" />
+    <Content Include="Scripts\app\shared\directives\compileDirective.js" />
+    <Content Include="Scripts\app\shared\directives\debounceDirective.js" />
+    <Content Include="Scripts\app\shared\directives\intDirective.js" />
+    <Content Include="Scripts\app\shared\directives\loadingDirective.js" />
+    <Content Include="Scripts\app\shared\editBootstraperService.js" />
+    <Content Include="Scripts\app\shared\generalService.js" />
+    <Content Include="Scripts\app\shared\listBootstraperService.js" />
+    <Content Include="Scripts\app\shared\singlefileService.js" />
+    <Content Include="Scripts\bootstrap-datepicker.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\homer.js" />
+    <Content Include="Scripts\icheck.min.js" />
+    <Content Include="Scripts\index.js" />
+    <Content Include="Scripts\jquery.blockUI.js" />
+    <Content Include="Scripts\jquery.fileupload.js" />
+    <Content Include="Scripts\jquery.iframe-transport.js" />
+    <Content Include="Scripts\jquery.min.js" />
+    <Content Include="Scripts\jquery.peity.min.js" />
+    <Content Include="Scripts\jquery.slimscroll.min.js" />
+    <Content Include="Scripts\metisMenu.min.js" />
+    <Content Include="Scripts\moment.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -158,8 +219,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Content\" />
-    <Folder Include="Scripts\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
@@ -200,6 +259,16 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Shared\_Blank.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\fonts\fontawesome-webfont.eot" />
+    <Content Include="Content\fonts\fontawesome-webfont.ttf" />
+    <Content Include="Content\fonts\fontawesome-webfont.woff" />
+    <Content Include="Content\fonts\fontawesome-webfont.woff2" />
+    <Content Include="Content\fonts\FontAwesome.otf" />
+    <Content Include="Content\fonts\Pe-icon-7-stroke.eot" />
+    <Content Include="Content\fonts\Pe-icon-7-stroke.ttf" />
+    <Content Include="Content\fonts\Pe-icon-7-stroke.woff" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

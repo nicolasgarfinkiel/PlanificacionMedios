@@ -18,11 +18,11 @@ namespace Irsa.PDM.MainWebApp
             .Include("~/Content/css/helper.css")
             .Include("~/Content/css/static_custom.css")
             .Include("~/Content/css/bootstrap-datepicker.css")
-            .Include("~/Content/css/ng-grid.min.css")
-            .Include("~/Content/css/app.css")
+            .Include("~/Content/css/ng-grid.min.css")            
             .Include("~/Content/css/animate.min.css")
             .Include("~/Content/css/jquery.fileupload.css")
             .Include("~/Content/css/select.css")
+            .Include("~/Content/css/style.css")
             );
 
             bundles.Add(new ScriptBundle("~/bundles/scripts/basicScripts")
@@ -35,7 +35,7 @@ namespace Irsa.PDM.MainWebApp
               .Include("~/Scripts/jquery.peity.min.js")
               .Include("~/Scripts/index.js")
               .Include("~/Scripts/moment.js")
-              .Include("~/Scripts/app.js")
+              .Include("~/Scripts/homer.js")              
               );
 
             bundles.Add(new ScriptBundle("~/bundles/scripts/angularScripts")
@@ -55,7 +55,6 @@ namespace Irsa.PDM.MainWebApp
             .Include("~/Scripts/app/shared/base/baseNavigationService.js")
             .Include("~/Scripts/app/shared/base/baseService.js")
             .Include("~/Scripts/jquery.blockUI.js")
-
             );
           
         }

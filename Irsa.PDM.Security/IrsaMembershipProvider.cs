@@ -16,6 +16,8 @@ namespace Irsa.PDM.Security
     {
         #region Properties
 
+        private const int AppId = 1;
+
         #endregion
 
         public IrsaMembershipProvider()
@@ -192,61 +194,40 @@ namespace Irsa.PDM.Security
                 Init(username);
             }
 
-            return PDMSession.Current.Usuario != null &&
-                   PDMSession.Current.Usuario.Empresas.Any(e => e.Roles != null && e.Roles.Any());
+            return PDMSession.Current.Usuario != null &&  PDMSession.Current.Usuario.Roles.Any();
         }
 
         private void Init(string username)
-        {
-            var empresas = GetEmpresas(username);
-
+        {            
             PDMSession.Current.Usuario = new Usuario
             {
                 Nombre = username,
-                Empresas = empresas
-            };
-
-            if (PDMSession.Current.Usuario.Empresas.Count > 0)
-            {
-                PDMSession.Current.Usuario.CurrentEmpresa = PDMSession.Current.Usuario.Empresas[0];
-            }
+                Roles = GetRoles(username) 
+            };            
         }
 
-        private IList<Empresa> GetEmpresas(string username)
+        private IList<string> GetRoles(string username)
         {
-            var admin = new EmpresaAdmin();
-            var empresas = admin.GetAll().Where(e => e.GrupoEmpresa != null).ToList();
-            var result = new List<Empresa>();
-
             var client = new WebServiceClient<ISecurityService>(ConfigurationManager.AppSettings["SecurityServiceUrl"],
-                (binding, httpTransport, address, factory) =>
-                {
-                    var credentialBehaviour = factory.Endpoint.Behaviors.Find<ClientCredentials>();
-                    credentialBehaviour.UserName.UserName = ConfigurationManager.AppSettings["SecurityServiceUser"];
-                    credentialBehaviour.UserName.Password = ConfigurationManager.AppSettings["SecurityServicePassword"];
-                    httpTransport.AuthenticationScheme = AuthenticationSchemes.Ntlm;
-                });
+               (binding, httpTransport, address, factory) =>
+               {
+                   var credentialBehaviour = factory.Endpoint.Behaviors.Find<ClientCredentials>();
+                   credentialBehaviour.UserName.UserName = ConfigurationManager.AppSettings["SecurityServiceUser"];
+                   credentialBehaviour.UserName.Password = ConfigurationManager.AppSettings["SecurityServicePassword"];
+                   httpTransport.AuthenticationScheme = AuthenticationSchemes.Ntlm;
+               });
 
-            empresas.ForEach(e =>
+            var roles = new List<string>();
+            var usuario = client.Channel.UserLogonByName(username, AppId);
+
+            if (usuario == null) return roles;
+
+            client.Channel.GroupsListPerUser(usuario, AppId).ToList().ForEach(g =>
             {
-                var roles = new List<string>();
-                var usuario = client.Channel.UserLogonByName(username, e.GrupoEmpresa.IdApp);
-
-                if (usuario == null) return;
-
-                client.Channel.GroupsListPerUser(usuario, e.GrupoEmpresa.IdApp).ToList().ForEach(g =>
-                {
-                    roles.AddRange(client.Channel.PermissionListPerGroup(g).Select(r => r.Description).ToList());
-                });
-
-                e.Roles = roles;
-                if (e.Roles != null && e.Roles.Any())
-                {
-                    result.Add(e);
-                }
+                roles.AddRange(client.Channel.PermissionListPerGroup(g).Select(r => r.Description).ToList());
             });
 
-            return result;
-        }
+            return roles;
+        }       
     }
 }

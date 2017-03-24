@@ -53,7 +53,6 @@
     <Compile Include="BootStrapper.cs" />
     <Compile Include="ChoferesAdmin.cs" />
     <Compile Include="DataSetConverter.cs" />
-    <Compile Include="EmpresaAdmin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

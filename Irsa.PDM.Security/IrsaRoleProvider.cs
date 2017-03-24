@@ -62,11 +62,9 @@ namespace Irsa.PDM.Security
 
         public override string[] GetRolesForUser(string username)
         {
-            if (PDMSession.Current.Usuario == null ||
-                PDMSession.Current.Usuario.CurrentEmpresa == null  ||
-                PDMSession.Current.Usuario.CurrentEmpresa.Roles == null ) return null;
+            if (PDMSession.Current.Usuario == null || PDMSession.Current.Usuario.Roles == null ) return null;
 
-            return PDMSession.Current.Usuario.CurrentEmpresa.Roles.ToArray();
+            return PDMSession.Current.Usuario.Roles.ToArray();
         }
 
         public override string[] GetUsersInRole(string roleName)
@@ -80,10 +78,9 @@ namespace Irsa.PDM.Security
 
         public override bool IsUserInRole(string username, string roleName)
         {
-            return PDMSession.Current.Usuario != null &&
-                   PDMSession.Current.Usuario.CurrentEmpresa != null &&
-                   PDMSession.Current.Usuario.CurrentEmpresa.Roles != null &&
-                   PDMSession.Current.Usuario.CurrentEmpresa.Roles.Any(r => string.Equals(r, roleName));
+            return PDMSession.Current.Usuario != null &&                  
+                   PDMSession.Current.Usuario.Roles != null &&
+                   PDMSession.Current.Usuario.Roles.Any(r => string.Equals(r, roleName));
         }
 
         public override void RemoveUsersFromRoles(string[] usernames, string[] roleNames)

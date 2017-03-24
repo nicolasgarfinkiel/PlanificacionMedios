@@ -40,8 +40,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Empresa.cs" />
-    <Compile Include="GrupoEmpresa.cs" />
     <Compile Include="PDMSession.cs" />
     <Compile Include="Common\CustomFileBase.cs" />
     <Compile Include="Common\FilterBase.cs" />

@@ -39,8 +39,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Agencia.cs" />
+    <Compile Include="Certificacion.cs" />
+    <Compile Include="CertificacionItem.cs" />
+    <Compile Include="Empresa.cs" />
     <Compile Include="EntityBase.cs" />
+    <Compile Include="Pauta.cs" />
+    <Compile Include="PautaItem.cs" />
+    <Compile Include="Programa.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tarifa.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

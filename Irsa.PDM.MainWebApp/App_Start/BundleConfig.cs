@@ -24,7 +24,7 @@ namespace Irsa.PDM.MainWebApp
             .Include("~/Content/css/select.css")
             .Include("~/Content/css/style.css")
             );
-
+          
             bundles.Add(new ScriptBundle("~/bundles/scripts/basicScripts")
               .Include("~/Scripts/jquery.min.js")
               .Include("~/Scripts/jquery.slimscroll.min.js")
@@ -35,8 +35,9 @@ namespace Irsa.PDM.MainWebApp
               .Include("~/Scripts/jquery.peity.min.js")
               .Include("~/Scripts/index.js")
               .Include("~/Scripts/moment.js")
-              .Include("~/Scripts/homer.js")              
-              );
+              .Include("~/Scripts/homer.js")
+              .Include("~/Scripts/moment.js")
+              );      
 
             bundles.Add(new ScriptBundle("~/bundles/scripts/angularScripts")
             .Include("~/Scripts/angularJs/angular-v1.2.2.min.js")

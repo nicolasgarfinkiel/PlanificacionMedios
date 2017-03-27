@@ -1,10 +1,5 @@
 @import url("http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700");
 /* MARGINS & PADDINGS */
-
-body {
-    background: #f1f3f6;
-}
-
 .p-xxs {
     padding: 5px !important;
 }
@@ -1106,13 +1101,6 @@ body.blank {
     border-radius: 4px;
 }
 
-.chat-discussion .message.de-sistema {
-    background-color:  #ffffff;    
-    border-top: 1px dashed #cccccc;
-    border-bottom: 1px dashed #cccccc;
-}
-
-
 .chat-discussion .chat-message .message-date {
     float: right;
 }
@@ -1856,7 +1844,7 @@ body {
 }
 
 #wrapper {
-    margin: 0;
+    margin: 0 0 0 180px;
     padding: 0;
     background: #f1f3f6;
     border-left: 1px solid #e4e5e7;
@@ -2687,6 +2675,8 @@ body.fullscreen-panel-mode {
     text-align: center;
 }
 
+
+
     #logo span {
         font-weight: 600;
         color: #fff;
@@ -2696,20 +2686,13 @@ body.fullscreen-panel-mode {
     #logo.light-version {
         background-color: #f7f9fa;
         border-bottom: 1px solid #e4e5e7;
-        text-align: left;
-        width: 250px;
-        padding-left: 16px;
+        text-align: center;
     }
 
         #logo.light-version span {
             font-weight: 600;
             color: #34495e;
             font-size: 14px;
-        }
-
-         #logo.light-version small {
-             position: relative;
-             top: -2px;
         }
 
 .profile-picture {
@@ -3198,7 +3181,6 @@ h6 {
     .small-logo {
         display: block;
         float: left;
-        padding-left: 16px;
     }
 
     .header-line div {
@@ -4464,95 +4446,12 @@ ul.h-list {
     }
 }
 
-
-.markdown a {
-    color: #337ab7;
-    border-bottom: dashed 1px #337ab7;
-}
-
-
-.app-popover {
-    position: absolute;
-    z-index: 99999999999999999999;
-    padding: 10px;
-    background-color: #f0e68c;
-    min-width: 550px;
-    max-width: 800px;
-    -webkit-box-shadow: 3px 6px 17px -4px rgba(0,0,0,0.75);
-    -moz-box-shadow: 3px 6px 17px -4px rgba(0,0,0,0.75);
-    box-shadow: 3px 6px 17px -4px rgba(0,0,0,0.75);
-}
-
-    .app-popover header {
-        position: relative;
-    }
-
-    .app-popover h6 {
-        position: relative;
-        top: -20px;
-        margin-bottom: 0;
-        padding-bottom: 0;
-    }
-
-    .app-popover header span {
-        background: url(../images/triangle.png) no-repeat;
-        display: inline-block;
-        width: 16px;
-        height: 16px;
-        position: relative;
-        left: -26px;
-    }
-
-    .app-popover header i {
-        cursor: pointer;
-        float: right;
-        padding-bottom: 4px;
-    }
-
-    .app-popover section {
-        padding-top: 20px;
-        padding-bottom: 20px;
-        border-top: 1px solid #c3b74e;
-    }
-
-
-    .app-popover.filter {
-         background-color: #fff;
-    }
-
-    .app-popover.filter tbody tr:hover {
-        cursor: pointer;
-        background-color: #cccccc;
-    }
-
-.loading {
-    background: url("../images/loading.gif") no-repeat center;
-    background-size: 40px 40px; 
-    padding: 40px;
-    text-align: center;
-    vertical-align: middle;
-    width: 150px;
+.logo-irsa {
+    background: url(../images/logo-irsa.png);
+    display: inline-block;
+    width: 120px;
+    height: 40px;
+    background-size: 120px 40px;
     position: relative;
-    top: 40%;
-}
-
-
-.divMessageBox {
-    width: 100%;
-    height: 100%;
-    position: fixed;
-    top: 0;
-    left: 0;
-    background: rgba(0,0,0,.6);
-    z-index: 100000;
-}
-
-.MessageBoxContainer {
-    top: 35%;
-    color: #fff;
-    position: relative;
-    width: 100%;
-    background-color: #232323;
-    background-color: rgba(0,0,0,.8);
-    padding: 20px;
+    top: -11px;
 }

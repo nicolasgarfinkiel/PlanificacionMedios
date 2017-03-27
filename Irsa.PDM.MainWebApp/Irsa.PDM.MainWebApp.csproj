@@ -160,6 +160,7 @@
     <Content Include="Content\fonts\fontawesome-webfont.svg" />
     <Content Include="Content\fonts\Pe-icon-7-stroke.svg" />
     <Content Include="Content\images\loading.gif" />
+    <Content Include="Content\images\logo-irsa.png" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Scripts\angularJs\angular-dragdrop.min.js" />

@@ -7,7 +7,7 @@ namespace Irsa.PDM.Entities
 {
     public class Programa
     {
-        public Empresa Empresa
+        public Proveedor Empresa
         {
             get
             {

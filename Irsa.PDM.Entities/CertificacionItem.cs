@@ -18,7 +18,7 @@ namespace Irsa.PDM.Entities
             }
         }
 
-        public PautaItem PautaItem
+        public PlanificacionItem PautaItem
         {
             get
             {

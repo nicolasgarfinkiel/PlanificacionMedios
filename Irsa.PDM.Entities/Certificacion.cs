@@ -7,7 +7,7 @@ namespace Irsa.PDM.Entities
 {
     public class Certificacion
     {
-        public Pauta Pauta
+        public Planificacion Planificacion
         {
             get
             {

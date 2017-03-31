@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Irsa.PDM.Entities
 {
-    public class Pauta
+    public class Planificacion
     {
         public Agencia Agencia
         {
@@ -18,7 +18,7 @@ namespace Irsa.PDM.Entities
             }
         }
 
-        public IList<Irsa.PDM.Entities.PautaItem> PautaItem
+        public IList<Irsa.PDM.Entities.PlanificacionItem> PlanificacionItem
         {
             get
             {

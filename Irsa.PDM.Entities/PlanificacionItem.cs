@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Irsa.PDM.Entities
 {
-    public class PautaItem
+    public class PlanificacionItem
     {
         public Tarifa Tarifa
         {

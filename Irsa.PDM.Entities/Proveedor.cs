@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Irsa.PDM.Entities
 {
-    public class Empresa
+    public class Proveedor
     {
     }
 }

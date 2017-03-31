@@ -6,7 +6,7 @@
         {
             //Mapper.Initialize(cfg =>
             //{
-            //    cfg.CreateMap<Empresa, Dtos.Empresa>();
+            //    cfg.CreateMap<Proveedor, Dtos.Proveedor>();
             //    cfg.CreateMap<GrupoEmpresa, Dtos.GrupoEmpresa>();
             //    cfg.CreateMap<Pais, Dtos.Pais>();
             //    cfg.CreateMap<Provincia, Dtos.Provincia>();

@@ -16,11 +16,11 @@
       <FileName>Agencia.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Irsa.PDM.Entities.Empresa">
+  <Class Name="Irsa.PDM.Entities.Proveedor">
     <Position X="6.5" Y="2" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Empresa.cs</FileName>
+      <FileName>Proveedor.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Irsa.PDM.Entities.Programa">
@@ -43,24 +43,24 @@
       <Property Name="Programa" />
     </ShowAsAssociation>
   </Class>
-  <Class Name="Irsa.PDM.Entities.Pauta">
+  <Class Name="Irsa.PDM.Entities.Planificacion">
     <Position X="1.75" Y="3.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAgAAAAAAQAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Pauta.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAQAAAAAAAAA=</HashCode>
+      <FileName>Planificacion.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
       <Property Name="Agencia" />
     </ShowAsAssociation>
     <ShowAsCollectionAssociation>
-      <Property Name="PautaItem" />
+      <Property Name="PlanificacionItem" />
     </ShowAsCollectionAssociation>
   </Class>
-  <Class Name="Irsa.PDM.Entities.PautaItem">
+  <Class Name="Irsa.PDM.Entities.PlanificacionItem">
     <Position X="1.75" Y="4.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>PautaItem.cs</FileName>
+      <FileName>PlanificacionItem.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
       <Property Name="Tarifa" />
@@ -69,11 +69,11 @@
   <Class Name="Irsa.PDM.Entities.Certificacion">
     <Position X="4.25" Y="5.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgA=</HashCode>
       <FileName>Certificacion.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
-      <Property Name="Pauta" />
+      <Property Name="Planificacion" />
     </ShowAsAssociation>
   </Class>
   <Class Name="Irsa.PDM.Entities.CertificacionItem">

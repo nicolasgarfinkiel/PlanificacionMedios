@@ -134,7 +134,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
-    <Compile Include="Controllers\ChoferesController.cs" />
+    <Compile Include="Controllers\MediosController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -207,7 +207,9 @@
     <Content Include="Scripts\jquery.slimscroll.min.js" />
     <Content Include="Scripts\metisMenu.min.js" />
     <Content Include="Scripts\moment.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -240,6 +242,10 @@
     <ProjectReference Include="..\Irsa.PDM.Infrastructure\Irsa.PDM.Infrastructure.csproj">
       <Project>{972e359a-d5c5-45a8-aeb4-32787d86ada1}</Project>
       <Name>Irsa.PDM.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Irsa.PDM.Security\Irsa.PDM.Security.csproj">
+      <Project>{4a30ec96-61ca-48ea-8e88-3dc338230743}</Project>
+      <Name>Irsa.PDM.Security</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -274,6 +280,7 @@
   <ItemGroup>
     <None Include="Properties\PublishProfiles\PlanificacionDeMedios - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\PlanificacionDeMedios - Web Deploy.pubxml" />
+    <Content Include="Views\Medios\Index.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

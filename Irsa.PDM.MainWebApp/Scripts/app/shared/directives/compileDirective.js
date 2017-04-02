@@ -1,4 +1,4 @@
-﻿angular.module('cresud.cdp.directive.compile', [])
+﻿angular.module('irsa.pdm.directive.compile', [])
    .directive('compile', ['$compile', function ($compile) {
        return function (scope, element, attrs) {
            scope.$watch(

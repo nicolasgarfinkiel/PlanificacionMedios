@@ -5,7 +5,7 @@
 @using Irsa.PDM.MainWebApp.Models
 
 
-<ul class="nav lt" style="display: @Html.MenuParentDisplay(Model)">
+<ul class="nav nav-second-level" >
     @foreach (var node in Model)
     {
         <li class="@Html.MenuItemClass(node.Action, node.Controller, node.Children.Any())">

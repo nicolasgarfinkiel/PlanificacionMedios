@@ -1,4 +1,4 @@
-﻿angular.module('cresud.cdp.service.bootstraper.list', [])
+﻿angular.module('irsa.pdm.service.bootstraper.list', [])
        .factory('listBootstraperService', [
            function () {
                var scope = {};

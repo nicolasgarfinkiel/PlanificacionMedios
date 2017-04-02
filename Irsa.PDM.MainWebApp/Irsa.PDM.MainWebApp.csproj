@@ -179,13 +179,13 @@
     <Content Include="Scripts\angularJs\quill\quill.min.js" />
     <Content Include="Scripts\angularJs\select.min.js" />
     <Content Include="Scripts\angularJs\ui-utils.min.js" />
-    <Content Include="Scripts\app\choferes\choferesEditCtrl.js" />
-    <Content Include="Scripts\app\choferes\choferesListCtrl.js" />
-    <Content Include="Scripts\app\choferes\choferesModule.js" />
+    <Content Include="Scripts\app\medios\mediosEditCtrl.js" />
+    <Content Include="Scripts\app\medios\mediosListCtrl.js" />
+    <Content Include="Scripts\app\medios\mediosModule.js" />
     <Content Include="Scripts\app\shared\baseService.js" />
     <Content Include="Scripts\app\shared\base\baseNavigationService.js" />
     <Content Include="Scripts\app\shared\base\baseService.js" />
-    <Content Include="Scripts\app\shared\choferesService.js" />
+    <Content Include="Scripts\app\shared\mediosService.js" />
     <Content Include="Scripts\app\shared\directives\compileDirective.js" />
     <Content Include="Scripts\app\shared\directives\debounceDirective.js" />
     <Content Include="Scripts\app\shared\directives\intDirective.js" />
@@ -280,7 +280,9 @@
   <ItemGroup>
     <None Include="Properties\PublishProfiles\PlanificacionDeMedios - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\PlanificacionDeMedios - Web Deploy.pubxml" />
+    <Content Include="Views\Medios\Edit.cshtml" />
     <Content Include="Views\Medios\Index.cshtml" />
+    <Content Include="Views\Medios\List.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

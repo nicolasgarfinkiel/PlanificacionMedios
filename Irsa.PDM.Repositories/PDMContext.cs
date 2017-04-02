@@ -1,5 +1,7 @@
 ﻿using System.Configuration;
 using System.Data.Entity;
+using System.Data.Entity.Migrations;
+using System.Data.Entity.ModelConfiguration.Conventions;
 using Irsa.PDM.Entities;
 
 namespace Irsa.PDM.Repositories
@@ -9,16 +11,15 @@ namespace Irsa.PDM.Repositories
         public PDMContext()
             : base(ConfigurationManager.ConnectionStrings["PDM"].ConnectionString)
         {
-            Database.SetInitializer<PDMContext>(null);
+     //       this.AutomaticMigrationsEnabled = true;
+          //  Database.SetInitializer<PDMContext>(null);
+            Database.SetInitializer(new MigrateDatabaseToLatestVersion<PDMContext, Migrations.Configuration>("PDM"));
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Medio>().HasKey(t => t.Id);
-            modelBuilder.Entity<Medio>().Property(t => t.Id).HasColumnName("Id");
-            modelBuilder.Entity<Medio>().Property(t => t.Nombre).HasColumnName("Nombre");
-            modelBuilder.Entity<Medio>().Property(t => t.Descripcion).HasColumnName("Descripcion");
-            modelBuilder.Entity<Medio>().ToTable("Medio");      
+            modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
+            
         }
 
         public IDbSet<Medio> Medios { get; set; }

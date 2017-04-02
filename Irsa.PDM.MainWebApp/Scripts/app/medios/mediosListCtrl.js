@@ -1,29 +1,15 @@
-﻿angular.module('cresud.cdp.choferes.ctrl.list', [])
+﻿angular.module('irsa.pdm.medios.ctrl.list', [])
        .controller('listCtrl', [
            '$scope',
-           'choferesService',
+           'mediosService',
            'baseNavigationService',
            'listBootstraperService',
-           function ($scope, choferesService, baseNavigationService, listBootstraperService) {
-               $scope.onInitEnd = function () {
-                   var displayName = null;
-
-                   switch ($scope.usuario.currentEmpresa.grupoEmpresa.paisDescripcion.toUpperCase()) {
-                       case 'PARAGUAY':
-                           displayName = 'RUC';
-                           break;
-                       case 'BOLIVIA':
-                           displayName = 'NIT';
-                           break;
-                       default:
-                           displayName = 'CUIT';
-                   }
-
-                   $scope.columns[1].displayName = displayName;                   
+           function ($scope, mediosService, baseNavigationService, listBootstraperService) {
+               $scope.onInitEnd = function () {                          
                };
 
                listBootstraperService.init($scope, {
-                   service: choferesService,
+                   service: mediosService,
                    navigation: baseNavigationService,
                    columns: [
                        { field: 'nombre', displayName: 'Apellido Nombre / Descripción', cellTemplate: '<div class="" style="padding: 4px;">{{row.entity.apellido}} {{row.entity.nombre}}</div>' },

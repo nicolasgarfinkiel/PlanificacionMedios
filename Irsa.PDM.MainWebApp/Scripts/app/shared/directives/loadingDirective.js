@@ -1,4 +1,4 @@
-﻿angular.module('cresud.cdp.directive.loading', [])
+﻿angular.module('irsa.pdm.directive.loading', [])
     .directive('loading', ['$http', function ($http) {
         return {
             restrict: 'E',

@@ -1,17 +1,17 @@
-﻿angular.module('cresud.cdp.choferes', [
-    'cresud.cdp.choferes.ctrl.list',
-    'cresud.cdp.choferes.ctrl.edit',
-    'cresud.cdp.service.choferes',
-    'cresud.cdp.navigation.base',     
-    'cresud.cdp.service.base',
-    'cresud.cdp.service.bootstraper.list',
-    'cresud.cdp.service.bootstraper.edit',
+﻿angular.module('irsa.pdm.medios', [
+    'irsa.pdm.medios.ctrl.list',
+    'irsa.pdm.medios.ctrl.edit',
+    'irsa.pdm.service.medios',
+    'irsa.pdm.navigation.base',    
+    'irsa.pdm.service.base',
+    'irsa.pdm.service.bootstraper.list',
+    'irsa.pdm.service.bootstraper.edit',
     'ngRoute',
     'ngGrid',
     '$strap.directives',
-    'cresud.cdp.directive.loading',    
-    'cresud.cdp.directive.debounce',
-    'cresud.cdp.directive.int'
+    'irsa.pdm.directive.loading',    
+    'irsa.pdm.directive.debounce',
+    'irsa.pdm.directive.int'
 ]).config([
     '$routeProvider',
     '$locationProvider',
@@ -19,17 +19,17 @@
     function ($routeProvider, $locationProvider, $httpProvider) {
 
         $routeProvider.when('/', {
-            templateUrl: 'choferes/list',
+            templateUrl: 'medios/list',
             controller: 'listCtrl'
         });
               
         $routeProvider.when('/create', {
-            templateUrl: 'choferes/edit',
+            templateUrl: 'medios/edit',
             controller: 'editCtrl'
         });
         
         $routeProvider.when('/edit/:id', {
-            templateUrl: 'choferes/edit',
+            templateUrl: 'medios/edit',
             controller: 'editCtrl'
         });
 

@@ -1,10 +1,10 @@
-﻿angular.module('cresud.cdp.service.choferes', [])
-       .factory('choferesService', [
+﻿angular.module('irsa.pdm.service.medios', [])
+       .factory('mediosService', [
            '$http',
            'baseService',
            function ($http, baseService) {
                var result = angular.extend({}, baseService);
-               result.controller = 'Choferes';
+               result.controller = 'Medios';
 
                return result;
            }]);

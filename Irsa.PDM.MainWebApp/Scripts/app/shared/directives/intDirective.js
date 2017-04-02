@@ -1,4 +1,4 @@
-﻿angular.module('cresud.cdp.directive.int', [])
+﻿angular.module('irsa.pdm.directive.int', [])
     .directive('int', [ function ($http) {
         return {
             require: 'ngModel',

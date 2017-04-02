@@ -1,4 +1,4 @@
-﻿angular.module('cresud.cdp.navigation.base', [])
+﻿angular.module('irsa.pdm.navigation.base', [])
        .factory('baseNavigationService', [
           '$location',
            function ($location) {

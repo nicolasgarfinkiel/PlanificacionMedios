@@ -1,4 +1,4 @@
-﻿angular.module('cresud.cdp.service.general', [])
+﻿angular.module('irsa.pdm.service.general', [])
        .factory('generalService', [
            '$http',
            'baseService',

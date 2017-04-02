@@ -1,7 +1,21 @@
-﻿
+﻿@using Irsa.PDM.Infrastructure
+
 @{
-    ViewBag.Title = "Index";
+    ViewBag.ngApp = "irsa.pdm.medios";
 }
+<div>    
+    <script type="text/ng-template" id="medios/list">
+        @RenderPage(Url.Content("~/Views/Medios/List.cshtml"))
+    </script>
+    <script type="text/ng-template" id="medios/edit">
+        @RenderPage(Url.Content("~/Views/Medios/Edit.cshtml"))
+    </script>
+    <div ng-view></div>
+</div>
 
-<h2>Index</h2>
-
+@section scripts{
+    @Html.IncludeVersionedJs("Scripts/app/Medios/mediosModule.js")
+    @Html.IncludeVersionedJs("Scripts/app/Medios/mediosListCtrl.js")
+    @Html.IncludeVersionedJs("Scripts/app/Medios/mediosEditCtrl.js")        
+    @Html.IncludeVersionedJs("Scripts/app/shared/mediosService.js")
+}

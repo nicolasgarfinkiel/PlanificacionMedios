@@ -1,4 +1,4 @@
-﻿angular.module('cdp.service.singleFile', [])
+﻿angular.module('irsa.pdm.service.singleFile', [])
        .factory('singleFileService', [
            '$http',           
            function ($http) {

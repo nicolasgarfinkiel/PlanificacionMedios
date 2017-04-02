@@ -1,4 +1,4 @@
-﻿angular.module('cresud.cdp.service.bootstraper.edit',
+﻿angular.module('irsa.pdm.service.bootstraper.edit',
     [        
     ]).factory('editBootstraperService', [
            function () {

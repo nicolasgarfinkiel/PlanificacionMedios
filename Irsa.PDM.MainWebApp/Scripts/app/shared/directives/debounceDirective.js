@@ -1,4 +1,4 @@
-﻿angular.module('cresud.cdp.directive.debounce', [])
+﻿angular.module('irsa.pdm.directive.debounce', [])
     .directive('ngDebounce', function ($timeout) {
         return {
             restrict: 'A',

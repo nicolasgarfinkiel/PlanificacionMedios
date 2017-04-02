@@ -923,37 +923,10 @@ body.blank {
         border-color: #e4e5e7;
     }
 
-.ngHeaderCell {
-    border-right: none;
-    border-bottom: 1px solid #e4e5e7;
-}
-
-.ngCell {
-    border-right: none;
-}
-
-.ngTopPanel {
-    background: #fff;
-}
-
-.ngRow.even {
-    background: #f9f9f9;
-}
-
-.ngRow.selected {
-    background: #e5e8ee;
-}
-
-.ngRow {
-    border-bottom: 1px solid #e4e5e7;
-}
-
-.ngCell {
-    background-color: transparent;
-}
-
-.ngHeaderCell {
-    border-right: none;
+.ng-grid-icon-container {
+    text-align: center;
+    position: relative;
+    top: 4px;
 }
 
 .gridStyle {
@@ -4454,4 +4427,50 @@ ul.h-list {
     background-size: 120px 40px;
     position: relative;
     top: -11px;
+}
+
+
+.gridStyleLarge {
+    border: 1px solid rgb(212,212,212);
+    width: 100%;
+    height: 460px;
+}
+
+.gridStyleVeryLarge {
+    border: 1px solid rgb(212,212,212);
+    width: 100%;
+    height: 600px;
+}
+
+.gridStyleDefault {
+    border: 1px solid rgb(212,212,212);
+    width: 100%;
+    height: 300px;
+}
+
+.gridStyleMedium {
+    border: 1px solid rgb(212,212,212);
+    width: 100%;
+    height: 200px;
+}
+
+.gridStyleSmall {
+    border: 1px solid rgb(212,212,212);
+    width: 100%;
+    height: 100px;
+}
+
+.hpanel.hblue .panel-body {
+    border-top: 2px solid #70ABB3;
+}
+
+.loading {
+    background: url("../images/loading.gif") no-repeat center;
+    padding: 40px;
+    text-align: center;
+    vertical-align: middle;
+    width: 150px;
+    background-size: 60px 60px;
+    position: relative;
+    top: 40%;
 }

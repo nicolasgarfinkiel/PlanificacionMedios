@@ -53,6 +53,12 @@ function checkSessionStatus() {
 
 $(document).ready(function () {
 
+    $(window).resize(function () {
+        setTimeout(function () {
+            $(window).trigger('resize');
+        }, 600);
+    });
+
     // Add special class to minimalize page elements when screen is less than 768px
     setBodySmall();
 

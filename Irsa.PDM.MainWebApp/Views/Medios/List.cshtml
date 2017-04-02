@@ -1,28 +1,26 @@
-﻿<section class="panel panel-default">
-    <header class="panel-heading">
+﻿<div class="hpanel hblue">
+    <div class="panel-heading hbuilt">
         Listado de medios
-    </header>
-    <div class="row wrapper">
-        <div class="col-sm-10">
-            <div class="input-group m-b">
-                <input type="text" class="input-sm form-control" placeholder="Buscar" ng-model="filter.multiColumnSearchText" ng-debounce="1200">
-                <span class="input-group-addon">
-                    <i class="fa fa-search"></i>
-                </span>
-            </div>
-        </div>
-        <div class="col-sm-2 text-right" >
-            <a href="javascript:void(0)" class="btn btn-success " ng-click="create()"><i class="fa fa-plus"></i> Nuevo</a>
-        </div>
-        
-        <div class="col-sm-12">
-            <div class="alert alert-danger" ng-if="result.hasErrors">
-                <button type="button" class="close" data-dismiss="alert">×</button>
-                <i class="fa fa-ban-circle"></i> {{result.messages[0]}}
-            </div>
-        </div>
     </div>
-    <div style="margin: 0 15px 15px 15px">
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-sm-10">
+                <div class="input-group m-b">
+                    <input type="text" class="input-sm form-control" placeholder="Buscar" ng-model="filter.multiColumnSearchText" ng-debounce="1200">
+                    <span class="input-group-addon">
+                        <i class="fa fa-search"></i>
+                    </span>
+                </div>
+            </div>
+            <div class="col-sm-2 text-right">
+                <a href="javascript:void(0)" class="btn btn-success " ng-click="create()"><i class="fa fa-plus"></i> Nuevo</a>
+            </div>
+        </div>
+        <div class="alert alert-danger" ng-if="result.hasErrors">
+            <i class="fa fa-bolt"></i>
+            <div ng-repeat="message in result.messages">{{message}}</div>
+        </div>
         <div class="gridStyleLarge" ng-grid="gridOptions"></div>
-    </div>    
-</section>
+    </div>
+</div>
+

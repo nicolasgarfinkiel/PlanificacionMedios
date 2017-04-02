@@ -1,67 +1,35 @@
-﻿<div class="row">    
-    <div class="col-sm-12">
-        <section class="panel panel-default">
-            <header class="panel-heading font-bold">{{operation}}</header>
-            <div class="panel-body">
-                <form class="bs-example form-horizontal">                                                         
-                    <div class="form-group">
-                        <label class="col-lg-2 control-label">Es transportista</label>
-                        <div class="col-lg-10">
-                            <input type="checkbox" ng-model="entity.esChoferTransportista"> 
-                        </div>
-                    </div>   
-                    <div class="form-group">
-                        <label class="col-lg-2 control-label">{{entity.esChoferTransportista ? 'Descripción' : 'Nombre'}}</label>
-                        <div class="col-lg-10">
-                            <input type="text" class="form-control" ng-model="entity.nombre">
-                        </div>
-                    </div>
-                    <div class="form-group" ng-if="!entity.esChoferTransportista">
-                        <label class="col-lg-2 control-label">Apellido</label>
-                        <div class="col-lg-10">
-                            <input type="text" class="form-control" ng-model="entity.apellido">
-                        </div>
-                    </div>                    
-                    <div class="form-group">
-                        <label class="col-lg-2 control-label">{{usuario.currentEmpresaLabelCuit}}</label>
-                        <div class="col-lg-10">
-                            <input type="text" class="form-control" ng-model="entity.cuit" int>                            
-                        </div>
-                    </div>
-                    <div class="form-group" ng-if="esParaguay">
-                        <label class="col-lg-2 control-label">Domicilio</label>
-                        <div class="col-lg-10">
-                            <input type="text" class="form-control" ng-model="entity.domicilio">
-                        </div>
-                    </div>
-                    <div class="form-group" ng-if="esParaguay">
-                        <label class="col-lg-2 control-label">Marca Vehículo</label>
-                        <div class="col-lg-10">
-                            <input type="text" class="form-control" ng-model="entity.marca">
-                        </div>
-                    </div>
-                    <div class="form-group" ng-if="!entity.esChoferTransportista">
-                        <label class="col-lg-2 control-label">Patente camión</label>
-                        <div class="col-lg-10">
-                            <input type="text" class="form-control" ng-model="entity.camion">
-                        </div>
-                    </div>
-                    <div class="form-group" ng-if="!entity.esChoferTransportista">
-                        <label class="col-lg-2 control-label">Patente acoplado</label>
-                        <div class="col-lg-10">
-                            <input type="text" class="form-control" ng-model="entity.acoplado">
-                        </div>
-                    </div>                                                                                                              
-                    <div class="alert alert-danger" ng-if="result.hasErrors">
-                        <i class="fa fa-bolt"></i>
-                        <div ng-repeat="message in result.messages">{{message}}</div>
-                    </div>
-                </form>
+﻿<div class="hpanel hblue">
+    <div class="panel-heading hbuilt">
+        {{operation}}
+    </div>
+    <div class="panel-body">
+        <form class="form-horizontal">
+            <div class="form-group">
+                <label class="col-lg-2 control-label">Nombre</label>
+                <div class="col-lg-10">
+                    <input type="text" class="form-control" ng-model="entity.nombre">
+                </div>
             </div>
-            <footer class="panel-footer font-bold text-right">
-                <button type="button" class="btn btn-sm btn-success btn-default" ng-click="save()">Aceptar</button>
-                <button type="button" class="btn btn-sm btn-default" ng-click="list()">Volver</button>
-            </footer>
-        </section>
+            <div class="form-group">
+                <label class="col-lg-2 control-label">Descripción</label>
+                <div class="col-lg-10">
+                    <textarea class="form-control" ng-model="entity.descripcion"></textarea>
+                </div>
+            </div>
+
+            <div class="alert alert-danger" ng-if="result.hasErrors">
+                <i class="fa fa-bolt"></i>
+                <div ng-repeat="message in result.messages">{{message}}</div>
+            </div>
+        </form>
+    </div>
+    <div class="panel-footer text-right">
+        <button type="button" class="btn btn-primary" ng-click="save()">Aceptar</button>
+        <button type="button" class="btn btn-default" ng-click="list()">Volver</button>
     </div>
 </div>
+
+
+
+
+

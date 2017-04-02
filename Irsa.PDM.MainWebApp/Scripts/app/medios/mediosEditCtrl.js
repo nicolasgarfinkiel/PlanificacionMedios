@@ -20,8 +20,12 @@
                    $scope.result = { hasErrors: false, messages: [] };                   
 
                    if (!$scope.entity.nombre) {
-                       $scope.result.messages.push($scope.entity.esChoferTransportista ? 'Ingrese la descripción' : 'Ingrese el nombre');
-                   }                                    
+                       $scope.result.messages.push('Ingrese el nombre');
+                   }
+
+                   if (!$scope.entity.descripcion) {
+                       $scope.result.messages.push('Ingrese la descripción');
+                   }
 
                    $scope.result.hasErrors = $scope.result.messages.length;
                    return !$scope.result.hasErrors;

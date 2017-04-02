@@ -43,12 +43,7 @@
                            scope.data = response.data.data.data;
                            scope.usuario = response.data.data.usuario;
                            scope.entity = entity;
-
-                           if (!entity.id) {
-                               scope.entity.grupoEmpresaId = scope.usuario.currentEmpresa.grupoEmpresa.id;
-                               scope.entity.empresaId = scope.usuario.currentEmpresa.id;
-                           }
-
+                           
                            if (scope.onInitEnd) scope.onInitEnd();
                        }, function () { throw 'Error on getDataEditInit'; });
                    },

@@ -38,12 +38,18 @@ namespace Irsa.PDM.Admin
         }
 
         public override void Validate(Dtos.Medio dto)
-        {           
+        {
+            var entity = PdmContext.Medios.FirstOrDefault(m => m.Nombre.ToLower().Equals(dto.Nombre.ToLower()));
+
+            if (entity != null && entity.Id != dto.Id)
+            {
+                throw new Exception("Ya existe otro medio con el mismo nombre");
+            }
         }
 
         public override IQueryable GetQuery(FilterBase filter)
         {
-            var result = PdmContext.Medios.AsQueryable();            
+            var result = PdmContext.Medios.OrderBy(m => m.Descripcion).AsQueryable();            
 
             if (!string.IsNullOrEmpty(filter.MultiColumnSearchText))
             {

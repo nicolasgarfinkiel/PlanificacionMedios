@@ -6,54 +6,51 @@ using Irsa.PDM.Entities;
 
 namespace Irsa.PDM.Admin
 {
-    public class MediosAdmin : BaseAdmin<int, Entities.Medio, Dtos.Medio, FilterBase>
+    public class PlazasAdmin : BaseAdmin<int, Entities.Plaza, Dtos.Plaza, FilterBase>
     {
         #region Base
 
-        public override Medio ToEntity(Dtos.Medio dto)
+        public override Plaza ToEntity(Dtos.Plaza dto)
         {
-            var entity = default(Medio);
-            var tipoEspacio = (TipoEspacio) Enum.Parse(typeof(TipoEspacio), dto.TipoEspacio);
+            var entity = default(Plaza);            
 
             if (!dto.Id.HasValue)
             {
-                entity = new Medio
+                entity = new Plaza
                 {                 
                     CreateDate = DateTime.Now,
                     CreatedBy = UsuarioLogged,                                        
                     Enabled = true,                    
                     Nombre = dto.Nombre,
-                    Descripcion = dto.Descripcion,
-                    TipoEspacio = tipoEspacio
+                    Descripcion = dto.Descripcion                    
                 };
             }
             else
             {
-                entity = PdmContext.Medios.Single(c => c.Id == dto.Id.Value);
+                entity = PdmContext.Plazas.Single(c => c.Id == dto.Id.Value);
              
                 entity.Nombre = dto.Nombre;
                 entity.Descripcion = dto.Descripcion;
                 entity.UpdateDate = DateTime.Now;
-                entity.UpdatedBy = UsuarioLogged;
-                entity.TipoEspacio = tipoEspacio;
+                entity.UpdatedBy = UsuarioLogged;                
             }
 
             return entity;
         }
 
-        public override void Validate(Dtos.Medio dto)
+        public override void Validate(Dtos.Plaza dto)
         {
-            var entity = PdmContext.Medios.FirstOrDefault(m => m.Nombre.ToLower().Equals(dto.Nombre.ToLower()));
+            var entity = PdmContext.Plazas.FirstOrDefault(m => m.Nombre.ToLower().Equals(dto.Nombre.ToLower()));
 
             if (entity != null && entity.Id != dto.Id)
             {
-                throw new Exception("Ya existe otro medio con el mismo nombre");
+                throw new Exception("Ya existe otro plaza con el mismo nombre");
             }
         }
 
         public override IQueryable GetQuery(FilterBase filter)
         {
-            var result = PdmContext.Medios.OrderBy(m => m.Descripcion).AsQueryable();            
+            var result = PdmContext.Plazas.OrderBy(m => m.Descripcion).AsQueryable();            
 
             if (!string.IsNullOrEmpty(filter.MultiColumnSearchText))
             {
@@ -68,10 +65,6 @@ namespace Irsa.PDM.Admin
         }
 
         #endregion
-
-        public IEnumerable<string> GetTipoEspacioList()
-        {
-            return Enum.GetNames(typeof(TipoEspacio)).OrderBy(t => t);
-        }
+        
     }
 }

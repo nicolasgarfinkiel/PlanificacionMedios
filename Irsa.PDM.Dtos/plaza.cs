@@ -1,10 +1,9 @@
 ﻿namespace Irsa.PDM.Dtos
 {
-    public class Medio
+    public class Plaza
     {
         public int? Id { get; set; } 
         public string Nombre { get; set; }
-        public string Descripcion { get; set; }
-        public string TipoEspacio { get; set; }
+        public string Descripcion { get; set; }        
     }
 }

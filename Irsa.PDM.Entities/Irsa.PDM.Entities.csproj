@@ -42,6 +42,7 @@
     <Compile Include="Agencia.cs" />
     <Compile Include="Certificacion.cs" />
     <Compile Include="CertificacionItem.cs" />
+    <Compile Include="Plaza.cs" />
     <Compile Include="Medio.cs" />
     <Compile Include="Proveedor.cs" />
     <Compile Include="EntityBase.cs" />
@@ -50,6 +51,7 @@
     <Compile Include="Programa.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tarifa.cs" />
+    <Compile Include="TipoEspacio.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />

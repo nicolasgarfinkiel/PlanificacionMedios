@@ -9,7 +9,8 @@ namespace Irsa.PDM.Admin
         {
             Mapper.Initialize(cfg =>
             {
-                cfg.CreateMap<Medio, Dtos.Medio>();              
+                cfg.CreateMap<Medio, Dtos.Medio>();
+                cfg.CreateMap<Plaza, Dtos.Plaza>();              
             });         
         }
     }

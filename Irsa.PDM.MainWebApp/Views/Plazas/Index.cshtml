@@ -1,0 +1,21 @@
+﻿@using Irsa.PDM.Infrastructure
+
+@{
+    ViewBag.ngApp = "irsa.pdm.plazas";
+}
+<div>    
+    <script type="text/ng-template" id="plazas/list">
+        @RenderPage(Url.Content("~/Views/Plazas/List.cshtml"))
+    </script>
+    <script type="text/ng-template" id="plazas/edit">
+        @RenderPage(Url.Content("~/Views/Plazas/Edit.cshtml"))
+    </script>
+    <div ng-view></div>
+</div>
+
+@section scripts{
+    @Html.IncludeVersionedJs("Scripts/app/Plazas/plazasModule.js")
+    @Html.IncludeVersionedJs("Scripts/app/Plazas/plazasListCtrl.js")
+    @Html.IncludeVersionedJs("Scripts/app/Plazas/plazasEditCtrl.js")        
+    @Html.IncludeVersionedJs("Scripts/app/shared/plazasService.js")
+}

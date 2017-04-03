@@ -1,18 +1,18 @@
-﻿angular.module('irsa.pdm.medios.ctrl.edit', [])
+﻿angular.module('irsa.pdm.plazas.ctrl.edit', [])
        .controller('editCtrl', [
            '$scope',
            '$routeParams',
-           'mediosService',
+           'plazasService',
            'baseNavigationService',
            'editBootstraperService',
-           function ($scope, $routeParams, mediosService, baseNavigationService, editBootstraperService) {
+           function ($scope, $routeParams, plazasService, baseNavigationService, editBootstraperService) {
 
                $scope.onInitEnd = function () {
-                   $scope.operation = !$routeParams.id ? 'Nuevo medio' : 'Edición de medio';                   
+                   $scope.operation = !$routeParams.id ? 'Nueva plaza' : 'Edición de plaza';                   
                };
 
                editBootstraperService.init($scope, $routeParams,  {
-                   service: mediosService,
+                   service: plazasService,
                    navigation: baseNavigationService
                });
               
@@ -21,11 +21,7 @@
 
                    if (!$scope.entity.nombre) {
                        $scope.result.messages.push('Ingrese el nombre');
-                   }
-
-                   if (!$scope.entity.tipoEspacio) {
-                       $scope.result.messages.push('Seleccione el tipo de espacio');
-                   }
+                   }                  
 
                    if (!$scope.entity.descripcion) {
                        $scope.result.messages.push('Ingrese la descripción');

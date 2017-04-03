@@ -1,6 +1,5 @@
 ﻿using System.Configuration;
 using System.Data.Entity;
-using System.Data.Entity.Migrations;
 using System.Data.Entity.ModelConfiguration.Conventions;
 using Irsa.PDM.Entities;
 
@@ -23,6 +22,7 @@ namespace Irsa.PDM.Repositories
         }
 
         public IDbSet<Medio> Medios { get; set; }
+        public IDbSet<Plaza> Plazas { get; set; }
 
     }
 }

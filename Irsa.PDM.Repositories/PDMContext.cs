@@ -9,8 +9,7 @@ namespace Irsa.PDM.Repositories
     {
         public PDMContext()
             : base(ConfigurationManager.ConnectionStrings["PDM"].ConnectionString)
-        {
-     //       this.AutomaticMigrationsEnabled = true;
+        {     
           //  Database.SetInitializer<PDMContext>(null);
             Database.SetInitializer(new MigrateDatabaseToLatestVersion<PDMContext, Migrations.Configuration>("PDM"));
         }
@@ -23,6 +22,7 @@ namespace Irsa.PDM.Repositories
 
         public IDbSet<Medio> Medios { get; set; }
         public IDbSet<Plaza> Plazas { get; set; }
+        public IDbSet<Vehiculo> Vehiculos { get; set; }
 
     }
 }

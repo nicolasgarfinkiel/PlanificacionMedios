@@ -134,6 +134,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\VehiculosController.cs" />
     <Compile Include="Controllers\PlazasController.cs" />
     <Compile Include="Controllers\MediosController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -180,6 +181,10 @@
     <Content Include="Scripts\angularJs\quill\quill.min.js" />
     <Content Include="Scripts\angularJs\select.min.js" />
     <Content Include="Scripts\angularJs\ui-utils.min.js" />
+    <Content Include="Scripts\app\shared\vehiculosService.js" />
+    <Content Include="Scripts\app\vehiculos\vehiculosEditCtrl.js" />
+    <Content Include="Scripts\app\vehiculos\vehiculosListCtrl.js" />
+    <Content Include="Scripts\app\vehiculos\vehiculosModule.js" />
     <Content Include="Scripts\app\plazas\plazasEditCtrl.js" />
     <Content Include="Scripts\app\plazas\plazasListCtrl.js" />
     <Content Include="Scripts\app\plazas\plazasModule.js" />
@@ -291,6 +296,9 @@
     <Content Include="Views\Plazas\Edit.cshtml" />
     <Content Include="Views\Plazas\Index.cshtml" />
     <Content Include="Views\Plazas\List.cshtml" />
+    <Content Include="Views\Vehiculos\Edit.cshtml" />
+    <Content Include="Views\Vehiculos\Index.cshtml" />
+    <Content Include="Views\Vehiculos\List.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

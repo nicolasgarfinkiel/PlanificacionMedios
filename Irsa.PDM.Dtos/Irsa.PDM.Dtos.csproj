@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Vehiculo.cs" />
     <Compile Include="Plaza.cs" />
     <Compile Include="Medio.cs" />
     <Compile Include="PDMSession.cs" />

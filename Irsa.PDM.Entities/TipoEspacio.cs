@@ -3,6 +3,6 @@
     public enum TipoEspacio
     {
         Horario = 1,
-        Pagina
+        Estatico
     }
 }

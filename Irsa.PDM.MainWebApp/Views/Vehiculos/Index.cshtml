@@ -1,0 +1,22 @@
+﻿@using Irsa.PDM.Infrastructure
+
+@{
+    ViewBag.ngApp = "irsa.pdm.vehiculos";
+}
+<div>    
+    <script type="text/ng-template" id="vehiculos/list">
+        @RenderPage(Url.Content("~/Views/Vehiculos/List.cshtml"))
+    </script>
+    <script type="text/ng-template" id="vehiculos/edit">
+        @RenderPage(Url.Content("~/Views/Vehiculos/Edit.cshtml"))
+    </script>
+    <div ng-view></div>
+</div>
+
+@section scripts{
+    @Html.IncludeVersionedJs("Scripts/app/vehiculos/vehiculosModule.js")
+    @Html.IncludeVersionedJs("Scripts/app/vehiculos/vehiculosListCtrl.js")
+    @Html.IncludeVersionedJs("Scripts/app/vehiculos/vehiculosEditCtrl.js")        
+    @Html.IncludeVersionedJs("Scripts/app/shared/vehiculosService.js")
+    @Html.IncludeVersionedJs("Scripts/app/shared/mediosService.js")
+}

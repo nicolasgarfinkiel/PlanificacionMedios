@@ -52,9 +52,14 @@ function checkSessionStatus() {
 
 
 $(document).ready(function () {
+    var width = 0;
+    var height = 0;
 
     $(window).resize(function () {
         setTimeout(function () {
+            if (window.innerWidth == width && window.innerHeight == height) return;
+            width = window.innerWidth;
+            height = window.innerHeight;
             $(window).trigger('resize');
         }, 600);
     });

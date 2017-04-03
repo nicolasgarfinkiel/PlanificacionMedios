@@ -1,65 +1,65 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Irsa.PDM.Dtos.Common;
 using Irsa.PDM.Entities;
 
 namespace Irsa.PDM.Admin
 {
-    public class MediosAdmin : BaseAdmin<int, Entities.Medio, Dtos.Medio, FilterBase>
+    public class VehiculosAdmin : BaseAdmin<int, Entities.Vehiculo, Dtos.Vehiculo, FilterBase>
     {
         #region Base
 
-        public override Medio ToEntity(Dtos.Medio dto)
+        public override Vehiculo ToEntity(Dtos.Vehiculo dto)
         {
-            var entity = default(Medio);
-            var tipoEspacio = (TipoEspacio) Enum.Parse(typeof(TipoEspacio), dto.TipoEspacio);
+            var entity = default(Vehiculo);
+            var medio = PdmContext.Medios.Single(m => m.Id == dto.Medio.Id);
 
             if (!dto.Id.HasValue)
             {
-                entity = new Medio
+                entity = new Vehiculo
                 {                 
                     CreateDate = DateTime.Now,
-                    CreatedBy = UsuarioLogged,                                        
-                    Enabled = true,                    
+                    CreatedBy = UsuarioLogged,
+                    Enabled = true,
                     Nombre = dto.Nombre,
                     Descripcion = dto.Descripcion,
-                    TipoEspacio = tipoEspacio
+                    Medio = medio
                 };
             }
             else
             {
-                entity = PdmContext.Medios.Single(c => c.Id == dto.Id.Value);
+                entity = PdmContext.Vehiculos.Single(c => c.Id == dto.Id.Value);
              
                 entity.Nombre = dto.Nombre;
                 entity.Descripcion = dto.Descripcion;
                 entity.UpdateDate = DateTime.Now;
                 entity.UpdatedBy = UsuarioLogged;
-                entity.TipoEspacio = tipoEspacio;
+                entity.Medio = medio;
             }
 
             return entity;
         }
 
-        public override void Validate(Dtos.Medio dto)
+        public override void Validate(Dtos.Vehiculo dto)
         {
-            var entity = PdmContext.Medios.FirstOrDefault(m => m.Nombre.ToLower().Equals(dto.Nombre.ToLower()));
+            var entity = PdmContext.Vehiculos.FirstOrDefault(m => m.Nombre.ToLower().Equals(dto.Nombre.ToLower()));
 
             if (entity != null && entity.Id != dto.Id)
             {
-                throw new Exception("Ya existe otro medio con el mismo nombre");
+                throw new Exception("Ya existe otro vehículo con el mismo nombre");
             }
         }
 
         public override IQueryable GetQuery(FilterBase filter)
         {
-            var result = PdmContext.Medios.OrderBy(m => m.Nombre).AsQueryable();            
+            var result = PdmContext.Vehiculos.OrderBy(m => m.Descripcion).AsQueryable();            
 
             if (!string.IsNullOrEmpty(filter.MultiColumnSearchText))
             {
                 filter.MultiColumnSearchText = filter.MultiColumnSearchText.ToLower();
 
                 result = result.Where(r =>
+                    (r.Medio != null && r.Medio.Nombre.ToLower().Contains(filter.MultiColumnSearchText)) ||
                     (r.Nombre != null && r.Nombre.ToLower().Contains(filter.MultiColumnSearchText)) ||
                     (r.Descripcion != null && r.Descripcion.ToLower().Contains(filter.MultiColumnSearchText))).AsQueryable();
             }
@@ -68,10 +68,6 @@ namespace Irsa.PDM.Admin
         }
 
         #endregion
-
-        public IEnumerable<string> GetTipoEspacioList()
-        {
-            return Enum.GetNames(typeof(TipoEspacio)).OrderBy(t => t);
-        }
+        
     }
 }

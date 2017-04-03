@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="BaseAdmin.cs" />
     <Compile Include="BootStrapper.cs" />
+    <Compile Include="VehiculosAdmin.cs" />
     <Compile Include="PlazasAdmin.cs" />
     <Compile Include="MediosAdmin.cs" />
     <Compile Include="DataSetConverter.cs" />

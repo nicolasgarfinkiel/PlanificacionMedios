@@ -23,6 +23,7 @@ namespace Irsa.PDM.Repositories
         public IDbSet<Medio> Medios { get; set; }
         public IDbSet<Plaza> Plazas { get; set; }
         public IDbSet<Vehiculo> Vehiculos { get; set; }
+        public IDbSet<Tarifa> Tarifas { get; set; }
 
     }
 }

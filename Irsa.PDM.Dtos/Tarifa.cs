@@ -1,10 +1,11 @@
-﻿namespace Irsa.PDM.Entities
+﻿namespace Irsa.PDM.Dtos
 {
-    public class Tarifa: EntityBase
+    public class Tarifa
     {
-        public virtual Medio Medio { get; set; }
-        public virtual Plaza Plaza { get; set; }
-        public virtual Vehiculo Vehiculo { get; set; }
+        public int? Id { get; set; }
+        public int MedioId { get; set; }
+        public int PlazaId { get; set; }
+        public int VehiculoId { get; set; }
         public int? HoraDesde { get; set; }
         public int? HoraHasta { get; set; }
         public bool Lunes { get; set; }

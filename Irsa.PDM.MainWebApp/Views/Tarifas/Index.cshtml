@@ -1,0 +1,17 @@
+﻿@using Irsa.PDM.Infrastructure
+
+@{
+    ViewBag.ngApp = "irsa.pdm.tarifas";
+}
+<div>    
+    <script type="text/ng-template" id="tarifas/edit">
+        @RenderPage(Url.Content("~/Views/Tarifas/Edit.cshtml"))
+    </script>  
+    <div ng-view></div>
+</div>
+
+@section scripts{
+    @Html.IncludeVersionedJs("Scripts/app/tarifas/tarifasModule.js")    
+    @Html.IncludeVersionedJs("Scripts/app/tarifas/tarifasEditCtrl.js")        
+    @Html.IncludeVersionedJs("Scripts/app/shared/tarifasService.js")
+}

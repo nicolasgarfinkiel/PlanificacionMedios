@@ -2102,7 +2102,7 @@ body {
 }
 
 .hpanel .alert {
-    margin-bottom: 0;
+    margin-bottom: 10px;
     border-radius: 0;
     border: 1px solid #e4e5e7;
     border-bottom: none;
@@ -4473,4 +4473,75 @@ ul.h-list {
     background-size: 60px 60px;
     position: relative;
     top: 40%;
+}
+
+.ngTopPanel {
+    background-color: #f7f9fa;
+}
+
+.ngFooterPanel {
+    width: 1118px;
+    height: 55px;
+    color: inherit;
+    border-top: none;
+    font-size: 90%;
+    background: #f7f9fa;
+    padding: 10px 15px;
+}
+
+.ngRowCountPicker {
+    display: none;
+}
+
+
+.hpanel.hblue .panel-body {
+    border-top: 1px solid #70ABB3;
+}
+
+.hpanel > .panel-heading {
+    font-weight: normal;
+}
+
+.dropdown-menu.filter {
+    padding: 6px;
+}
+
+    .dropdown-menu.filter input[type="checkbox"] {
+        position: relative;
+        top: 2px;
+    }
+
+
+.hour-range .small {
+    display: inline-block;
+    width: 46%;
+}
+
+.hour-range .small span {
+    display: inline-block;
+    width: 55%;
+}
+
+#no-more-tables .hour-range .small input[type="text"] {    
+    width: 45%;
+}
+
+
+#no-more-tables input[type="text"], #no-more-tables select {
+    width: 100%;
+}
+
+@media only screen and (max-width: 800px) {
+
+    .day-edit {
+    }
+
+        .day-edit > span {
+            display: inline-block;
+            width: 45%;
+        }
+
+    .hour-range .small {
+        width: 100%;
+    }
 }

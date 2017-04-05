@@ -1,0 +1,224 @@
+﻿<div class="hpanel hblue">
+    <div class="panel-heading hbuilt">
+        Administración de tarifas
+    </div>
+    <div class="panel-body">
+        <form class="form-horizontal">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="input-group m-b">
+                        <input type="text" class="input-sm form-control" placeholder="Buscar" ng-model="filter.multiColumnSearchText" ng-debounce="1200">
+                        <span class="input-group-addon">
+                            <i class="fa fa-search"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+
+            <div id="no-more-tables">
+                <table class="col-sm-12 table-bordered table-striped table-condensed cf">
+                    <thead class="cf">
+                        <tr>
+                            <th style="width: 40px;"></th>
+                            <th style="width: 10%">
+                                Medio
+                                <div class="btn-group" style="float: right;">
+                                    <button data-toggle="dropdown" class="btn btn-default btn-xs dropdown-toggle" ng-click="setAux('medios')"><span class="fa fa-level-down"></span></button>
+                                    <ul class="dropdown-menu filter" role="menu">
+                                        <li ng-repeat="medio in data.medios">
+                                            <input type="checkbox" ng-checked="filter.mediosAux.indexOf(medio.id) != -1" ng-click="toggleCheck('medios', medio.id)" /> {{medio.nombre}}
+                                        </li>
+                                        <li class="divider"></li>
+                                        <li class="text-right">
+                                            <button class="btn btn-primary btn-xs" ng-click="applyFilter('medios')">Aplicar</button>
+                                            <button class="btn btn-default btn-xs" ng-click="clearFilter('medios', $event)">Limpiar</button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </th>
+                            <th style="width: 7%">
+                                Plaza
+                                <div class="btn-group" style="float: right;">
+                                    <button data-toggle="dropdown" class="btn btn-default btn-xs dropdown-toggle" ng-click="setAux('plazas')"><span class="fa fa-level-down"></span></button>
+                                    <ul class="dropdown-menu filter" role="menu">
+                                        <li ng-repeat="plaza in data.plazas">
+                                            <input type="checkbox" ng-checked="filter.plazasAux.indexOf(plaza.id) != -1" ng-click="toggleCheck('plazas', plaza.id)" /> {{plaza.nombre}}
+                                        </li>
+                                        <li class="divider"></li>
+                                        <li class="text-right">
+                                            <button class="btn btn-primary btn-xs" ng-click="applyFilter('plazas')">Aplicar</button>
+                                            <button class="btn btn-default btn-xs" ng-click="clearFilter('plazas', $event)">Limpiar</button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </th>
+                            <th style="width: 13%">
+                                Vehículo
+                                <div class="btn-group" style="float: right;">
+                                    <button data-toggle="dropdown" class="btn btn-default btn-xs dropdown-toggle" ng-click="setAux('vehiculos')"><span class="fa fa-level-down"></span></button>
+                                    <ul class="dropdown-menu filter" role="menu">
+                                        <li ng-repeat="vehiculo in data.vehiculos">
+                                            <input type="checkbox" ng-checked="filter.vehiculosAux.indexOf(vehiculo.id) != -1" ng-click="toggleCheck('vehiculos', vehiculo.id)" /> {{vehiculo.nombre}}
+                                        </li>
+                                        <li class="divider"></li>
+                                        <li class="text-right">
+                                            <button class="btn btn-primary btn-xs" ng-click="applyFilter('vehiculos')">Aplicar</button>
+                                            <button class="btn btn-default btn-xs" ng-click="clearFilter('vehiculos', $event)">Limpiar</button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </th>
+                            <th style="width: 24%">
+                                Días
+                                <div class="btn-group" style="float: right;">
+                                    <button data-toggle="dropdown" class="btn btn-default btn-xs dropdown-toggle" ng-click="setAux('dias')"><span class="fa fa-level-down"></span></button>
+                                    <ul class="dropdown-menu filter" role="menu">
+                                        <li ng-repeat="dia in dias">
+                                            <input type="checkbox" ng-checked="filter.diasAux.indexOf(dia) != -1" ng-click="toggleCheck('dias', dia)" /> {{dia}}
+                                        </li>
+                                        <li class="divider"></li>
+                                        <li class="text-right">
+                                            <button class="btn btn-primary btn-xs" ng-click="applyFilter('dias')">Aplicar</button>
+                                            <button class="btn btn-default btn-xs" ng-click="clearFilter('dias', $event)">Limpiar</button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </th>
+                            <th style="width: 8%">
+                                h.Desde
+                                <div class="btn-group" style="float: right;">
+                                    <button data-toggle="dropdown" class="btn btn-default btn-xs dropdown-toggle" ng-click="setAuxHoras('horaDesde')"><span class="fa fa-level-down"></span></button>
+                                    <ul class="dropdown-menu filter" role="menu">
+                                        <li style="font-weight: normal;">
+                                            <div class="small" style="margin-top: 5px;">
+                                                <input type="text" ng-model="filter.horaDesdeAux" int maxlength="4" />
+                                            </div>
+                                        </li>
+                                        <li class="divider"></li>
+                                        <li class="text-right">
+                                            <button class="btn btn-primary btn-xs" ng-click="applyFilterHoras('horaDesde')">Aplicar</button>
+                                            <button class="btn btn-default btn-xs" ng-click="clearFilterHoras('horaDesde', $event)">Limpiar</button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </th>
+                            <th style="width: 8%">
+                                h.Hasta
+                                <div class="btn-group" style="float: right;">
+                                    <button data-toggle="dropdown" class="btn btn-default btn-xs dropdown-toggle" ng-click="setAuxHoras('horaHasta')"><span class="fa fa-level-down"></span></button>
+                                    <ul class="dropdown-menu filter" role="menu">
+                                        <li style="font-weight: normal;">
+                                            <div class="small" style="margin-top: 5px;">
+                                                <input type="text" ng-model="filter.horaHastaAux" int maxlength="4" />
+                                            </div>
+                                        </li>
+                                        <li class="divider"></li>
+                                        <li class="text-right">
+                                            <button class="btn btn-primary btn-xs" ng-click="applyFilterHoras('horaHasta')">Aplicar</button>
+                                            <button class="btn btn-default btn-xs" ng-click="clearFilterHoras('horaHasta', $event)">Limpiar</button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </th>
+                            <th>
+                                Importe
+                            </th>
+                            <th>
+                                Descripción
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-dblclick="editable=!editable">
+                            <td data-title="Acciones">
+                                <div class="btn-group">
+                                    <button data-toggle="dropdown" class="btn btn-success btn-xs dropdown-toggle"><span class="caret"></span></button>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li><a href=""><i class="fa fa-plus"> </i> Agregar</a></li>
+                                        <li class="divider"></li>
+                                        <li><a href=""><i class="fa fa-trash"> </i> Eliminar</a></li>
+                                    </ul>
+                                </div>
+                            </td>
+                            <td data-title="Medio">
+                                <span ng-if="!editable">Radio</span>
+                                <select ng-if="editable" ng-options="medio.id as medio.nombre for medio in data.medios"></select>                                        
+                            </td>
+                            <td data-title="Plaza">
+                                <span ng-if="!editable">GBA</span>
+                                <select ng-if="editable" ng-options="plaza.id as plaza.nombre for plaza in data.plazas"></select>
+                            </td>
+                            <td data-title="Vehículo">
+                                <span ng-if="!editable">Canal 13</span>
+                                <select ng-if="editable" ng-options="vehiculo.id as vehiculo.nombre for vehiculo in data.vehiculos"></select>
+                            </td>
+                            <td data-title="Días">
+                                <span ng-if="!editable">Lun, Mar, Mie, Jue, Vie, Sab, Dom</span>
+                                <div ng-if="editable" class="small day-edit">
+                                    <span>
+                                        <input type="checkbox" value="1" ng-model="tarifa.lunes" style="position: relative; top: 1px;" /> Lun
+                                    </span>
+                                    <span>
+                                        <input type="checkbox" value="1" ng-model="tarifa.martes" style="position: relative; top: 1px;" /> Mar
+                                    </span>
+                                    <span>
+                                        <input type="checkbox" value="1" ng-model="tarifa.miercoles" style="position: relative; top: 1px;" /> Mie
+                                    </span>
+                                    <span>
+                                        <input type="checkbox" value="1" ng-model="tarifa.jueves" style="position: relative; top: 1px;" /> Jue
+                                    </span>
+                                    <span>
+                                        <input type="checkbox" value="1" ng-model="tarifa.viernes" style="position: relative; top: 1px;" /> Vie
+                                    </span>
+                                    <span>
+                                        <input type="checkbox" value="1" ng-model="tarifa.sabado" style="position: relative; top: 1px;" /> Sab
+                                    </span>
+                                    <span>
+                                        <input type="checkbox" value="1" ng-model="tarifa.domingo" style="position: relative; top: 1px;" /> Dom
+                                    </span>
+                                </div>
+                            </td>
+                            <td data-title="Hora desde">
+                                <span ng-if="!editable">10</span>
+                                <div ng-if="editable" class="hour-range">
+
+                                    <input type="text" ng-model="filter.horaDesdeAux" int maxlength="4" />
+                                </div>
+                            </td>
+                            <td data-title="Hora hasta">
+                                <span ng-if="!editable">10</span>
+                                <div ng-if="editable" class="hour-range">
+                                    <input type="text" ng-model="filter.horaHastaAux" int maxlength="4" />
+                                </div>
+                            </td>
+                            <td data-title="Importe">
+                                <span ng-if="!editable">$12.00</span>
+                                <input type="text" ng-if="editable" />
+                            </td>
+                            <td data-title="Descripción">
+                                <span ng-if="!editable">asdasdas</span>
+                                <input type="text" ng-if="editable" />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+
+
+            <div class="alert alert-danger" ng-if="result.hasErrors">
+                <i class="fa fa-bolt"></i>
+                <div ng-repeat="message in result.messages">{{message}}</div>
+            </div>
+        </form>
+    </div>
+    <div class="panel-footer text-right">
+        @*<button type="button" class="btn btn-primary" ng-click="save()">Guardar</button>*@
+    </div>
+</div>
+
+
+
+
+

@@ -23,6 +23,7 @@ namespace Irsa.PDM.MainWebApp
             .Include("~/Content/css/jquery.fileupload.css")
             .Include("~/Content/css/select.css")
             .Include("~/Content/css/style.css")
+            .Include("~/Content/css/table-responsive.css")
             );
           
             bundles.Add(new ScriptBundle("~/bundles/scripts/basicScripts")

@@ -134,6 +134,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\TarifasController.cs" />
     <Compile Include="Controllers\VehiculosController.cs" />
     <Compile Include="Controllers\PlazasController.cs" />
     <Compile Include="Controllers\MediosController.cs" />
@@ -159,6 +160,7 @@
     <Content Include="Content\css\select.css" />
     <Content Include="Content\css\static_custom.css" />
     <Content Include="Content\css\style.css" />
+    <Content Include="Content\css\table-responsive.css" />
     <Content Include="Content\fonts\fontawesome-webfont.svg" />
     <Content Include="Content\fonts\Pe-icon-7-stroke.svg" />
     <Content Include="Content\images\loading.gif" />
@@ -181,6 +183,9 @@
     <Content Include="Scripts\angularJs\quill\quill.min.js" />
     <Content Include="Scripts\angularJs\select.min.js" />
     <Content Include="Scripts\angularJs\ui-utils.min.js" />
+    <Content Include="Scripts\app\tarifas\tarifasEditCtrl.js" />
+    <Content Include="Scripts\app\tarifas\tarifasModule.js" />
+    <Content Include="Scripts\app\shared\tarifasService.js" />
     <Content Include="Scripts\app\shared\vehiculosService.js" />
     <Content Include="Scripts\app\vehiculos\vehiculosEditCtrl.js" />
     <Content Include="Scripts\app\vehiculos\vehiculosListCtrl.js" />
@@ -299,6 +304,8 @@
     <Content Include="Views\Vehiculos\Edit.cshtml" />
     <Content Include="Views\Vehiculos\Index.cshtml" />
     <Content Include="Views\Vehiculos\List.cshtml" />
+    <Content Include="Views\Tarifas\Edit.cshtml" />
+    <Content Include="Views\Tarifas\Index.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

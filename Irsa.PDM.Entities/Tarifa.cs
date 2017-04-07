@@ -16,5 +16,6 @@
         public bool Domingo { get; set; }
         public string OrdenDeCompra { get; set; }
         public string Descripcion { get; set; }
+        public double Importe { get; set; }
     }
 }

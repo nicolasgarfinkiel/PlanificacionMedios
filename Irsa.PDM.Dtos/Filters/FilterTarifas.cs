@@ -14,37 +14,37 @@ namespace Irsa.PDM.Dtos.Filters
         public IList<string> Dias { get; set; }
         public string OrdenDeCompra { get; set; }
 
-        public bool? Lunes
+        public bool Lunes
         {
             get { return Dias != null && Dias.Contains("Lunes"); }
         }
 
-        public bool? Martes
+        public bool Martes
         {
             get { return Dias != null && Dias.Contains("Martes"); }
         }
 
-        public bool? Miercoles
+        public bool Miercoles
         {
             get { return Dias != null && Dias.Contains("Miercoles"); }
         }
 
-        public bool? Jueves
+        public bool Jueves
         {
             get { return Dias != null && Dias.Contains("Jueves"); }
         }
 
-        public bool? Viernes
+        public bool Viernes
         {
             get { return Dias != null && Dias.Contains("Viernes"); }
         }
 
-        public bool? Sabado
+        public bool Sabado
         {
             get { return Dias != null && Dias.Contains("Sabado"); }
         }
 
-        public bool? Domingo
+        public bool Domingo
         {
             get { return Dias != null && Dias.Contains("Domingo"); }
         }

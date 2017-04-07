@@ -13,6 +13,7 @@
                //#region base
 
                $scope.onInitEnd = function () {
+                   $scope.findTarifas();
                };
 
                editBootstraperService.init($scope, $routeParams, {
@@ -32,7 +33,9 @@
                    vehiculosAux: [],
                    vehiculos: [],
                    diasAux: [],
-                   dias: []
+                   dias: [],
+                   currentPage: 1,
+                   pageSize: 99999999
                };
 
                $scope.toggleCheck = function (entity, id) {
@@ -64,6 +67,7 @@
 
                $scope.applyFilterHoras = function (entity) {
                    $scope.filter[entity] = $scope.filter[entity + 'Aux'];
+                   $scope.findTarifas();
                };
 
                $scope.clearFilterHoras = function (entity, $event) {
@@ -72,46 +76,69 @@
                    $event.stopPropagation();
                };
 
+               $scope.getById = function (entity, id) {
+                   var result = null;
+
+                   for (var i = 0; i < $scope.data[entity].length; i++) {
+                       if ($scope.data[entity][i].id == id) {
+                           result = $scope.data[entity][i];
+                           break;
+                       }
+                   }
+
+                   return result;
+               };
+
+               $scope.$watch('filter.multiColumnSearchText', function (newValue, oldValue) {
+                   if (typeof newValue == 'undefined' || newValue == oldValue) return;
+                   $scope.findTarifas();
+               });
+
                //#endregion                      
 
                $scope.findTarifas = function () {
-
+                   tarifasService.getByFilter($scope.filter).then(function (response) {
+                       $scope.tarifas = response.data.data;
+                   });
                };
 
                $scope.addTarifa = function (current) {
-                   $scope.validateAndSave(function() {
+                   $scope.validateAndSave(function () {
                        var index = $scope.tarifas.indexOf(current);
                        var tarifa = angular.copy($scope.tarifaInit);
                        $scope.tarifas.splice(index + 1, 0, tarifa);
                        $scope.currentTarifa = null;
                        $scope.setEditable(tarifa);
-                   });                   
+                   });
                };
 
                $scope.deleteTarifa = function (tarifa) {
-                   if (tarifa == $scope.currentTarifa) {
+                   tarifasService.deleteEntity(tarifa.id).then(function (response) {
+                       $scope.result = response.data.result;
+
                        var index = $scope.tarifas.indexOf(tarifa);
                        $scope.tarifas.splice(index, 1);
-                       $scope.currentTarifa = null;
-                   } else {
-                       $scope.validateAndSave(function () {
-                           var index = $scope.tarifas.indexOf(tarifa);
-                           $scope.tarifas.splice(index, 1);
+
+                       if (tarifa == $scope.currentTarifa) {
                            $scope.currentTarifa = null;
-                       });
-                   }                   
+                       }
+
+                   }, function () { throw 'Error on deleteEntity'; });
                };
 
-               $scope.setEditable = function (tarifa) {                   
-                   $scope.validateAndSave(function () {                                          
+               $scope.setEditable = function (tarifa) {
+                   $scope.validateAndSave(function () {
                        if (tarifa == $scope.currentTarifa) {
                            $scope.currentTarifa = null;
                            return;
                        }
 
                        $scope.currentTarifa = tarifa;
-                       $scope.currentTarifa.editable = !$scope.currentTarifa.editable;                       
-                   });                   
+                       $scope.currentTarifa.editable = !$scope.currentTarifa.editable;
+                       $scope.currentTarifa.medio = $scope.getById('medios', $scope.currentTarifa.medio.id);
+                       $scope.currentTarifa.plaza = $scope.getById('plazas', $scope.currentTarifa.plaza.id);
+                       $scope.currentTarifa.vehiculo = $scope.getById('vehiculos', $scope.currentTarifa.vehiculo.id);
+                   });
                }
 
                $scope.validateAndSave = function (callback) {
@@ -122,10 +149,20 @@
 
                    if (!$scope.isValidTarifa($scope.currentTarifa)) return;
 
-                   //TODO: save
-                   $scope.currentTarifa.editable = false;
-                 //  $scope.currentTarifa = null;
-                   callback();
+                   if ($scope.currentTarifa.id) {
+                       tarifasService.updateEntity($scope.currentTarifa).then(function (response) {
+                           $scope.result = response.data.result;
+                           $scope.currentTarifa.editable = false;
+                           callback();
+                       }, function () { throw 'Error on update'; });
+                   } else {
+                       tarifasService.createEntity($scope.currentTarifa).then(function (response) {
+                           $scope.currentTarifa.id = response.data.data.id;
+                           $scope.result = response.data.result;
+                           $scope.currentTarifa.editable = false;
+                           callback();
+                       }, function () { throw 'Error on create'; });
+                   }
                }
 
                $scope.isValidTarifa = function (tarifa) {
@@ -147,5 +184,7 @@
                        tarifa.invalidTarifa ||
                        tarifa.invalidDescripcion);
                }
-             
+
+
+
            }]);

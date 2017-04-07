@@ -3,9 +3,9 @@
     public class Tarifa
     {
         public int? Id { get; set; }
-        public int MedioId { get; set; }
-        public int PlazaId { get; set; }
-        public int VehiculoId { get; set; }
+        public Medio Medio { get; set; }
+        public Plaza Plaza { get; set; }
+        public Vehiculo Vehiculo { get; set; }
         public int? HoraDesde { get; set; }
         public int? HoraHasta { get; set; }
         public bool Lunes { get; set; }
@@ -17,5 +17,6 @@
         public bool Domingo { get; set; }
         public string OrdenDeCompra { get; set; }
         public string Descripcion { get; set; }
+        public double Importe { get; set; }
     }
 }

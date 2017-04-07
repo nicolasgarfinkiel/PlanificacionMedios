@@ -4535,6 +4535,11 @@ ul.h-list {
     padding-right: 5px;
 }
 
+
+.error select, .error input[type="text"], .error .day-edit {
+    border: 1px solid #a94442;
+}
+
 @media only screen and (max-width: 800px) {
 
     .day-edit {

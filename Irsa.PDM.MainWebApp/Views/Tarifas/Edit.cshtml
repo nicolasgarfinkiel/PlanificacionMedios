@@ -130,40 +130,40 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr ng-dblclick="editable=!editable" ng-repeat="tarifa in tarifas">
+                        <tr ng-dblclick="setEditable(tarifa)" ng-repeat="tarifa in tarifas">
                             <td data-title="Acciones">
                                 <div class="btn-group">
                                     <button data-toggle="dropdown" class="btn btn-success btn-xs dropdown-toggle"><span class="caret"></span></button>
                                     <ul class="dropdown-menu" role="menu">
                                         <li><a href="javascript:void(0)" ng-click="addTarifa(tarifa)"><i class="fa fa-plus"> </i> Agregar</a></li>
                                         <li class="divider"></li>
-                                        <li ng-if="tarifas.length > 1"><a href=""><i class="fa fa-trash"> </i> Eliminar</a></li>
+                                        <li ng-if="tarifas.length > 1"><a href="javascript:void(0)" ng-click="deleteTarifa(tarifa)"><i class="fa fa-trash"> </i> Eliminar</a></li>
                                     </ul>
                                 </div>
                             </td>
-                            <td data-title="Medio">
-                                <span ng-if="!editable">{{tarifa.medio.nombre}}</span>
-                                <select ng-if="editable" ng-model="tarifa.medio" ng-options="medio as medio.nombre for medio in data.medios"></select>                                        
+                            <td data-title="Medio" ng-class="{error: tarifa.invalidMedio}">
+                                <span ng-if="!tarifa.editable">{{tarifa.medio.nombre}}</span>
+                                <select ng-if="tarifa.editable" ng-model="tarifa.medio" ng-options="medio as medio.nombre for medio in data.medios"></select>
                             </td>
-                            <td data-title="Plaza">
-                                <span ng-if="!editable">{{tarifa.plaza.nombre}}</span>
-                                <select ng-if="editable" ng-model="tarifa.plaza" ng-options="plaza as plaza.nombre for plaza in data.plazas"></select>
+                            <td data-title="Plaza" ng-class="{error: tarifa.invalidPlaza}">
+                                <span ng-if="!tarifa.editable">{{tarifa.plaza.nombre}}</span>
+                                <select ng-if="tarifa.editable" ng-model="tarifa.plaza" ng-options="plaza as plaza.nombre for plaza in data.plazas"></select>
                             </td>
-                            <td data-title="Vehículo">
-                                <span ng-if="!editable">{{tarifa.vehiculo.nombre}}</span>
-                                <select ng-if="editable" ng-model="tarifa.vehiculo" ng-options="vehiculo as vehiculo.nombre for vehiculo in data.vehiculos"></select>
+                            <td data-title="Vehículo" ng-class="{error: tarifa.invalidVehiculo}">
+                                <span ng-if="!tarifa.editable">{{tarifa.vehiculo.nombre}}</span>
+                                <select ng-if="tarifa.editable" ng-model="tarifa.vehiculo" ng-options="vehiculo as vehiculo.nombre for vehiculo in data.vehiculos"></select>
                             </td>
-                            <td data-title="Días">
-                                <span ng-if="!editable" class="day-list">
+                            <td data-title="Días" ng-class="{error: tarifa.invalidDias}">
+                                <span ng-if="!tarifa.editable" class="day-list">
                                     <span ng-if="tarifa.lunes">Lun</span>
                                     <span ng-if="tarifa.martes">Mar</span>
                                     <span ng-if="tarifa.miercoles">Mie</span>
                                     <span ng-if="tarifa.jueves">Jue</span>
                                     <span ng-if="tarifa.viernes">Vie</span>
                                     <span ng-if="tarifa.sabado">Sab</span>
-                                    <span ng-if="tarifa.domingo">Dom</span>                                    
+                                    <span ng-if="tarifa.domingo">Dom</span>
                                 </span>
-                                <div ng-if="editable" class="small day-edit">
+                                <div ng-if="tarifa.editable" class="small day-edit">
                                     <span>
                                         <input type="checkbox" value="1" ng-model="tarifa.lunes" style="position: relative; top: 1px;" /> Lun
                                     </span>
@@ -187,25 +187,25 @@
                                     </span>
                                 </div>
                             </td>
-                            <td data-title="Hora desde">
-                                <span ng-if="!editable">{{tarifa.horaDesde}}</span>
-                                <div ng-if="editable" class="hour-range">
+                            <td data-title="Hora desde" ng-class="{error: tarifa.invalidHoraDesde}">
+                                <span ng-if="!tarifa.editable">{{tarifa.horaDesde}}</span>
+                                <div ng-if="tarifa.editable" class="hour-range">
                                     <input type="text" ng-model="tarifa.horaDesde" int maxlength="4" />
                                 </div>
                             </td>
-                            <td data-title="Hora hasta">
-                                <span ng-if="!editable">{{tarifa.horaHasta}}</span>
-                                <div ng-if="editable" class="hour-range">
+                            <td data-title="Hora hasta" ng-class="{error: tarifa.invalidHoraHasta}">
+                                <span ng-if="!tarifa.editable">{{tarifa.horaHasta}}</span>
+                                <div ng-if="tarifa.editable" class="hour-range">
                                     <input type="text" ng-model="tarifa.horaHasta" int maxlength="4" />
                                 </div>
                             </td>
-                            <td data-title="Importe">
-                                <span ng-if="!editable">{{tarifa.importe | currency}}</span>
-                                <input type="text" ng-if="editable" ng-model="tarifa.importe" />
+                            <td data-title="Importe" ng-class="{error: tarifa.invalidTarifa}">
+                                <span ng-if="!tarifa.editable">{{tarifa.importe | currency}}</span>
+                                <input type="text" ng-if="tarifa.editable" ng-model="tarifa.importe" />
                             </td>
-                            <td data-title="Descripción">
-                                <span ng-if="!editable">{{tarifa.descripcion}}</span>
-                                <input type="text" ng-if="editable" ng-model="tarifa.descripcion" />
+                            <td data-title="Descripción" ng-class="{error: tarifa.invalidDescripcion}">
+                                <span ng-if="!tarifa.editable">{{tarifa.descripcion}}</span>
+                                <input type="text" ng-if="tarifa.editable" ng-model="tarifa.descripcion" />
                             </td>
                         </tr>
                     </tbody>

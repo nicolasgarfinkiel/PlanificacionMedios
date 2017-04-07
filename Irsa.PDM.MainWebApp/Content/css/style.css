@@ -4531,6 +4531,10 @@ ul.h-list {
     width: 100%;
 }
 
+.day-list span {
+    padding-right: 5px;
+}
+
 @media only screen and (max-width: 800px) {
 
     .day-edit {

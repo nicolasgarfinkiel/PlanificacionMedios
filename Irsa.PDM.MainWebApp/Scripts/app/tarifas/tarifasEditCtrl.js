@@ -30,6 +30,8 @@
 
                //#endregion
 
+               $scope.dias = ['Lunes', 'Martes', 'Miercoles', 'Juves', 'Viernes', 'Sabado', 'Domingo'];
+               $scope.tarifas = [{}];
 
                //#region filter
 
@@ -42,8 +44,7 @@
                    vehiculos: [],
                    diasAux: [],
                    dias: []
-               };
-               $scope.dias = ['Lunes', 'Martes', 'Miercoles', 'Juves', 'Viernes', 'Sabado', 'Domingo'];
+               };              
 
                $scope.toggleCheck = function (entity, id) {
                    if ($scope.filter[entity + 'Aux'].indexOf(id) === -1) {
@@ -86,5 +87,10 @@
 
                $scope.findTarifas = function() {
                    
+               };
+
+               $scope.addTarifa = function(current) {
+                   var index = $scope.tarifas.indexOf(current);
+                   $scope.tarifas.splice(index +1, 0, {});
                };
            }]);

@@ -13,6 +13,8 @@ namespace Irsa.PDM.Admin
                 cfg.CreateMap<Plaza, Dtos.Plaza>();
                 cfg.CreateMap<Vehiculo, Dtos.Vehiculo>();
                 cfg.CreateMap<Tarifa, Dtos.Tarifa>();
+                cfg.CreateMap<Tarifario, Dtos.Tarifario>();
+                cfg.CreateMap<Tarifario, Dtos.TarifarioEdit>();
             });         
         }
     }

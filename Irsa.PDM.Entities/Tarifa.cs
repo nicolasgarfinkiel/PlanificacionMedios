@@ -2,6 +2,7 @@
 {
     public class Tarifa: EntityBase
     {
+        public virtual Tarifario Tarifario { get; set; }
         public virtual Medio Medio { get; set; }
         public virtual Plaza Plaza { get; set; }
         public virtual Vehiculo Vehiculo { get; set; }

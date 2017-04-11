@@ -134,6 +134,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\TarifariosController.cs" />
     <Compile Include="Controllers\TarifasController.cs" />
     <Compile Include="Controllers\VehiculosController.cs" />
     <Compile Include="Controllers\PlazasController.cs" />
@@ -304,8 +305,8 @@
     <Content Include="Views\Vehiculos\Edit.cshtml" />
     <Content Include="Views\Vehiculos\Index.cshtml" />
     <Content Include="Views\Vehiculos\List.cshtml" />
-    <Content Include="Views\Tarifas\Edit.cshtml" />
-    <Content Include="Views\Tarifas\Index.cshtml" />
+    <Content Include="Views\Tarifarios\Edit.cshtml" />
+    <Content Include="Views\Tarifarios\Index.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

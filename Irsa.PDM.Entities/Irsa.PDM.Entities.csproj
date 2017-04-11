@@ -39,6 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Tarifario.cs" />
     <Compile Include="Vehiculo.cs" />
     <Compile Include="Plaza.cs" />
     <Compile Include="Medio.cs" />

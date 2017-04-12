@@ -1,4 +1,4 @@
-﻿angular.module('irsa.pdm.tarifas.ctrl.edit', [])
+﻿angular.module('irsa.pdm.tarifarios.ctrl.edit', [])
        .controller('editCtrl', [
            '$scope',
            '$routeParams',

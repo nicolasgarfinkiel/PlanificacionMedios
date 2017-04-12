@@ -1,8 +1,11 @@
-﻿angular.module('irsa.pdm.tarifas', [
-    'irsa.pdm.tarifas.ctrl.edit',    
+﻿angular.module('irsa.pdm.tarifarios', [
+    'irsa.pdm.tarifarios.ctrl.list',
+    'irsa.pdm.tarifarios.ctrl.edit',
+    'irsa.pdm.service.tarifarios',
     'irsa.pdm.service.tarifas',
     'irsa.pdm.navigation.base',    
     'irsa.pdm.service.base',
+    'irsa.pdm.service.bootstraper.list',
     'irsa.pdm.service.bootstraper.edit',    
     'ngRoute',
     'ngGrid',
@@ -17,7 +20,17 @@
     function ($routeProvider, $locationProvider, $httpProvider) {
 
         $routeProvider.when('/', {
-            templateUrl: 'tarifas/edit',
+            templateUrl: 'tarifarios/list',
+            controller: 'listCtrl'
+        });
+
+        $routeProvider.when('/create', {
+            templateUrl: 'tarifarios/edit',
+            controller: 'editCtrl'
+        });
+
+        $routeProvider.when('/edit/:id', {
+            templateUrl: 'tarifarios/edit',
             controller: 'editCtrl'
         });
 

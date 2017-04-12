@@ -184,8 +184,10 @@
     <Content Include="Scripts\angularJs\quill\quill.min.js" />
     <Content Include="Scripts\angularJs\select.min.js" />
     <Content Include="Scripts\angularJs\ui-utils.min.js" />
-    <Content Include="Scripts\app\tarifas\tarifasEditCtrl.js" />
-    <Content Include="Scripts\app\tarifas\tarifasModule.js" />
+    <Content Include="Scripts\app\shared\tarifariosService.js" />
+    <Content Include="Scripts\app\tarifarios\tarifariosListCtrl.js" />
+    <Content Include="Scripts\app\tarifarios\tarifariosEditCtrl.js" />
+    <Content Include="Scripts\app\tarifarios\tarifariosModule.js" />
     <Content Include="Scripts\app\shared\tarifasService.js" />
     <Content Include="Scripts\app\shared\vehiculosService.js" />
     <Content Include="Scripts\app\vehiculos\vehiculosEditCtrl.js" />
@@ -307,6 +309,7 @@
     <Content Include="Views\Vehiculos\List.cshtml" />
     <Content Include="Views\Tarifarios\Edit.cshtml" />
     <Content Include="Views\Tarifarios\Index.cshtml" />
+    <Content Include="Views\Tarifarios\List.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

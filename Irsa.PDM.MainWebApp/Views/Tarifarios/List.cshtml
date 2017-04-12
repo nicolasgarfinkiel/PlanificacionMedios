@@ -1,0 +1,37 @@
+﻿<div class="hpanel hblue">
+    <div class="panel-heading hbuilt">
+        Listado de tarifarios
+    </div>
+    <div class="panel-body">
+        <div class="row" style="margin-bottom: 10px;">           
+            <div class="col-sm-2">
+                <div class="input-group input-append">
+                    <input type="text" ng-model="filter.fechaDesde" data-date-format="dd/mm/yyyy" bs-datepicker class="form-control" placeholder="Fecha desde" />
+                    <span class="input-group-addon" data-toggle="datepicker"><i class=" fa fa-calendar"></i></span>
+                </div>
+            </div>
+            <div class="col-sm-2">
+                <div class="input-group input-append">
+                    <input type="text" ng-model="filter.fechaHasta" data-date-format="dd/mm/yyyy" bs-datepicker class="form-control" placeholder="Fecha hasta" />
+                    <span class="input-group-addon" data-toggle="datepicker"><i class=" fa fa-calendar"></i></span>
+                </div>
+            </div>          
+            <div class="col-sm-8 text-right">
+                <a href="javascript:void(0)" class="btn btn-info " ng-click="search()"><i class="fa fa-search"></i> Buscar</a>
+                <a href="javascript:void(0)" class="btn btn-success " ng-click="create()"><i class="fa fa-plus"></i> Nuevo</a>              
+            </div>
+            <div class="col-sm-12">
+                <div class="alert alert-danger" ng-if="result.hasErrors">
+                    <button type="button" class="close" data-dismiss="alert">×</button>
+                    <i class="fa fa-ban-circle"></i> {{result.messages[0]}}
+                </div>
+            </div>
+        </div>   
+        <div class="alert alert-danger" ng-if="result.hasErrors">
+            <i class="fa fa-bolt"></i>
+            <div ng-repeat="message in result.messages">{{message}}</div>
+        </div>
+        <div class="gridStyleLarge" ng-grid="gridOptions"></div>
+    </div>
+</div>
+

@@ -3,7 +3,7 @@
         Listado de tarifarios
     </div>
     <div class="panel-body">
-        <div class="row" style="margin-bottom: 10px;">           
+        <div class="row" style="margin-bottom: 10px;">
             <div class="col-sm-2">
                 <div class="input-group input-append">
                     <input type="text" ng-model="filter.fechaDesde" data-date-format="dd/mm/yyyy" bs-datepicker class="form-control" placeholder="Fecha desde" />
@@ -15,10 +15,10 @@
                     <input type="text" ng-model="filter.fechaHasta" data-date-format="dd/mm/yyyy" bs-datepicker class="form-control" placeholder="Fecha hasta" />
                     <span class="input-group-addon" data-toggle="datepicker"><i class=" fa fa-calendar"></i></span>
                 </div>
-            </div>          
+            </div>
             <div class="col-sm-8 text-right">
                 <a href="javascript:void(0)" class="btn btn-info " ng-click="search()"><i class="fa fa-search"></i> Buscar</a>
-                <a href="javascript:void(0)" class="btn btn-success " ng-click="create()"><i class="fa fa-plus"></i> Nuevo</a>              
+                <a href="javascript:void(0)" class="btn btn-success " ng-click="setCreate()"><i class="fa fa-plus"></i> Nuevo</a>
             </div>
             <div class="col-sm-12">
                 <div class="alert alert-danger" ng-if="result.hasErrors">
@@ -26,7 +26,7 @@
                     <i class="fa fa-ban-circle"></i> {{result.messages[0]}}
                 </div>
             </div>
-        </div>   
+        </div>
         <div class="alert alert-danger" ng-if="result.hasErrors">
             <i class="fa fa-bolt"></i>
             <div ng-repeat="message in result.messages">{{message}}</div>
@@ -34,4 +34,49 @@
         <div class="gridStyleLarge" ng-grid="gridOptions"></div>
     </div>
 </div>
+
+
+<div class="modal fade pdm" id="tarifarioModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-sm" style="width: 350px;">
+        <div class="modal-content">
+            <div class="color-line"></div>
+            <div class="modal-header">
+                <h4 class="modal-title">{{operation}} de tarifario</h4>
+            </div>
+            <div class="modal-body">
+
+                <form class="form-horizontal ng-pristine ng-valid">
+                    <div class="form-group">
+                        <label class="col-lg-4 control-label">Fecha desde</label>
+                        <div class="col-lg-8">
+                            <div class="input-group input-append">
+                                <input type="text" ng-model="filter.fechaDesde" data-date-format="dd/mm/yyyy" bs-datepicker class="form-control" />
+                                <span class="input-group-addon" data-toggle="datepicker"><i class=" fa fa-calendar"></i></span>
+                            </div>
+                        </div>                       
+                    </div>
+                    <div class="form-group">                      
+                        <label class="col-lg-4 control-label">Fecha hasta</label>
+                        <div class="col-lg-8">
+                            <div class="input-group input-append">
+                                <input type="text" ng-model="filter.fechaHasta" data-date-format="dd/mm/yyyy" bs-datepicker class="form-control" />
+                                <span class="input-group-addon" data-toggle="datepicker"><i class=" fa fa-calendar"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="alert alert-danger" ng-if="resultModal.hasErrors">
+                    <i class="fa fa-bolt"></i>
+                    <div ng-repeat="message in resultModal.messages">{{message}}</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" ng-click="save()">Aceptar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 

@@ -4517,12 +4517,12 @@ ul.h-list {
     width: 46%;
 }
 
-.hour-range .small span {
-    display: inline-block;
-    width: 55%;
-}
+    .hour-range .small span {
+        display: inline-block;
+        width: 55%;
+    }
 
-#no-more-tables .hour-range .small input[type="text"] {    
+#no-more-tables .hour-range .small input[type="text"] {
     width: 45%;
 }
 
@@ -4538,6 +4538,18 @@ ul.h-list {
 
 .error select, .error input[type="text"], .error .day-edit {
     border: 1px solid #a94442;
+}
+
+.modal.pdm .modal-header {
+    padding: 20px;
+}
+
+    .modal.pdm .modal-header h4 {
+        font-size: 20px;
+    }
+
+.modal.pdm .modal-body {
+    padding: 20px 20px 0 20px;
 }
 
 @media only screen and (max-width: 800px) {

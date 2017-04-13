@@ -3,6 +3,7 @@
     public class Tarifa
     {
         public int? Id { get; set; }
+        public int IdTarifario { get; set; }
         public Medio Medio { get; set; }
         public Plaza Plaza { get; set; }
         public Vehiculo Vehiculo { get; set; }

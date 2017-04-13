@@ -18,8 +18,11 @@ namespace Irsa.PDM.Admin
 
             if (!dto.Id.HasValue)
             {
+                var tarifario = PdmContext.Tarifario.Single(t => t.Id == dto.IdTarifario);
+
                 entity = new Tarifa
                 {
+                    Tarifario = tarifario,
                     CreateDate = DateTime.Now,
                     CreatedBy = UsuarioLogged,
                     Enabled = true,
@@ -73,7 +76,7 @@ namespace Irsa.PDM.Admin
 
         public override IQueryable GetQuery(FilterTarifas filter)
         {
-            var result = PdmContext.Tarifas.OrderBy(r => r.Medio.Nombre).AsQueryable();
+            var result = PdmContext.Tarifas.Where(t => t.Tarifario.Id == filter.TarifarioId).OrderBy(r => r.Medio.Nombre).AsQueryable();
 
             if (filter.Medios != null && filter.Medios.Any())
             {

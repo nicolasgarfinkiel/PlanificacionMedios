@@ -2,12 +2,13 @@
        .controller('editCtrl', [
            '$scope',
            '$routeParams',
+           'tarifariosService',
            'tarifasService',
            'baseNavigationService',
            'editBootstraperService',
-           function ($scope, $routeParams, tarifasService, baseNavigationService, editBootstraperService) {
+           function ($scope, $routeParams, tarifariosService, tarifasService, baseNavigationService, editBootstraperService) {
                $scope.dias = ['Lunes', 'Martes', 'Miercoles', 'Juves', 'Viernes', 'Sabado', 'Domingo'];
-               $scope.tarifaInit = { lunes: true, martes: true, miercoles: true, jueves: true, viernes: true, sabado: true, domingo: true };
+               $scope.tarifaInit = { idTarifario: $routeParams.id, lunes: true, martes: true, miercoles: true, jueves: true, viernes: true, sabado: true, domingo: true };
                $scope.tarifas = [angular.copy($scope.tarifaInit)];
 
                //#region base
@@ -17,7 +18,7 @@
                };
 
                editBootstraperService.init($scope, $routeParams, {
-                   service: tarifasService,
+                   service: tarifariosService,
                    navigation: baseNavigationService
                });
 
@@ -35,7 +36,9 @@
                    diasAux: [],
                    dias: [],
                    currentPage: 1,
-                   pageSize: 99999999
+                   pageSize: 99999999,
+                   tarifarioId: $routeParams.id
+
                };
 
                $scope.toggleCheck = function (entity, id) {
@@ -126,8 +129,8 @@
                    }, function () { throw 'Error on deleteEntity'; });
                };
 
-               $scope.setEditable = function(tarifa) {
-                   $scope.validateAndSave(function() {
+               $scope.setEditable = function (tarifa) {
+                   $scope.validateAndSave(function () {
                        if (tarifa == $scope.currentTarifa) {
                            $scope.currentTarifa = null;
                            return;
@@ -144,7 +147,7 @@
                    });
                };
 
-               $scope.validateAndSave = function(callback) {
+               $scope.validateAndSave = function (callback) {
                    if ($scope.currentTarifa == null) {
                        callback();
                        return;
@@ -153,28 +156,28 @@
                    if (!$scope.isValidTarifa($scope.currentTarifa)) return;
 
                    if ($scope.currentTarifa.id) {
-                       tarifasService.updateEntity($scope.currentTarifa).then(function(response) {
+                       tarifasService.updateEntity($scope.currentTarifa).then(function (response) {
                            $scope.result = response.data.result;
                            $scope.currentTarifa.editable = false;
                            callback();
-                       }, function() { throw 'Error on update'; });
+                       }, function () { throw 'Error on update'; });
                    } else {
-                       tarifasService.createEntity($scope.currentTarifa).then(function(response) {
+                       tarifasService.createEntity($scope.currentTarifa).then(function (response) {
                            $scope.currentTarifa.id = response.data.data.id;
                            $scope.result = response.data.result;
                            $scope.currentTarifa.editable = false;
                            callback();
-                       }, function() { throw 'Error on create'; });
+                       }, function () { throw 'Error on create'; });
                    }
                };
 
-               $scope.isValidTarifa = function(tarifa) {
+               $scope.isValidTarifa = function (tarifa) {
                    tarifa.invalidMedio = !tarifa.medio;
                    tarifa.invalidPlaza = !tarifa.plaza;
                    tarifa.invalidVehiculo = !tarifa.vehiculo;
                    tarifa.invalidDias = !tarifa.lunes && !tarifa.martes && !tarifa.miercoles && !tarifa.jueves && !tarifa.viernes && !tarifa.sabado && !tarifa.domingo;
-                   tarifa.invalidHoraDesde = !tarifa.horaDesde;
-                   tarifa.invalidHoraHasta = !tarifa.horaHasta;
+                   tarifa.invalidHoraDesde = tarifa.horaDesde === null || tarifa.horaDesde === '' || typeof tarifa.horaDesde == 'undefined';
+                   tarifa.invalidHoraHasta = tarifa.horaHasta === null || tarifa.horaHasta === '' || typeof tarifa.horaHasta == 'undefined';
                    tarifa.invalidTarifa = !tarifa.importe || isNaN(tarifa.importe);
                    tarifa.invalidDescripcion = !tarifa.descripcion;
 
@@ -187,4 +190,43 @@
                        tarifa.invalidTarifa ||
                        tarifa.invalidDescripcion);
                };
+
+               $scope.filterVehiculos = function (medio) {
+                   $scope.vehiculosFiltered = [];
+
+                   if ($scope.currentTarifa.vehiculo && $scope.currentTarifa.vehiculo.medio.id != medio.id) {
+                       $scope.currentTarifa.vehiculo = null;
+                   }
+
+                   if (!medio) return;
+
+                   $scope.data.vehiculos.forEach(function (vehiculo) {
+                       if (vehiculo.medio.id == medio.id) {
+                           $scope.vehiculosFiltered.push(vehiculo);
+                       }
+                   });
+               };
+
+               $scope.setStaticValues = function (medio) {
+                   if (!medio || medio.tipoEspacio != 'Estatico') return;
+
+                   $scope.currentTarifa.lunes =
+                   $scope.currentTarifa.martes =
+                   $scope.currentTarifa.miercoles =
+                   $scope.currentTarifa.jueves =
+                   $scope.currentTarifa.viernes =
+                   $scope.currentTarifa.sabado =
+                   $scope.currentTarifa.domingo = true;
+
+                   $scope.currentTarifa.horaDesde = 0;
+                   $scope.currentTarifa.horaHasta = 2359;
+
+               };
+
+               $scope.$watch('currentTarifa.medio', function (newValue, oldValue) {
+                   if (!$scope.currentTarifa) return;
+                   $scope.filterVehiculos(newValue);
+                   $scope.setStaticValues(newValue);
+
+               });
            }]);

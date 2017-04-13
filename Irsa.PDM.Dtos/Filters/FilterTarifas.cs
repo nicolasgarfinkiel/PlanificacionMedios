@@ -1,11 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Security.AccessControl;
 using Irsa.PDM.Dtos.Common;
 
 namespace Irsa.PDM.Dtos.Filters
 {
     public class FilterTarifas : FilterBase
     {
+        public int TarifarioId { get; set; }
         public IList<int> Medios { get; set; }
         public IList<int> Plazas { get; set; }
         public IList<int> Vehiculos { get; set; }

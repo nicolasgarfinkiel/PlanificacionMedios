@@ -39,6 +39,8 @@ namespace Irsa.PDM.Admin
 
         public override void Validate(Dtos.Tarifario dto)
         {
+            if(dto.FechaHasta < dto.FechaDesde)
+                throw new Exception("La fecha hasta debe ser mayor a la fecha desde");
         }
 
         public override IQueryable GetQuery(FilterTarifarios filter)

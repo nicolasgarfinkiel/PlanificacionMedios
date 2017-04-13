@@ -7,9 +7,16 @@ namespace Irsa.PDM.MainWebApp.Controllers
 {
     //[Authorize(Roles = "Administracion")]
     public class TarifariosController : BaseController<TarifariosAdmin, int, Entities.Tarifario, Dtos.Tarifario, FilterTarifarios>
-    {        
+    {
+        private readonly MediosAdmin _mediosAdmin;
+        private readonly PlazasAdmin _plazasAdmin;
+        private readonly VehiculosAdmin _vehiculosAdmin;
+
         public TarifariosController()
-        {            
+        {
+            _mediosAdmin = new MediosAdmin();
+            _plazasAdmin = new PlazasAdmin();
+            _vehiculosAdmin = new VehiculosAdmin();
         }
 
         public ActionResult Index()
@@ -19,14 +26,17 @@ namespace Irsa.PDM.MainWebApp.Controllers
 
         public override object GetDataList()
         {
-            return new { };       
+            return new { };
         }
 
         public override object GetDataEdit()
         {
             return new
-            {              
-            };               
+            {
+                Medios = _mediosAdmin.GetAll().OrderBy(e => e.Nombre),
+                Plazas = _plazasAdmin.GetAll().OrderBy(e => e.Nombre),
+                Vehiculos = _vehiculosAdmin.GetAll().OrderBy(e => e.Nombre),
+            };
         }
     }
 }

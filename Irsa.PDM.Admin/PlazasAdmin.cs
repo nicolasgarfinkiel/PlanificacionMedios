@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Irsa.PDM.Dtos.Common;
 using Irsa.PDM.Entities;
@@ -21,7 +20,7 @@ namespace Irsa.PDM.Admin
                     CreateDate = DateTime.Now,
                     CreatedBy = UsuarioLogged,                                        
                     Enabled = true,                    
-                    Nombre = dto.Nombre,
+                    Codigo = dto.Codigo,
                     Descripcion = dto.Descripcion                    
                 };
             }
@@ -29,7 +28,7 @@ namespace Irsa.PDM.Admin
             {
                 entity = PdmContext.Plazas.Single(c => c.Id == dto.Id.Value);
              
-                entity.Nombre = dto.Nombre;
+                entity.Codigo = dto.Codigo;
                 entity.Descripcion = dto.Descripcion;
                 entity.UpdateDate = DateTime.Now;
                 entity.UpdatedBy = UsuarioLogged;                
@@ -40,7 +39,7 @@ namespace Irsa.PDM.Admin
 
         public override void Validate(Dtos.Plaza dto)
         {
-            var entity = PdmContext.Plazas.FirstOrDefault(m => m.Nombre.ToLower().Equals(dto.Nombre.ToLower()));
+            var entity = PdmContext.Plazas.FirstOrDefault(m => m.Codigo.ToLower().Equals(dto.Codigo.ToLower()));
 
             if (entity != null && entity.Id != dto.Id)
             {
@@ -57,7 +56,7 @@ namespace Irsa.PDM.Admin
                 filter.MultiColumnSearchText = filter.MultiColumnSearchText.ToLower();
 
                 result = result.Where(r =>
-                    (r.Nombre != null && r.Nombre.ToLower().Contains(filter.MultiColumnSearchText)) ||
+                    (r.Codigo != null && r.Codigo.ToLower().Contains(filter.MultiColumnSearchText)) ||
                     (r.Descripcion != null && r.Descripcion.ToLower().Contains(filter.MultiColumnSearchText))).AsQueryable();
             }
 

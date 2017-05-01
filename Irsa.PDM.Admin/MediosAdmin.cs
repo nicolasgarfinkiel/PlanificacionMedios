@@ -13,7 +13,7 @@ namespace Irsa.PDM.Admin
         public override Medio ToEntity(Dtos.Medio dto)
         {
             var entity = default(Medio);
-            var tipoEspacio = (TipoEspacio) Enum.Parse(typeof(TipoEspacio), dto.TipoEspacio);
+          //  var tipoEspacio = (TipoEspacio) Enum.Parse(typeof(TipoEspacio), dto.TipoEspacio);
 
             if (!dto.Id.HasValue)
             {
@@ -24,7 +24,7 @@ namespace Irsa.PDM.Admin
                     Enabled = true,                    
                     Nombre = dto.Nombre,
                     Descripcion = dto.Descripcion,
-                    TipoEspacio = tipoEspacio
+                 //   TipoEspacio = tipoEspacio
                 };
             }
             else
@@ -35,7 +35,7 @@ namespace Irsa.PDM.Admin
                 entity.Descripcion = dto.Descripcion;
                 entity.UpdateDate = DateTime.Now;
                 entity.UpdatedBy = UsuarioLogged;
-                entity.TipoEspacio = tipoEspacio;
+                //entity.TipoEspacio = tipoEspacio;
             }
 
             return entity;

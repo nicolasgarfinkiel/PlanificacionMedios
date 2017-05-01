@@ -1,20 +1,24 @@
 ﻿using System;
+using System.Data.Entity;
 using System.Linq;
+using System.Security.AccessControl;
+using System.Web.Configuration;
 using Irsa.PDM.Dtos.Filters;
 using Irsa.PDM.Entities;
 
 namespace Irsa.PDM.Admin
 {
     public class TarifasAdmin : BaseAdmin<int, Entities.Tarifa, Dtos.Tarifa, FilterTarifas>
-    {
+    {        
+
         #region Base
 
         public override Tarifa ToEntity(Dtos.Tarifa dto)
         {
             var entity = default(Tarifa);
-            var medio = PdmContext.Medios.Single(e => e.Id == dto.Medio.Id);
-            var plaza = PdmContext.Plazas.Single(e => e.Id == dto.Plaza.Id);
-            var vehiculo = PdmContext.Vehiculos.Single(e => e.Id == dto.Vehiculo.Id);
+            //var medio = PdmContext.Medios.Single(e => e.Id == dto.Medio.Id);
+            //var plaza = PdmContext.Plazas.Single(e => e.Id == dto.Plaza.Id);
+            //var vehiculo = PdmContext.Vehiculos.Single(e => e.Id == dto.Vehiculo.Id);
 
             if (!dto.Id.HasValue)
             {
@@ -36,10 +40,10 @@ namespace Irsa.PDM.Admin
                     Viernes = dto.Viernes,
                     Sabado = dto.Sabado,
                     Domingo = dto.Domingo,
-                    Medio = medio,
+                  //  Medio = medio,
                     OrdenDeCompra = dto.OrdenDeCompra,
-                    Plaza = plaza,
-                    Vehiculo = vehiculo,
+                   // Plaza = plaza,
+                    //Vehiculo = vehiculo,
                     Importe = dto.Importe
                 };
             }
@@ -47,23 +51,23 @@ namespace Irsa.PDM.Admin
             {
                 entity = PdmContext.Tarifas.Single(c => c.Id == dto.Id.Value);
 
-                entity.Descripcion = dto.Descripcion;
+            //    entity.Descripcion = dto.Descripcion;
                 entity.UpdateDate = DateTime.Now;
                 entity.UpdatedBy = UsuarioLogged;
-                entity.Descripcion = dto.Descripcion;
-                entity.HoraDesde = dto.HoraDesde;
-                entity.HoraHasta = dto.HoraHasta;
-                entity.Lunes = dto.Lunes;
-                entity.Martes = dto.Martes;
-                entity.Miercoles = dto.Miercoles;
-                entity.Jueves = dto.Jueves;
-                entity.Viernes = dto.Viernes;
-                entity.Sabado = dto.Sabado;
-                entity.Domingo = dto.Domingo;
-                entity.Medio = medio;
+                //entity.Descripcion = dto.Descripcion;
+                //entity.HoraDesde = dto.HoraDesde;
+                //entity.HoraHasta = dto.HoraHasta;
+                //entity.Lunes = dto.Lunes;
+                //entity.Martes = dto.Martes;
+                //entity.Miercoles = dto.Miercoles;
+                //entity.Jueves = dto.Jueves;
+                //entity.Viernes = dto.Viernes;
+                //entity.Sabado = dto.Sabado;
+                //entity.Domingo = dto.Domingo;
+                //entity.Medio = medio;
                 entity.OrdenDeCompra = dto.OrdenDeCompra;
-                entity.Plaza = plaza;
-                entity.Vehiculo = vehiculo;
+                //entity.Plaza = plaza;
+                //entity.Vehiculo = vehiculo;
                 entity.Importe = dto.Importe;
             }
 
@@ -75,8 +79,13 @@ namespace Irsa.PDM.Admin
         }
 
         public override IQueryable GetQuery(FilterTarifas filter)
-        {
-            var result = PdmContext.Tarifas.Where(t => t.Tarifario.Id == filter.TarifarioId).OrderBy(r => r.Medio.Nombre).AsQueryable();
+        {            
+            var result = PdmContext
+                        .Tarifas.Include(t => t.Vehiculo)
+                        .Include(t => t.Medio)
+                        .Include(t => t.Plaza)
+                        .Where(t => t.Tarifario.Id == filter.TarifarioId).OrderBy(r => r.Medio.Nombre)
+                        .AsQueryable();
 
             if (filter.Medios != null && filter.Medios.Any())
             {
@@ -128,13 +137,15 @@ namespace Irsa.PDM.Admin
 
                 result = result.Where(r =>
                     (r.Medio != null && r.Medio.Nombre.ToLower().Contains(filter.MultiColumnSearchText)) ||
-                    (r.Plaza != null && r.Plaza.Nombre.ToLower().Contains(filter.MultiColumnSearchText)) ||
+                    (r.Plaza != null && r.Plaza.Codigo.ToLower().Contains(filter.MultiColumnSearchText)) ||
                     (r.Vehiculo != null && r.Vehiculo.Nombre.ToLower().Contains(filter.MultiColumnSearchText)) ||
                     (r.Descripcion != null && r.Descripcion.ToLower().Contains(filter.MultiColumnSearchText))).AsQueryable();
             }
 
             return result;
         }
+
+        
 
         #endregion
 

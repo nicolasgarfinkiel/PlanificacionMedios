@@ -9,7 +9,7 @@
            function ($scope, $routeParams, tarifariosService, tarifasService, baseNavigationService, editBootstraperService) {
                $scope.dias = ['Lunes', 'Martes', 'Miercoles', 'Juves', 'Viernes', 'Sabado', 'Domingo'];
                $scope.tarifaInit = { idTarifario: $routeParams.id, lunes: true, martes: true, miercoles: true, jueves: true, viernes: true, sabado: true, domingo: true };
-               $scope.tarifas = [angular.copy($scope.tarifaInit)];
+               $scope.tarifas = [];               
 
                //#region base
 
@@ -36,7 +36,7 @@
                    diasAux: [],
                    dias: [],
                    currentPage: 1,
-                   pageSize: 99999999,
+                   pageSize: 50,
                    tarifarioId: $routeParams.id
 
                };
@@ -130,6 +130,7 @@
                };
 
                $scope.setEditable = function (tarifa) {
+                   tarifa.edited = false;
                    $scope.validateAndSave(function () {
                        if (tarifa == $scope.currentTarifa) {
                            $scope.currentTarifa = null;
@@ -139,11 +140,11 @@
                        $scope.currentTarifa = tarifa;
                        $scope.currentTarifa.editable = !$scope.currentTarifa.editable;
 
-                       if ($scope.currentTarifa.medio) {
-                           $scope.currentTarifa.medio = $scope.getById('medios', $scope.currentTarifa.medio.id);
-                           $scope.currentTarifa.plaza = $scope.getById('plazas', $scope.currentTarifa.plaza.id);
-                           $scope.currentTarifa.vehiculo = $scope.getById('vehiculos', $scope.currentTarifa.vehiculo.id);
-                       }
+                       //if ($scope.currentTarifa.medio) {
+                       //    $scope.currentTarifa.medio = $scope.getById('medios', $scope.currentTarifa.medio.id);
+                       //    $scope.currentTarifa.plaza = $scope.getById('plazas', $scope.currentTarifa.plaza.id);
+                       //    $scope.currentTarifa.vehiculo = $scope.getById('vehiculos', $scope.currentTarifa.vehiculo.id);
+                       //}
                    });
                };
 
@@ -172,23 +173,17 @@
                };
 
                $scope.isValidTarifa = function (tarifa) {
-                   tarifa.invalidMedio = !tarifa.medio;
-                   tarifa.invalidPlaza = !tarifa.plaza;
-                   tarifa.invalidVehiculo = !tarifa.vehiculo;
-                   tarifa.invalidDias = !tarifa.lunes && !tarifa.martes && !tarifa.miercoles && !tarifa.jueves && !tarifa.viernes && !tarifa.sabado && !tarifa.domingo;
-                   tarifa.invalidHoraDesde = tarifa.horaDesde === null || tarifa.horaDesde === '' || typeof tarifa.horaDesde == 'undefined';
-                   tarifa.invalidHoraHasta = tarifa.horaHasta === null || tarifa.horaHasta === '' || typeof tarifa.horaHasta == 'undefined';
+                   //tarifa.invalidMedio = !tarifa.medio;
+                   //tarifa.invalidPlaza = !tarifa.plaza;
+                   //tarifa.invalidVehiculo = !tarifa.vehiculo;
+                   //tarifa.invalidDias = !tarifa.lunes && !tarifa.martes && !tarifa.miercoles && !tarifa.jueves && !tarifa.viernes && !tarifa.sabado && !tarifa.domingo;
+                   //tarifa.invalidHoraDesde = tarifa.horaDesde === null || tarifa.horaDesde === '' || typeof tarifa.horaDesde == 'undefined';
+                   //tarifa.invalidHoraHasta = tarifa.horaHasta === null || tarifa.horaHasta === '' || typeof tarifa.horaHasta == 'undefined';
+                   //tarifa.invalidDescripcion = !tarifa.descripcion;
                    tarifa.invalidTarifa = !tarifa.importe || isNaN(tarifa.importe);
-                   tarifa.invalidDescripcion = !tarifa.descripcion;
+                 
 
-                   return !(tarifa.invalidMedio ||
-                       tarifa.invalidPlaza ||
-                       tarifa.invalidVehiculo ||
-                       tarifa.invalidDias ||
-                       tarifa.invalidHoraDesde ||
-                       tarifa.invalidHoraHasta ||
-                       tarifa.invalidTarifa ||
-                       tarifa.invalidDescripcion);
+                   return !(tarifa.invalidTarifa);
                };
 
                $scope.filterVehiculos = function (medio) {

@@ -19,8 +19,8 @@
                        { field: 'id', displayName: 'Id', width: 50 },
                        { field: 'fechaDesde', displayName: 'Fecha desde' },
                        { field: 'fechaHasta', displayName: 'Fecha hasta' },
-                       { field: 'cuit', displayName: 'Editar', width: 70, cellTemplate: '<div class="ng-grid-icon-container"><a href="javascript:void(0)" class="btn btn-rounded btn-xs btn-icon btn-default" ng-click="setEdit(row.entity)"><i class="fa fa-pencil"></i></a></div>' },
-                       { field: 'cuit', displayName: 'Admin', width: 70, cellTemplate: '<div class="ng-grid-icon-container"><a href="javascript:void(0)" class="btn btn-rounded btn-xs btn-icon btn-default" ng-click="navigationService.goToEdit(row.entity.id)"><i class="fa fa-share-square-o"></i></a></div>' }
+                   //   { field: 'cuit', displayName: 'Editar', width: 70, cellTemplate: '<div class="ng-grid-icon-container"><a href="javascript:void(0)" class="btn btn-rounded btn-xs btn-icon btn-default" ng-click="setEdit(row.entity)"><i class="fa fa-pencil"></i></a></div>' },
+                       { field: 'cuit', displayName: 'Admin', width: 70, cellTemplate: '<div class="ng-grid-icon-container"><a href="javascript:void(0)" class="btn btn-rounded btn-xs btn-icon btn-default" ng-click="navigationService.goToEdit(row.entity.id)" ng-show="row.entity.enabled"><i class="fa fa-share-square-o"></i></a></div>' }
                    ]
                });
                
@@ -28,18 +28,19 @@
 
                $scope.resultModal = { hasErrors: false, messages: [] };
 
-               $scope.setCreate = function () {
+               $scope.setCreate = function () {                   
                    $scope.resultModal.hasErrors = false;
                    $scope.operation = 'Alta';
                    $scope.entity = {};
                    $('#tarifarioModal').modal('show');
+                   $scope.getFechaDesde();                   
                };
 
                $scope.setEdit = function (entity) {                   
                    $scope.resultModal.hasErrors = false;
                    $scope.operation = 'Edición';
                    $scope.entity = angular.copy(entity);                  
-                   $('#tarifarioModal').modal('show');
+                   $('#tarifarioModal').modal('show');                   
                };
 
                $scope.save = function () {
@@ -74,7 +75,7 @@
                    $scope.resultModal.messages = [];                   
 
                    if (!$scope.entity.fechaDesde) {
-                       $scope.resultModal.messages.push('Ingrese la fecha desde');
+                       $scope.resultModal.messages.push('Error al completar la fecha desde');
                    }
 
                    if (!$scope.entity.fechaHasta) {
@@ -84,4 +85,19 @@
                    $scope.resultModal.hasErrors = $scope.resultModal.messages.length;
                    return !$scope.resultModal.hasErrors;
                };
+
+               $scope.getFechaDesde = function () {
+                   $scope.resultModal.hasErrors = false;
+                   $scope.resultModal.messages = [];
+                   $scope.entity.fechaDesde = null;
+                 
+                   tarifariosService.getFechaDesde().then(function (response) {
+                       if (!response.data.result.hasErrors) {
+                           $scope.entity.fechaDesde = response.data.data;                           
+                           return;
+                       }
+
+                       $scope.resultModal = response.data.result;
+                   }, function () { throw 'Error on getFechaDesde'; });
+               };               
            }]);

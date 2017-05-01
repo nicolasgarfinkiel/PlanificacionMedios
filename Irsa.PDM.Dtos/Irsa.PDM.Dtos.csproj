@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="Filters\FilterTarifarios.cs" />
     <Compile Include="Tarifa.cs" />
+    <Compile Include="TarifaFcMedios.cs" />
     <Compile Include="Tarifario.cs" />
     <Compile Include="TarifarioEdit.cs" />
     <Compile Include="Vehiculo.cs" />

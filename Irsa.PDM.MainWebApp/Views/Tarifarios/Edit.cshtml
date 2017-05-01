@@ -1,6 +1,6 @@
 ﻿
 <div class="hpanel">
-    <div class="panel-body">             
+    <div class="panel-body">
         <h5 class="font-light m-b-xs">
             Administración de tarifario nro: {{entity.id}}
         </h5>
@@ -8,7 +8,7 @@
     </div>
 </div>
 
-<div class="hpanel hblue">    
+<div class="hpanel hblue">
     <div class="panel-body">
         <form class="form-horizontal">
             <div class="row">
@@ -26,8 +26,7 @@
                 <table class="col-sm-12 table-bordered table-striped table-condensed cf">
                     <thead class="cf">
                         <tr>
-                            <th style="width: 40px;"></th>
-                            <th style="width: 10%">
+                            <th style="width: 7%">
                                 Medio
                                 <div class="btn-group" style="float: right;">
                                     <button data-toggle="dropdown" class="btn btn-default btn-xs dropdown-toggle" ng-click="setAux('medios')"><span class="fa fa-level-down"></span></button>
@@ -43,7 +42,7 @@
                                     </ul>
                                 </div>
                             </th>
-                            <th style="width: 7%">
+                            <th style="width: 5%">
                                 Plaza
                                 <div class="btn-group" style="float: right;">
                                     <button data-toggle="dropdown" class="btn btn-default btn-xs dropdown-toggle" ng-click="setAux('plazas')"><span class="fa fa-level-down"></span></button>
@@ -75,7 +74,7 @@
                                     </ul>
                                 </div>
                             </th>
-                            <th style="width: 24%">
+                            <th style="width: 19%">
                                 Días
                                 <div class="btn-group" style="float: right;">
                                     <button data-toggle="dropdown" class="btn btn-default btn-xs dropdown-toggle" ng-click="setAux('dias')"><span class="fa fa-level-down"></span></button>
@@ -91,8 +90,8 @@
                                     </ul>
                                 </div>
                             </th>
-                            <th style="width: 8%">
-                                h.Desde
+                            <th style="width: 5%">
+                                hs.D
                                 <div class="btn-group" style="float: right;">
                                     <button data-toggle="dropdown" class="btn btn-default btn-xs dropdown-toggle" ng-click="setAuxHoras('horaDesde')"><span class="fa fa-level-down"></span></button>
                                     <ul class="dropdown-menu filter" role="menu">
@@ -109,8 +108,8 @@
                                     </ul>
                                 </div>
                             </th>
-                            <th style="width: 8%">
-                                h.Hasta
+                            <th style="width: 5%">
+                                hs.H
                                 <div class="btn-group" style="float: right;">
                                     <button data-toggle="dropdown" class="btn btn-default btn-xs dropdown-toggle" ng-click="setAuxHoras('horaHasta')"><span class="fa fa-level-down"></span></button>
                                     <ul class="dropdown-menu filter" role="menu">
@@ -126,41 +125,32 @@
                                         </li>
                                     </ul>
                                 </div>
-                            </th>
-                            <th>
-                                Importe
-                            </th>
+                            </th>                       
                             <th>
                                 Descripción
                             </th>
+                            <th style="width: 8%">
+                                Importe
+                            </th>
+                            <th style="width: 5%">
+                                O.C.
+                            </th>
+                            <th style="width: 4%"></th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr ng-dblclick="setEditable(tarifa)" ng-repeat="tarifa in tarifas">
-                            <td data-title="Acciones">
-                                <div class="btn-group">
-                                    <button data-toggle="dropdown" class="btn btn-success btn-xs dropdown-toggle"><span class="caret"></span></button>
-                                    <ul class="dropdown-menu" role="menu">
-                                        <li><a href="javascript:void(0)" ng-click="addTarifa(tarifa)"><i class="fa fa-plus"> </i> Agregar</a></li>
-                                        <li class="divider"></li>
-                                        <li ng-if="tarifas.length > 1"><a href="javascript:void(0)" ng-click="deleteTarifa(tarifa)"><i class="fa fa-trash"> </i> Eliminar</a></li>
-                                    </ul>
-                                </div>
+                    <tbody style="font-size: 11px;">
+                        <tr ng-repeat="tarifa in tarifas">
+                            <td data-title="Medio">
+                                <span>{{tarifa.medioNombre}}</span>
                             </td>
-                            <td data-title="Medio" ng-class="{error: tarifa.invalidMedio}">
-                                <span ng-if="!tarifa.editable">{{tarifa.medio.nombre}}</span>
-                                <select ng-if="tarifa.editable" ng-model="tarifa.medio" ng-options="medio as medio.nombre for medio in data.medios"></select>
+                            <td data-title="Plaza">
+                                <span>{{tarifa.plazaCodigo}}</span>
                             </td>
-                            <td data-title="Plaza" ng-class="{error: tarifa.invalidPlaza}">
-                                <span ng-if="!tarifa.editable">{{tarifa.plaza.nombre}}</span>
-                                <select ng-if="tarifa.editable" ng-model="tarifa.plaza" ng-options="plaza as plaza.nombre for plaza in data.plazas"></select>
+                            <td data-title="Vehículo">
+                                <span>{{tarifa.vehiculoNombre}}</span>
                             </td>
-                            <td data-title="Vehículo" ng-class="{error: tarifa.invalidVehiculo}">
-                                <span ng-if="!tarifa.editable">{{tarifa.vehiculo.nombre}}</span>
-                                <select ng-if="tarifa.editable" ng-model="tarifa.vehiculo" ng-options="vehiculo as vehiculo.nombre for vehiculo in vehiculosFiltered"></select>
-                            </td>
-                            <td data-title="Días" ng-class="{error: tarifa.invalidDias}">
-                                <span ng-if="!tarifa.editable" class="day-list">
+                            <td data-title="Días">
+                                <span class="day-list">
                                     <span ng-if="tarifa.lunes">Lun</span>
                                     <span ng-if="tarifa.martes">Mar</span>
                                     <span ng-if="tarifa.miercoles">Mie</span>
@@ -169,50 +159,26 @@
                                     <span ng-if="tarifa.sabado">Sab</span>
                                     <span ng-if="tarifa.domingo">Dom</span>
                                 </span>
-                                <div ng-if="tarifa.editable" class="small day-edit">
-                                    <span>
-                                        <input type="checkbox" value="1" ng-model="tarifa.lunes" style="position: relative; top: 1px;" ng-disabled="tarifa.medio.tipoEspacio == 'Estatico'"  /> Lun
-                                    </span>
-                                    <span>
-                                        <input type="checkbox" value="1" ng-model="tarifa.martes" style="position: relative; top: 1px;" ng-disabled="tarifa.medio.tipoEspacio == 'Estatico'" /> Mar
-                                    </span>
-                                    <span>
-                                        <input type="checkbox" value="1" ng-model="tarifa.miercoles" style="position: relative; top: 1px;" ng-disabled="tarifa.medio.tipoEspacio == 'Estatico'" /> Mie
-                                    </span>
-                                    <span>
-                                        <input type="checkbox" value="1" ng-model="tarifa.jueves" style="position: relative; top: 1px;" ng-disabled="tarifa.medio.tipoEspacio == 'Estatico'" /> Jue
-                                    </span>
-                                    <span>
-                                        <input type="checkbox" value="1" ng-model="tarifa.viernes" style="position: relative; top: 1px;" ng-disabled="tarifa.medio.tipoEspacio == 'Estatico'" /> Vie
-                                    </span>
-                                    <span>
-                                        <input type="checkbox" value="1" ng-model="tarifa.sabado" style="position: relative; top: 1px;" ng-disabled="tarifa.medio.tipoEspacio == 'Estatico'" /> Sab
-                                    </span>
-                                    <span>
-                                        <input type="checkbox" value="1" ng-model="tarifa.domingo" style="position: relative; top: 1px;" ng-disabled="tarifa.medio.tipoEspacio == 'Estatico'" /> Dom
-                                    </span>
-                                </div>
                             </td>
-                            <td data-title="Hora desde" ng-class="{error: tarifa.invalidHoraDesde}">
-                                <span ng-if="!tarifa.editable">{{tarifa.horaDesde}}</span>
-                                <div ng-if="tarifa.editable" class="hour-range">
-                                    <input type="text" ng-model="tarifa.horaDesde" int maxlength="4" ng-disabled="tarifa.medio.tipoEspacio == 'Estatico'" />
-                                </div>
+                            <td data-title="Hora desde">
+                                <span>{{tarifa.horaDesde}}</span>
                             </td>
-                            <td data-title="Hora hasta" ng-class="{error: tarifa.invalidHoraHasta}">
-                                <span ng-if="!tarifa.editable">{{tarifa.horaHasta}}</span>
-                                <div ng-if="tarifa.editable" class="hour-range">
-                                    <input type="text" ng-model="tarifa.horaHasta" int maxlength="4" ng-disabled="tarifa.medio.tipoEspacio == 'Estatico'" />
-                                </div>
+                            <td data-title="Hora hasta">
+                                <span>{{tarifa.horaHasta}}</span>
+                            </td>                         
+                            <td data-title="Descripción">
+                                <span>{{tarifa.descripcion}}</span>                                
                             </td>
                             <td data-title="Importe" ng-class="{error: tarifa.invalidTarifa}">
-                                <span ng-if="!tarifa.editable">{{tarifa.importe | currency}}</span>
-                                <input type="text" ng-if="tarifa.editable" ng-model="tarifa.importe" />
+                                <span ng-if="!entity.enabled">{{tarifa.importe}}</span>
+                                <input type="text" ng-model="tarifa.importe" ng-if="entity.enabled" ng-keypress="tarifa.edited = true" />
                             </td>
-                            <td data-title="Descripción" ng-class="{error: tarifa.invalidDescripcion}">
-                                <span ng-if="!tarifa.editable">{{tarifa.descripcion}}</span>
-                                <input type="text" ng-if="tarifa.editable" ng-model="tarifa.descripcion" style="width: 80%;" />
-                                <button class="btn btn-primary btn-xs" type="button" ng-if="tarifa.editable" ng-click="setEditable(tarifa)"><i class="fa fa-save"></i></button>
+                            <td data-title="OC" >
+                                <span ng-if="!entity.enabled">{{tarifa.ordenDeCompra}}</span>
+                                <input type="text" ng-model="tarifa.ordenDeCompra" int ng-if="entity.enabled" ng-keypress="tarifa.edited = true" />
+                            </td>
+                            <td>
+                                <button class="btn btn-primary btn-xs" type="button" ng-click="setEditable(tarifa)" ng-if="entity.enabled && tarifa.edited"><i class="fa fa-save"></i></button>
                             </td>
                         </tr>
                     </tbody>

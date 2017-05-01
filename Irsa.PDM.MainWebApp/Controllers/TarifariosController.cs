@@ -1,7 +1,12 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Web.Mvc;
 using Irsa.PDM.Admin;
+using Irsa.PDM.Dtos;
+using Irsa.PDM.Dtos.Common;
 using Irsa.PDM.Dtos.Filters;
+using Irsa.PDM.Infrastructure;
 
 namespace Irsa.PDM.MainWebApp.Controllers
 {
@@ -34,9 +39,27 @@ namespace Irsa.PDM.MainWebApp.Controllers
             return new
             {
                 Medios = _mediosAdmin.GetAll().OrderBy(e => e.Nombre),
-                Plazas = _plazasAdmin.GetAll().OrderBy(e => e.Nombre),
+                Plazas = _plazasAdmin.GetAll().OrderBy(e => e.Codigo),
                 Vehiculos = _vehiculosAdmin.GetAll().OrderBy(e => e.Nombre),
             };
         }
+
+           [HttpPost]
+        public ActionResult GetFechaDesde()
+        {
+            var response = new Response<DateTime> { Result = new Result() { HasErrors = false, Messages = new List<string>() } };
+
+            try
+            {
+                response.Data = _admin.GetFechaDesde();                    
+            }
+            catch (Exception ex)
+            {
+                response.Result.HasErrors = true;
+                response.Result.Messages.Add(ex.Message);
+            }
+
+            return this.JsonNet(response);
+        }        
     }
 }

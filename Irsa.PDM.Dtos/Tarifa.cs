@@ -4,9 +4,9 @@
     {
         public int? Id { get; set; }
         public int IdTarifario { get; set; }
-        public Medio Medio { get; set; }
-        public Plaza Plaza { get; set; }
-        public Vehiculo Vehiculo { get; set; }
+        public string MedioNombre { get; set; }
+        public string PlazaCodigo { get; set; }
+        public string VehiculoNombre { get; set; }
         public int? HoraDesde { get; set; }
         public int? HoraHasta { get; set; }
         public bool Lunes { get; set; }

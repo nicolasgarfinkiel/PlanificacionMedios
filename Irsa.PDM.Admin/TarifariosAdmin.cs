@@ -1,18 +1,50 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
+using AutoMapper;
+using Irsa.PDM.Dtos;
 using Irsa.PDM.Dtos.Filters;
 using Irsa.PDM.Entities;
+using ServiceStack.Common.Extensions;
+using ServiceStack.ServiceClient.Web;
+using Tarifario = Irsa.PDM.Entities.Tarifario;
 
 namespace Irsa.PDM.Admin
 {
     public class TarifariosAdmin : BaseAdmin<int, Entities.Tarifario, Dtos.Tarifario, FilterTarifarios>
     {
+        private static string _fcMediosTarifarioUrl = ConfigurationManager.AppSettings["fcMediosTarifarioUrl"];
+        private const string ImportUser = "Import process";
+
         #region Base
+
+        public override Dtos.Tarifario Create(Dtos.Tarifario dto)
+        {
+            Validate(dto);
+            var entity = ToEntity(dto);
+            PdmContext.Tarifario.Add(entity);
+
+            var lastTarifario = PdmContext.Tarifario.OrderByDescending(e => e.Id).FirstOrDefault();
+
+            if (lastTarifario != null)
+            {
+                lastTarifario.Enabled = false;
+                lastTarifario.UpdateDate = DateTime.Now;
+                lastTarifario.UpdatedBy = UsuarioLogged;
+            }
+
+            PdmContext.SaveChanges();
+
+            InitTarifario(entity);
+
+            return Mapper.Map<Tarifario, Dtos.Tarifario>(entity);
+        }
 
         public override Tarifario ToEntity(Dtos.Tarifario dto)
         {
             var entity = default(Tarifario);
-          
+
             if (!dto.Id.HasValue)
             {
                 entity = new Tarifario
@@ -27,7 +59,7 @@ namespace Irsa.PDM.Admin
             else
             {
                 entity = PdmContext.Tarifario.Single(c => c.Id == dto.Id.Value);
-                
+
                 entity.UpdateDate = DateTime.Now;
                 entity.UpdatedBy = UsuarioLogged;
                 entity.FechaDesde = dto.FechaDesde;
@@ -39,14 +71,14 @@ namespace Irsa.PDM.Admin
 
         public override void Validate(Dtos.Tarifario dto)
         {
-            if(dto.FechaHasta < dto.FechaDesde)
+            if (dto.FechaHasta <= dto.FechaDesde)
                 throw new Exception("La fecha hasta debe ser mayor a la fecha desde");
         }
 
         public override IQueryable GetQuery(FilterTarifarios filter)
         {
             var result = PdmContext.Tarifario.OrderBy(r => r.FechaDesde).AsQueryable();
-          
+
 
             if (filter.FechaDesde.HasValue)
             {
@@ -57,12 +89,176 @@ namespace Irsa.PDM.Admin
             {
                 var fechaHasta = filter.FechaHasta.Value.AddDays(1).AddMilliseconds(-1);
                 result = result.Where(r => r.FechaDesde <= fechaHasta).AsQueryable();
-            }                      
+            }
 
             return result;
         }
 
         #endregion
 
+        public DateTime GetFechaDesde()
+        {
+            var lastTarifario = PdmContext.Tarifario.OrderByDescending(e => e.Id).FirstOrDefault();
+
+            return lastTarifario == null ? DateTime.Now : lastTarifario.FechaHasta.AddDays(1);
+        }
+
+        #region Init
+
+        private void InitTarifario(Tarifario entity)
+        {
+            var client = new JsonServiceClient(_fcMediosTarifarioUrl);
+            var tarifas = client.Get<IList<TarifaFcMedios>>("/client?method=get-list&action=programas_a_tarifar");
+
+            #region Base
+
+            var actualMedios = PdmContext.Medios.ToList();
+            var actualPlazas = PdmContext.Plazas.ToList();
+            var actualVehiculos = PdmContext.Vehiculos.ToList();
+
+            var serviceMedios = tarifas.Select(e => new { Codigo = e.cod_medio, Descripcion = e.des_medio }).Distinct().ToList();
+            var servicePlazas = tarifas.Select(e => new { Codigo = e.cod_plaza, Descripcion = e.des_plaza }).Distinct().ToList();
+            var serviceVehiculos = tarifas.Select(e => new { Codigo = e.cod_vehiculo, Descripcion = e.des_vehiculo }).Distinct().ToList();
+
+            #region Medios
+
+            serviceMedios.ForEach(t =>
+            {
+                var medio = actualMedios.FirstOrDefault(e => e.Codigo == t.Codigo);
+
+                if (medio == null)
+                {
+                    medio = new Entities.Medio
+                    {
+                        Codigo = t.Codigo,
+                        Descripcion = t.Descripcion,
+                        Nombre = t.Descripcion,
+                        CreateDate = DateTime.Now,
+                        CreatedBy = ImportUser,
+                        Enabled = true
+                    };
+
+                    PdmContext.Medios.Add(medio);
+                    actualMedios.Add(medio);
+                }
+                else
+                {
+                    medio.Descripcion = t.Descripcion;
+                    medio.UpdateDate = DateTime.Now;
+                    medio.UpdatedBy = ImportUser;
+                }
+            });
+
+            #endregion
+
+            #region Plazas
+
+            servicePlazas.ForEach(t =>
+            {
+                var plaza = actualPlazas.FirstOrDefault(e => e.Codigo == t.Codigo);
+
+                if (plaza == null)
+                {
+                    plaza = new Entities.Plaza
+                    {
+                        Codigo = t.Codigo,
+                        Descripcion = t.Descripcion,
+                        CreateDate = DateTime.Now,
+                        CreatedBy = ImportUser,
+                        Enabled = true
+                    };
+
+                    PdmContext.Plazas.Add(plaza);
+                    actualPlazas.Add(plaza);
+                }
+                else
+                {
+                    plaza.Descripcion = t.Descripcion;
+                    plaza.UpdateDate = DateTime.Now;
+                    plaza.UpdatedBy = ImportUser;
+                }
+            });
+
+            #endregion
+
+            #region Vehiculos
+
+            serviceVehiculos.ForEach(t =>
+            {
+                var vehiculo = actualVehiculos.FirstOrDefault(e => e.Codigo == t.Codigo);
+
+                if (vehiculo == null)
+                {
+                    vehiculo = new Entities.Vehiculo
+                    {
+                        Codigo = t.Codigo,
+                        Descripcion = t.Descripcion,
+                        CreateDate = DateTime.Now,
+                        CreatedBy = ImportUser,
+                        Enabled = true,
+                        Nombre = t.Descripcion
+                    };
+
+                    PdmContext.Vehiculos.Add(vehiculo);
+                    actualVehiculos.Add(vehiculo);
+                }
+                else
+                {
+                    vehiculo.Nombre = t.Descripcion;
+                    vehiculo.Descripcion = t.Descripcion;
+                    vehiculo.UpdateDate = DateTime.Now;
+                    vehiculo.UpdatedBy = ImportUser;
+                }
+            });
+
+
+            #endregion
+
+            PdmContext.SaveChanges();
+
+            #endregion
+
+            #region Tarifas
+
+            var toAdd = new List<Entities.Tarifa>();
+
+            tarifas.ForEach(t =>
+            {
+                var medio = actualMedios.Single(e => e.Codigo == t.cod_medio);
+                var plaza = actualPlazas.Single(e => e.Codigo == t.cod_plaza);
+                var vehiculo = actualVehiculos.Single(e => e.Codigo == t.cod_vehiculo);
+
+                toAdd.Add(new Entities.Tarifa
+                {
+                    CodigoPrograma = t.cod_programa,
+                    Descripcion = t.espacio,
+                    HoraDesde = t.hora_inicio,
+                    HoraHasta = t.hora_fin,
+                    Importe = t.bruto,
+                    Lunes = t.Lunes,
+                    Martes = t.Martes,
+                    Miercoles = t.Miercoles,
+                    Jueves = t.Jueves,
+                    Viernes = t.Viernes,
+                    Sabado = t.Sabado,
+                    Domingo = t.Domingo,
+                    Medio = medio,
+                    Plaza = plaza,
+                    Tarifario = entity,
+                    Vehiculo = vehiculo,
+                    CreateDate = DateTime.Now,
+                    CreatedBy = ImportUser,
+                    Enabled = true,
+                });               
+            });
+
+
+            PdmContext.BulkInsert(toAdd);
+            PdmContext.BulkSaveChanges();
+
+            #endregion
+        }
+
+        #endregion
     }
 }

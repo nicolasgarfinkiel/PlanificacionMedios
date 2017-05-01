@@ -12,7 +12,7 @@ namespace Irsa.PDM.Admin
         public override Vehiculo ToEntity(Dtos.Vehiculo dto)
         {
             var entity = default(Vehiculo);
-            var medio = PdmContext.Medios.Single(m => m.Id == dto.Medio.Id);
+         //   var medio = PdmContext.Medios.Single(m => m.Id == dto.Medio.Id);
 
             if (!dto.Id.HasValue)
             {
@@ -23,7 +23,7 @@ namespace Irsa.PDM.Admin
                     Enabled = true,
                     Nombre = dto.Nombre,
                     Descripcion = dto.Descripcion,
-                    Medio = medio
+                 //   Medio = medio
                 };
             }
             else
@@ -34,7 +34,7 @@ namespace Irsa.PDM.Admin
                 entity.Descripcion = dto.Descripcion;
                 entity.UpdateDate = DateTime.Now;
                 entity.UpdatedBy = UsuarioLogged;
-                entity.Medio = medio;
+               // entity.Medio = medio;
             }
 
             return entity;
@@ -59,7 +59,7 @@ namespace Irsa.PDM.Admin
                 filter.MultiColumnSearchText = filter.MultiColumnSearchText.ToLower();
 
                 result = result.Where(r =>
-                    (r.Medio != null && r.Medio.Nombre.ToLower().Contains(filter.MultiColumnSearchText)) ||
+                   // (r.Medio != null && r.Medio.Nombre.ToLower().Contains(filter.MultiColumnSearchText)) ||
                     (r.Nombre != null && r.Nombre.ToLower().Contains(filter.MultiColumnSearchText)) ||
                     (r.Descripcion != null && r.Descripcion.ToLower().Contains(filter.MultiColumnSearchText))).AsQueryable();
             }

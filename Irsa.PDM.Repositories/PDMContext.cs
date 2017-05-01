@@ -10,7 +10,7 @@ namespace Irsa.PDM.Repositories
         public PDMContext()
             : base(ConfigurationManager.ConnectionStrings["PDM"].ConnectionString)
         {     
-          //  Database.SetInitializer<PDMContext>(null);
+          //  Database.SetInitializer<PDMContext>(null);          
             Database.SetInitializer(new MigrateDatabaseToLatestVersion<PDMContext, Migrations.Configuration>("PDM"));
         }
 

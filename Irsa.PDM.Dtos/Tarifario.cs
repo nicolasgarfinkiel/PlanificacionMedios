@@ -7,6 +7,7 @@ namespace Irsa.PDM.Dtos
     {
         public int? Id { get; set; }
         public DateTime FechaDesde { get; set; }
-        public DateTime FechaHasta { get; set; }        
+        public DateTime FechaHasta { get; set; }
+        public bool Enabled { get; set; }
     }
 }

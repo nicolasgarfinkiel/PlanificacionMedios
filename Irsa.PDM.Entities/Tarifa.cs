@@ -1,7 +1,8 @@
 ﻿namespace Irsa.PDM.Entities
 {
     public class Tarifa: EntityBase
-    {
+    { 
+        public int CodigoPrograma{ get; set; }
         public virtual Tarifario Tarifario { get; set; }
         public virtual Medio Medio { get; set; }
         public virtual Plaza Plaza { get; set; }

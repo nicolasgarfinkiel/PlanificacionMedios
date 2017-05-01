@@ -19,8 +19,8 @@
                $scope.isValid = function() {
                    $scope.result = { hasErrors: false, messages: [] };                   
 
-                   if (!$scope.entity.nombre) {
-                       $scope.result.messages.push('Ingrese el nombre');
+                   if (!$scope.entity.codigo) {
+                       $scope.result.messages.push('Ingrese el código');
                    }                  
 
                    if (!$scope.entity.descripcion) {

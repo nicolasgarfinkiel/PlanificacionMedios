@@ -49,6 +49,7 @@ namespace Irsa.PDM.MainWebApp
             .Include("~/Scripts/angularJs/angular-resource.min.js")
             .Include("~/Scripts/angularJs/ui-utils.min.js")
             .Include("~/Scripts/angularJs/select.min.js")
+            .Include("~/Scripts/angularJs/angular-input-masks-standalone.min.js")
             .Include("~/Scripts/app/shared/listBootstraperService.js")
             .Include("~/Scripts/app/shared/editBootstraperService.js")
             .Include("~/Scripts/app/shared/directives/loadingDirective.js")

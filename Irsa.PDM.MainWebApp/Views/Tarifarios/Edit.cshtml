@@ -31,8 +31,8 @@
                                 <div class="btn-group" style="float: right;">
                                     <button data-toggle="dropdown" class="btn btn-default btn-xs dropdown-toggle" ng-click="setAux('medios')"><span class="fa fa-level-down"></span></button>
                                     <ul class="dropdown-menu filter" role="menu">
-                                        <li ng-repeat="medio in data.medios">
-                                            <input type="checkbox" ng-checked="filter.mediosAux.indexOf(medio.id) != -1" ng-click="toggleCheck('medios', medio.id)" /> {{medio.nombre}}
+                                        <li ng-repeat="medio in data.mediosBase">
+                                            <input type="checkbox" ng-checked="filter.mediosAux.indexOf(medio.nombre) != -1" ng-click="toggleCheck('medios', medio.nombre)" /> {{medio.nombre}}
                                         </li>
                                         <li class="divider"></li>
                                         <li class="text-right">
@@ -42,13 +42,13 @@
                                     </ul>
                                 </div>
                             </th>
-                            <th style="width: 5%">
+                            <th style="width: 6%">
                                 Plaza
                                 <div class="btn-group" style="float: right;">
                                     <button data-toggle="dropdown" class="btn btn-default btn-xs dropdown-toggle" ng-click="setAux('plazas')"><span class="fa fa-level-down"></span></button>
                                     <ul class="dropdown-menu filter" role="menu">
                                         <li ng-repeat="plaza in data.plazas">
-                                            <input type="checkbox" ng-checked="filter.plazasAux.indexOf(plaza.id) != -1" ng-click="toggleCheck('plazas', plaza.id)" /> {{plaza.nombre}}
+                                            <input type="checkbox" ng-checked="filter.plazasAux.indexOf(plaza.id) != -1" ng-click="toggleCheck('plazas', plaza.id)" /> {{plaza.codigo}}
                                         </li>
                                         <li class="divider"></li>
                                         <li class="text-right">
@@ -58,7 +58,7 @@
                                     </ul>
                                 </div>
                             </th>
-                            <th style="width: 13%">
+                            <th style="width: 18%">
                                 Vehículo
                                 <div class="btn-group" style="float: right;">
                                     <button data-toggle="dropdown" class="btn btn-default btn-xs dropdown-toggle" ng-click="setAux('vehiculos')"><span class="fa fa-level-down"></span></button>
@@ -74,7 +74,7 @@
                                     </ul>
                                 </div>
                             </th>
-                            <th style="width: 19%">
+                            <th style="width: 18%">
                                 Días
                                 <div class="btn-group" style="float: right;">
                                     <button data-toggle="dropdown" class="btn btn-default btn-xs dropdown-toggle" ng-click="setAux('dias')"><span class="fa fa-level-down"></span></button>
@@ -90,8 +90,8 @@
                                     </ul>
                                 </div>
                             </th>
-                            <th style="width: 5%">
-                                hs.D
+                            <th style="width: 6%">
+                                Hs.D
                                 <div class="btn-group" style="float: right;">
                                     <button data-toggle="dropdown" class="btn btn-default btn-xs dropdown-toggle" ng-click="setAuxHoras('horaDesde')"><span class="fa fa-level-down"></span></button>
                                     <ul class="dropdown-menu filter" role="menu">
@@ -108,8 +108,8 @@
                                     </ul>
                                 </div>
                             </th>
-                            <th style="width: 5%">
-                                hs.H
+                            <th style="width: 6%">
+                                Hs.H
                                 <div class="btn-group" style="float: right;">
                                     <button data-toggle="dropdown" class="btn btn-default btn-xs dropdown-toggle" ng-click="setAuxHoras('horaHasta')"><span class="fa fa-level-down"></span></button>
                                     <ul class="dropdown-menu filter" role="menu">
@@ -131,11 +131,37 @@
                             </th>
                             <th style="width: 8%">
                                 Importe
+                                <div class="btn-group" style="float: right;">
+                                    <button data-toggle="dropdown" class="btn btn-default btn-xs dropdown-toggle" ng-click="importe = null; invalidImporte = false;"><span class="fa fa-edit"></span></button>
+                                    <ul class="dropdown-menu filter" role="menu">
+                                        <li ng-class="{error: invalidImporte}">
+                                            <small>Importe</small>
+                                            <input type="text" ng-model="importe" style="font-weight: normal; padding: 2px; font-size: 11px;" fcsa-number="{ prepend: '$' }" />
+                                        </li>
+                                        <li class="divider"></li>
+                                        <li class="text-right">
+                                            <button class="btn btn-primary btn-xs" ng-click="setImportes($event)" ng-show="importe">Aplicar</button>                                            
+                                        </li>
+                                    </ul>
+                                </div>
                             </th>
-                            <th style="width: 5%">
+                            <th style="width: 7%">
                                 O.C.
+                                <div class="btn-group" style="float: right;">
+                                    <button data-toggle="dropdown" class="btn btn-default btn-xs dropdown-toggle" ng-click="oc = null; invalidOc = false;"><span class="fa fa-edit"></span></button>
+                                    <ul class="dropdown-menu filter " role="menu" style=" left: -71px;">
+                                        <li ng-class="{error: invalidOc}">
+                                            <small>Órden de compra</small>
+                                            <input type="text" ng-model="oc" style="font-weight: normal; padding: 2px; font-size: 11px;" int />
+                                        </li>
+                                        <li class="divider"></li>
+                                        <li class="text-right">
+                                            <button class="btn btn-primary btn-xs" ng-click="setOrdenesDeCompra($event)" ng-show="oc">Aplicar</button>
+                                        </li>
+                                    </ul>
+                                </div>
                             </th>
-                            <th style="width: 4%"></th>
+                            <th style="width: 3%"></th>
                         </tr>
                     </thead>
                     <tbody style="font-size: 11px;">
@@ -161,21 +187,21 @@
                                 </span>
                             </td>
                             <td data-title="Hora desde">
-                                <span>{{tarifa.horaDesde}}</span>
+                                <span>{{tarifa.horaDesdeFormatted}}</span>
                             </td>
                             <td data-title="Hora hasta">
-                                <span>{{tarifa.horaHasta}}</span>
+                                <span>{{tarifa.horaHastaFormatted}}</span>
                             </td>                         
                             <td data-title="Descripción">
                                 <span>{{tarifa.descripcion}}</span>                                
                             </td>
                             <td data-title="Importe" ng-class="{error: tarifa.invalidTarifa}">
-                                <span ng-if="!entity.enabled">{{tarifa.importe}}</span>
-                                <input type="text" ng-model="tarifa.importe" ng-if="entity.enabled" ng-keypress="tarifa.edited = true" />
+                                <span ng-if="!entity.enabled">{{tarifa.importe | currency}}</span>
+                                <input type="text" ng-model="tarifa.importe" ng-if="entity.enabled" ng-keypress="tarifa.edited = true" fcsa-number="{ prepend: '$' }" />
                             </td>
                             <td data-title="OC" >
                                 <span ng-if="!entity.enabled">{{tarifa.ordenDeCompra}}</span>
-                                <input type="text" ng-model="tarifa.ordenDeCompra" int ng-if="entity.enabled" ng-keypress="tarifa.edited = true" />
+                                <input type="text" ng-model="tarifa.ordenDeCompra" int ng-if="entity.enabled" ng-keypress="tarifa.edited = true"  />
                             </td>
                             <td>
                                 <button class="btn btn-primary btn-xs" type="button" ng-click="setEditable(tarifa)" ng-if="entity.enabled && tarifa.edited"><i class="fa fa-save"></i></button>
@@ -183,6 +209,23 @@
                         </tr>
                     </tbody>
                 </table>
+                <div class="row pdm-pager">                  
+                    <div class="col-sm-12">
+                        <div class="text-center">
+                            <ul class="pagination">
+                                <li class="previous" ng-class="{'disabled': isFirstPage()}">
+                                    <a href="javascript:void(0)" ng-click="goToPreviousPage()">Anterior</a>
+                                </li>
+                                <li class="active">
+                                    <a href="javascript:void(0)">Página {{filter.currentPage}} de {{filter.pageCount}} - Registros: <b>{{filter.count}}</b></a>                                    
+                                </li>                              
+                                <li class="next" ng-class="{'disabled': isLastPage()}">
+                                    <a href="javascript:void(0)" ng-click="goToNextPage()">Siguiente</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="alert alert-danger" ng-if="result.hasErrors">

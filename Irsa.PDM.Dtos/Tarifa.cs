@@ -1,4 +1,6 @@
-﻿namespace Irsa.PDM.Dtos
+﻿using System;
+
+namespace Irsa.PDM.Dtos
 {
     public class Tarifa
     {
@@ -19,5 +21,29 @@
         public string OrdenDeCompra { get; set; }
         public string Descripcion { get; set; }
         public double Importe { get; set; }
+
+        public string HoraDesdeFormatted
+        {
+            get
+            {
+                if (!HoraDesde.HasValue) return null;
+
+                var hora =  string.Format("{0}{1}", new String('0', 4 - HoraDesde.Value.ToString().Length), HoraDesde);
+
+                return string.Format("{0}:{1}", hora.Substring(0, 2), hora.Substring(2,2));
+            }
+        }
+
+        public string HoraHastaFormatted
+        {
+            get
+            {
+                if (!HoraHasta.HasValue) return null;
+
+                var hora = string.Format("{0}{1}", new String('0', 4 - HoraHasta.Value.ToString().Length), HoraHasta);
+
+                return string.Format("{0}:{1}", hora.Substring(0, 2), hora.Substring(2, 2));
+            }
+        }
     }
 }

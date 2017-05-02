@@ -44,7 +44,7 @@ namespace Irsa.PDM.MainWebApp.Controllers
             };
         }
 
-           [HttpPost]
+        [HttpPost]
         public ActionResult GetFechaDesde()
         {
             var response = new Response<DateTime> { Result = new Result() { HasErrors = false, Messages = new List<string>() } };

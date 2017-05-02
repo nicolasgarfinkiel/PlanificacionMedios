@@ -4565,4 +4565,8 @@ ul.h-list {
     .hour-range .small {
         width: 100%;
     }
+
+    .pdm-pager {
+        font-size: 10px !important;
+    }
 }

@@ -149,5 +149,28 @@ namespace Irsa.PDM.Admin
 
         #endregion
 
+
+        public void SetValues(FilterTarifas filter, double? importe, int? oc)
+        {
+            var tarifas = GetQuery(filter).OfType<Tarifa>().ToList();
+
+            tarifas.ForEach(t =>
+            {
+                if (importe.HasValue)
+                {
+                    t.Importe = importe.Value;
+                }
+
+                if (oc.HasValue)
+                {
+                    t.OrdenDeCompra = oc.Value.ToString();
+                }
+
+                t.UpdateDate = DateTime.Now;
+                t.UpdatedBy = UsuarioLogged;
+            });            
+
+            PdmContext.BulkSaveChanges();
+        }
     }
 }

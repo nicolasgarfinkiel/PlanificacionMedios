@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using Antlr.Runtime.Tree;
 using Irsa.PDM.Admin;
 using Irsa.PDM.Dtos;
 using Irsa.PDM.Dtos.Common;
@@ -31,7 +32,12 @@ namespace Irsa.PDM.MainWebApp.Controllers
 
         public override object GetDataList()
         {
-            return new { };
+            _admin.InitTablasBasicas();
+
+            return new
+            {
+                Vehiculos = _vehiculosAdmin.GetAll().OrderBy(e => e.Nombre)
+            };
         }
 
         public override object GetDataEdit()
@@ -45,13 +51,13 @@ namespace Irsa.PDM.MainWebApp.Controllers
         }
 
         [HttpPost]
-        public ActionResult GetFechaDesde()
+        public ActionResult GetFechaDesde(int vehiculolId)
         {
             var response = new Response<DateTime> { Result = new Result() { HasErrors = false, Messages = new List<string>() } };
 
             try
             {
-                response.Data = _admin.GetFechaDesde();                    
+                response.Data = _admin.GetFechaDesde(vehiculolId);                    
             }
             catch (Exception ex)
             {

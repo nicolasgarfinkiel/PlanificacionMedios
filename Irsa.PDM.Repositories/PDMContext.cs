@@ -25,6 +25,7 @@ namespace Irsa.PDM.Repositories
         public IDbSet<Vehiculo> Vehiculos { get; set; }
         public IDbSet<Tarifario> Tarifario { get; set; }
         public IDbSet<Tarifa> Tarifas { get; set; }
+        public IDbSet<ServiceSync> ServiceSyncs { get; set; }
 
     }
 }

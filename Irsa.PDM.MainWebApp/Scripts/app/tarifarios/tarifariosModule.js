@@ -3,6 +3,7 @@
     'irsa.pdm.tarifarios.ctrl.edit',
     'irsa.pdm.service.tarifarios',
     'irsa.pdm.service.tarifas',
+    'irsa.pdm.service.vehiculos',
     'irsa.pdm.navigation.base',    
     'irsa.pdm.service.base',
     'irsa.pdm.service.bootstraper.list',
@@ -13,7 +14,8 @@
     'irsa.pdm.directive.loading',    
     'irsa.pdm.directive.debounce',
     'irsa.pdm.directive.int',
-    'fcsa-number'
+    'fcsa-number',
+    'ui.select'
 ]).config([
     '$routeProvider',
     '$locationProvider',

@@ -7,6 +7,7 @@ namespace Irsa.PDM.Dtos.Filters
     {
         public DateTime? FechaDesde { get; set; }
         public DateTime? FechaHasta { get; set; }
+        public Vehiculo Vehiculo { get; set; }
 
     }
 }

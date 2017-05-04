@@ -4,7 +4,7 @@
         <h5 class="font-light m-b-xs">
             Administración de tarifario nro: {{entity.id}}
         </h5>
-        <small>Fecha desde: {{entity.fechaDesde}} - Fecha hasta: {{entity.fechaHasta}}</small>
+        <small>Vehículo: <b>{{entity.vehiculo.nombre}}</b>  - Fecha desde: {{entity.fechaDesde}} - Fecha hasta: {{entity.fechaHasta}}</small>
     </div>
 </div>
 
@@ -26,7 +26,7 @@
                 <table class="col-sm-12 table-bordered table-striped table-condensed cf">
                     <thead class="cf">
                         <tr>
-                            <th style="width: 7%">
+                            <th style="width: 10%">
                                 Medio
                                 <div class="btn-group" style="float: right;">
                                     <button data-toggle="dropdown" class="btn btn-default btn-xs dropdown-toggle" ng-click="setAux('medios')"><span class="fa fa-level-down"></span></button>
@@ -42,7 +42,7 @@
                                     </ul>
                                 </div>
                             </th>
-                            <th style="width: 6%">
+                            <th style="width: 12%">
                                 Plaza
                                 <div class="btn-group" style="float: right;">
                                     <button data-toggle="dropdown" class="btn btn-default btn-xs dropdown-toggle" ng-click="setAux('plazas')"><span class="fa fa-level-down"></span></button>
@@ -57,24 +57,8 @@
                                         </li>
                                     </ul>
                                 </div>
-                            </th>
-                            <th style="width: 18%">
-                                Vehículo
-                                <div class="btn-group" style="float: right;">
-                                    <button data-toggle="dropdown" class="btn btn-default btn-xs dropdown-toggle" ng-click="setAux('vehiculos')"><span class="fa fa-level-down"></span></button>
-                                    <ul class="dropdown-menu filter" role="menu">
-                                        <li ng-repeat="vehiculo in data.vehiculos">
-                                            <input type="checkbox" ng-checked="filter.vehiculosAux.indexOf(vehiculo.id) != -1" ng-click="toggleCheck('vehiculos', vehiculo.id)" /> {{vehiculo.nombre}}
-                                        </li>
-                                        <li class="divider"></li>
-                                        <li class="text-right">
-                                            <button class="btn btn-primary btn-xs" ng-click="applyFilter('vehiculos')">Aplicar</button>
-                                            <button class="btn btn-default btn-xs" ng-click="clearFilter('vehiculos', $event)">Limpiar</button>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </th>
-                            <th style="width: 18%">
+                            </th>                          
+                            <th style="width: 25%">
                                 Días
                                 <div class="btn-group" style="float: right;">
                                     <button data-toggle="dropdown" class="btn btn-default btn-xs dropdown-toggle" ng-click="setAux('dias')"><span class="fa fa-level-down"></span></button>
@@ -90,7 +74,7 @@
                                     </ul>
                                 </div>
                             </th>
-                            <th style="width: 6%">
+                            <th style="width: 8%">
                                 Hs.D
                                 <div class="btn-group" style="float: right;">
                                     <button data-toggle="dropdown" class="btn btn-default btn-xs dropdown-toggle" ng-click="setAuxHoras('horaDesde')"><span class="fa fa-level-down"></span></button>
@@ -108,7 +92,7 @@
                                     </ul>
                                 </div>
                             </th>
-                            <th style="width: 6%">
+                            <th style="width: 8%">
                                 Hs.H
                                 <div class="btn-group" style="float: right;">
                                     <button data-toggle="dropdown" class="btn btn-default btn-xs dropdown-toggle" ng-click="setAuxHoras('horaHasta')"><span class="fa fa-level-down"></span></button>
@@ -171,10 +155,7 @@
                             </td>
                             <td data-title="Plaza">
                                 <span>{{tarifa.plazaCodigo}}</span>
-                            </td>
-                            <td data-title="Vehículo">
-                                <span>{{tarifa.vehiculoNombre}}</span>
-                            </td>
+                            </td>                           
                             <td data-title="Días">
                                 <span class="day-list">
                                     <span ng-if="tarifa.lunes">Lun</span>

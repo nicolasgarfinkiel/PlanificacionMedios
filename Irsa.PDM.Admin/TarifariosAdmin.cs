@@ -16,6 +16,7 @@ namespace Irsa.PDM.Admin
     {
         private static string _fcMediosTarifarioUrl = ConfigurationManager.AppSettings["fcMediosTarifarioUrl"];
         private const string ImportUser = "Import process";
+        private const string GetTarifasAction = "/client?method=get-list&action=programas_a_tarifar";
 
         #region Base
 
@@ -24,15 +25,6 @@ namespace Irsa.PDM.Admin
             Validate(dto);
             var entity = ToEntity(dto);
             PdmContext.Tarifario.Add(entity);
-
-            var lastTarifario = PdmContext.Tarifario.OrderByDescending(e => e.Id).FirstOrDefault();
-
-            if (lastTarifario != null)
-            {
-                lastTarifario.Enabled = false;
-                lastTarifario.UpdateDate = DateTime.Now;
-                lastTarifario.UpdatedBy = UsuarioLogged;
-            }
 
             PdmContext.SaveChanges();
 
@@ -44,6 +36,7 @@ namespace Irsa.PDM.Admin
         public override Tarifario ToEntity(Dtos.Tarifario dto)
         {
             var entity = default(Tarifario);
+            var vehiculo = PdmContext.Vehiculos.Single(e => e.Id == dto.Vehiculo.Id);
 
             if (!dto.Id.HasValue)
             {
@@ -54,6 +47,7 @@ namespace Irsa.PDM.Admin
                     Enabled = true,
                     FechaDesde = dto.FechaDesde,
                     FechaHasta = dto.FechaHasta,
+                    Vehiculo = vehiculo
                 };
             }
             else
@@ -64,6 +58,7 @@ namespace Irsa.PDM.Admin
                 entity.UpdatedBy = UsuarioLogged;
                 entity.FechaDesde = dto.FechaDesde;
                 entity.FechaHasta = dto.FechaHasta;
+                entity.Vehiculo = vehiculo;
             }
 
             return entity;
@@ -72,7 +67,16 @@ namespace Irsa.PDM.Admin
         public override void Validate(Dtos.Tarifario dto)
         {
             if (dto.FechaHasta <= dto.FechaDesde)
+            {
                 throw new Exception("La fecha hasta debe ser mayor a la fecha desde");
+            }
+
+            var entity = PdmContext.Tarifario.FirstOrDefault(e => e.FechaDesde == dto.FechaDesde && e.FechaHasta == dto.FechaHasta && e.Vehiculo.Id == dto.Vehiculo.Id);
+
+            if (entity != null && entity.Id != dto.Id)
+            {
+                throw new Exception("Ya existe otro tarifario con el mismo rango de fechas y vehículo");   
+            }
         }
 
         public override IQueryable GetQuery(FilterTarifarios filter)
@@ -91,24 +95,47 @@ namespace Irsa.PDM.Admin
                 result = result.Where(r => r.FechaDesde <= fechaHasta).AsQueryable();
             }
 
+            if (filter.Vehiculo != null)
+            {                
+                result = result.Where(r => r.Vehiculo.Id == filter.Vehiculo.Id).AsQueryable();
+            }
+
             return result;
         }
 
         #endregion
 
-        public DateTime GetFechaDesde()
+        public DateTime GetFechaDesde(int vehiculolId)
         {
-            var lastTarifario = PdmContext.Tarifario.OrderByDescending(e => e.Id).FirstOrDefault();
+            var lastTarifario = PdmContext.Tarifario.Where(e => e.Vehiculo.Id == vehiculolId).OrderByDescending(e => e.Id).FirstOrDefault();
 
             return lastTarifario == null ? DateTime.Now : lastTarifario.FechaHasta.AddDays(1);
         }
 
         #region Init
 
-        private void InitTarifario(Tarifario entity)
+        public void InitTablasBasicas()
         {
+            var serviceSync = PdmContext.ServiceSyncs.FirstOrDefault();
+
+            if (serviceSync != null && !serviceSync.MustSync) return;
+
+            if (serviceSync == null)
+            {
+                serviceSync = new ServiceSync
+                {
+                    CreateDate = DateTime.Now,
+                    Enabled = true,
+                    CreatedBy = UsuarioLogged                    
+                };
+
+                PdmContext.ServiceSyncs.Add(serviceSync);
+            }
+
+            serviceSync.LastBaseTablesSync = DateTime.Now;
+                        
             var client = new JsonServiceClient(_fcMediosTarifarioUrl);
-            var tarifas = client.Get<IList<TarifaFcMedios>>("/client?method=get-list&action=programas_a_tarifar");
+            var tarifas = client.Get<IList<TarifaFcMedios>>(GetTarifasAction);
 
             #region Base
 
@@ -138,8 +165,7 @@ namespace Irsa.PDM.Admin
                         Enabled = true
                     };
 
-                    PdmContext.Medios.Add(medio);
-                    actualMedios.Add(medio);
+                    PdmContext.Medios.Add(medio);                    
                 }
                 else
                 {
@@ -168,8 +194,7 @@ namespace Irsa.PDM.Admin
                         Enabled = true
                     };
 
-                    PdmContext.Plazas.Add(plaza);
-                    actualPlazas.Add(plaza);
+                    PdmContext.Plazas.Add(plaza);                    
                 }
                 else
                 {
@@ -199,8 +224,7 @@ namespace Irsa.PDM.Admin
                         Nombre = t.Descripcion
                     };
 
-                    PdmContext.Vehiculos.Add(vehiculo);
-                    actualVehiculos.Add(vehiculo);
+                    PdmContext.Vehiculos.Add(vehiculo);                    
                 }
                 else
                 {
@@ -211,12 +235,22 @@ namespace Irsa.PDM.Admin
                 }
             });
 
+            #endregion            
 
             #endregion
 
             PdmContext.SaveChanges();
+        }
 
-            #endregion
+        private void InitTarifario(Tarifario entity)
+        {
+            var client = new JsonServiceClient(_fcMediosTarifarioUrl);
+            var tarifas = client.Get<IList<TarifaFcMedios>>(GetTarifasAction)
+                          .Where(e => e.cod_vehiculo == entity.Vehiculo.Codigo).ToList();
+
+            var actualMedios = PdmContext.Medios.ToList();
+            var actualPlazas = PdmContext.Plazas.ToList();
+            var actualVehiculos = PdmContext.Vehiculos.ToList();
 
             #region Tarifas
 

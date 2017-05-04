@@ -4,10 +4,11 @@
            'baseService',
            function ($http, baseService) {
                var result = angular.extend({
-                   getFechaDesde: function () {
+                   getFechaDesde: function (vehiculolId) {
                        return $http({
                            method: 'POST',
-                           url: '/Tarifarios/getFechaDesde'
+                           url: '/Tarifarios/getFechaDesde',
+                           data: { vehiculolId: vehiculolId }
                        });
                    },
                }, baseService);

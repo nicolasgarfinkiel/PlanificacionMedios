@@ -15,8 +15,24 @@
                     <input type="text" ng-model="filter.fechaHasta" data-date-format="dd/mm/yyyy" bs-datepicker class="form-control" placeholder="Fecha hasta" />
                     <span class="input-group-addon" data-toggle="datepicker"><i class=" fa fa-calendar"></i></span>
                 </div>
+            </div>           
+            <div class="col-sm-5">
+                <ui-select  ng-model="filter.vehiculo" theme="select2" style="width: 100%;" append-to-body="true">
+                    <ui-select-match placeholder="Vehículo">{{$select.selected.nombre}}</ui-select-match>
+                    <ui-select-choices refresh-on-active="true" refresh="getSelectSource($select)" refresh-delay="300" repeat="item in selectList | filter: $select.search">
+                        <div>{{item.nombre}}</div>
+                        <div ng-if="$index == $select.items.length-1 && currentPage < pageCount">
+                            <button class="btn btn-xs btn-info"
+                                    style="width: 100%; margin-top: 20px;"
+                                    ng-click="getSelectSource($select, $event);">
+                                Siguiente
+                            </button>
+                        </div>
+                    </ui-select-choices>
+                </ui-select>     
             </div>
-            <div class="col-sm-8 text-right">
+            <div class="col-sm-3 text-right">
+                <a href="javascript:void(0)" class="btn btn-default" ng-click="clearFilter()">Limpiar</a>
                 <a href="javascript:void(0)" class="btn btn-info " ng-click="search()"><i class="fa fa-search"></i> Buscar</a>
                 <a href="javascript:void(0)" class="btn btn-success " ng-click="setCreate()"><i class="fa fa-plus"></i> Nuevo</a>
             </div>
@@ -37,7 +53,7 @@
 
 
 <div class="modal fade pdm" id="tarifarioModal" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-sm" style="width: 370px;">
+    <div class="modal-dialog modal-sm" style="width: 500px;">
         <div class="modal-content">
             <div class="color-line"></div>
             <div class="modal-header">
@@ -46,6 +62,24 @@
             <div class="modal-body">
 
                 <form class="form-horizontal ng-pristine ng-valid">
+                    <div class="form-group">
+                        <label class="col-lg-4 control-label">Vehículo</label>
+                        <div class="col-lg-8">                            
+                                <ui-select ng-model="entity.vehiculo" theme="select2" style="width: 100%;" append-to-body="true">
+                                    <ui-select-match >{{$select.selected.nombre}}</ui-select-match>
+                                    <ui-select-choices refresh-on-active="true" refresh="getSelectSource($select)" refresh-delay="300" repeat="item in selectList | filter: $select.search">
+                                        <div>{{item.nombre}}</div>
+                                        <div ng-if="$index == $select.items.length-1 && currentPage < pageCount">
+                                            <button class="btn btn-xs btn-info"
+                                                    style="width: 100%; margin-top: 20px;"
+                                                    ng-click="getSelectSource($select, $event);">
+                                                Siguiente
+                                            </button>
+                                        </div>
+                                    </ui-select-choices>
+                                </ui-select>                                 
+                        </div>
+                    </div>
                     <div class="form-group">
                         <label class="col-lg-4 control-label">Fecha desde</label>
                         <div class="col-lg-8">

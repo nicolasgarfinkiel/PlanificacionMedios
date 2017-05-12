@@ -17,6 +17,7 @@ namespace Irsa.PDM.Admin
         private static string _fcMediosTarifarioUrl = ConfigurationManager.AppSettings["fcMediosTarifarioUrl"];
         private const string ImportUser = "Import process";
         private const string GetTarifasAction = "/client?method=get-list&action=programas_a_tarifar";
+        private const string PutTarifasAction = "/client?method=create&action=programas_tarifados";
 
         #region Base
 
@@ -25,6 +26,15 @@ namespace Irsa.PDM.Admin
             Validate(dto);
             var entity = ToEntity(dto);
             PdmContext.Tarifario.Add(entity);
+
+            var lastTarifario = PdmContext.Tarifario.OrderByDescending(e => e.Id).FirstOrDefault();
+
+            if (lastTarifario != null)
+            {
+                lastTarifario.Editable = false;
+                lastTarifario.UpdateDate = DateTime.Now;
+                lastTarifario.UpdatedBy = UsuarioLogged;
+            }
 
             PdmContext.SaveChanges();
 
@@ -45,6 +55,7 @@ namespace Irsa.PDM.Admin
                     CreateDate = DateTime.Now,
                     CreatedBy = UsuarioLogged,
                     Enabled = true,
+                    Editable = true,
                     FechaDesde = dto.FechaDesde,
                     FechaHasta = dto.FechaHasta,
                     Vehiculo = vehiculo
@@ -135,7 +146,18 @@ namespace Irsa.PDM.Admin
             serviceSync.LastBaseTablesSync = DateTime.Now;
                         
             var client = new JsonServiceClient(_fcMediosTarifarioUrl);
-            var tarifas = client.Get<IList<TarifaFcMedios>>(GetTarifasAction);
+            var tarifas = default(IList<TarifaFcMedios>);
+
+            try
+            {
+                tarifas = client.Get<IList<TarifaFcMedios>>(GetTarifasAction);
+            }
+            catch (Exception)
+            {
+                
+                throw;
+            }
+            
 
             #region Base
 

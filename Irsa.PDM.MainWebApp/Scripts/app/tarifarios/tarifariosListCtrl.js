@@ -21,8 +21,9 @@
                        { field: 'vehiculo.nombre', displayName: 'Vehículo' },
                        { field: 'fechaDesde', displayName: 'Fecha desde' },
                        { field: 'fechaHasta', displayName: 'Fecha hasta' },
+                       { field: 'editable', displayName: 'Editable' },
                    //   { field: 'cuit', displayName: 'Editar', width: 70, cellTemplate: '<div class="ng-grid-icon-container"><a href="javascript:void(0)" class="btn btn-rounded btn-xs btn-icon btn-default" ng-click="setEdit(row.entity)"><i class="fa fa-pencil"></i></a></div>' },
-                       { field: 'cuit', displayName: 'Admin', width: 70, cellTemplate: '<div class="ng-grid-icon-container"><a href="javascript:void(0)" class="btn btn-rounded btn-xs btn-icon btn-default" ng-click="navigationService.goToEdit(row.entity.id)" ><i class="fa fa-share-square-o"></i></a></div>' }
+                       { field: 'cuit', displayName: 'Admin', width: 70, cellTemplate: '<div class="ng-grid-icon-container"><a href="javascript:void(0)" ng-if="row.entity.editable" class="btn btn-rounded btn-xs btn-icon btn-default" ng-click="navigationService.goToEdit(row.entity.id)" ><i class="fa fa-share-square-o"></i></a></div>' }
                    ]
                });
                

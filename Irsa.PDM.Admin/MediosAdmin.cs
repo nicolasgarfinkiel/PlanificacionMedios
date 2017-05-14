@@ -15,28 +15,28 @@ namespace Irsa.PDM.Admin
             var entity = default(Medio);
           //  var tipoEspacio = (TipoEspacio) Enum.Parse(typeof(TipoEspacio), dto.TipoEspacio);
 
-            if (!dto.Id.HasValue)
-            {
-                entity = new Medio
-                {                 
-                    CreateDate = DateTime.Now,
-                    CreatedBy = UsuarioLogged,                                        
-                    Enabled = true,                    
-                    Nombre = dto.Nombre,
-                    Descripcion = dto.Descripcion,
-                 //   TipoEspacio = tipoEspacio
-                };
-            }
-            else
-            {
-                entity = PdmContext.Medios.Single(c => c.Id == dto.Id.Value);
+            //if (!dto.Id.HasValue)
+            //{
+            //    entity = new Medio
+            //    {                 
+            //        CreateDate = DateTime.Now,
+            //        CreatedBy = UsuarioLogged,                                        
+            //        Enabled = true,                    
+            //        Nombre = dto.Nombre,
+            //        Descripcion = dto.Descripcion,
+            //     //   TipoEspacio = tipoEspacio
+            //    };
+            //}
+            //else
+            //{
+            //    entity = PdmContext.Medios.Single(c => c.Id == dto.Id.Value);
              
-                entity.Nombre = dto.Nombre;
-                entity.Descripcion = dto.Descripcion;
-                entity.UpdateDate = DateTime.Now;
-                entity.UpdatedBy = UsuarioLogged;
-                //entity.TipoEspacio = tipoEspacio;
-            }
+            //    entity.Nombre = dto.Nombre;
+            //    entity.Descripcion = dto.Descripcion;
+            //    entity.UpdateDate = DateTime.Now;
+            //    entity.UpdatedBy = UsuarioLogged;
+            //    //entity.TipoEspacio = tipoEspacio;
+            //}
 
             return entity;
         }

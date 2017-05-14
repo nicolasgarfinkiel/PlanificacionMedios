@@ -19,5 +19,7 @@
         public string OrdenDeCompra { get; set; }
         public string Descripcion { get; set; }
         public double Importe { get; set; }
+
+        public double ImporteOld { get; set; }
     }
 }

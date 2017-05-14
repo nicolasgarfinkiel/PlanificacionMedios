@@ -45,6 +45,13 @@
                            data: { entity: entity }
                        });
                    },
+                   deleteEntity: function (id) {
+                       return $http({
+                           method: 'POST',
+                           url: '/' + this.controller + '/DeleteEntity',
+                           data: { id: id }
+                       });
+                   },
                    
                };
            }]);

@@ -1,17 +1,61 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Security.AccessControl;
-using System.Web.Configuration;
+using AutoMapper;
+using Irsa.PDM.Dtos;
 using Irsa.PDM.Dtos.Filters;
-using Irsa.PDM.Entities;
+using ServiceStack.ServiceClient.Web;
+using Tarifa = Irsa.PDM.Entities.Tarifa;
 
 namespace Irsa.PDM.Admin
 {
     public class TarifasAdmin : BaseAdmin<int, Entities.Tarifa, Dtos.Tarifa, FilterTarifas>
-    {        
+    {
+        private const string PostTarifasAction = "/client?method=create&action=programas_tarifados";
+        private const string ErrorMessage = "Se actualizaron satisfactoriamente las tarifas.";
 
         #region Base
+
+        public override Dtos.Tarifa Update(Dtos.Tarifa dto)
+        {
+            var entity = ToEntity(dto);
+
+            #region Sync
+
+            var tarifasFcMedios = new List<TarifaFcMediosUpdate>
+            {
+                new TarifaFcMediosUpdate
+                {
+                    cod_programa = entity.CodigoPrograma,
+                    fecha_tarifa = entity.Tarifario.FechaDesde.ToString("yyyy-dd-MM 00:00:00"),
+                    bruto = entity.Importe,
+                    descuento_1 = 0,
+                    descuento_2 = 0,
+                    descuento_3 = 0,
+                    descuento_4 = 0,
+                    descuento_5 = 0
+                }
+            };
+
+            var json = string.Join(",", tarifasFcMedios.Select(e => string.Format("{{\"cod_programa\":{0},\"bruto\":{1},\"descuento_1\":{2},\"descuento_2\":{3},\"descuento_3\":{4},\"descuento_4\":{5},\"descuento_5\":{6},\"fecha_tarifa\":\"{7}\"}}",
+               e.cod_programa, e.bruto, e.descuento_1, e.descuento_2, e.descuento_3, e.descuento_4, e.descuento_5, e.fecha_tarifa)).ToList());
+
+            json = string.Format("[{0}]", json);
+
+            var result = string.Format("{0}{1}", FcMediosTarifarioUrl, PostTarifasAction).PostJsonToUrl(json);
+
+            if (!string.Equals(result, ErrorMessage))
+            {
+                throw new Exception(string.Format("Error en la sincronización con FC Medios: {0}", result));
+            }
+
+            #endregion
+
+            PdmContext.SaveChanges();
+
+            return Mapper.Map<Entities.Tarifa, Dtos.Tarifa>(entity);
+        }
 
         public override Tarifa ToEntity(Dtos.Tarifa dto)
         {
@@ -22,7 +66,7 @@ namespace Irsa.PDM.Admin
 
             if (!dto.Id.HasValue)
             {
-                var tarifario = PdmContext.Tarifario.Single(t => t.Id == dto.IdTarifario);
+                var tarifario = PdmContext.Tarifarios.Single(t => t.Id == dto.IdTarifario);
 
                 entity = new Tarifa
                 {
@@ -40,9 +84,9 @@ namespace Irsa.PDM.Admin
                     Viernes = dto.Viernes,
                     Sabado = dto.Sabado,
                     Domingo = dto.Domingo,
-                  //  Medio = medio,
+                    //  Medio = medio,
                     OrdenDeCompra = dto.OrdenDeCompra,
-                   // Plaza = plaza,
+                    // Plaza = plaza,
                     //Vehiculo = vehiculo,
                     Importe = dto.Importe
                 };
@@ -51,7 +95,7 @@ namespace Irsa.PDM.Admin
             {
                 entity = PdmContext.Tarifas.Single(c => c.Id == dto.Id.Value);
 
-            //    entity.Descripcion = dto.Descripcion;
+                //    entity.Descripcion = dto.Descripcion;
                 entity.UpdateDate = DateTime.Now;
                 entity.UpdatedBy = UsuarioLogged;
                 //entity.Descripcion = dto.Descripcion;
@@ -79,7 +123,7 @@ namespace Irsa.PDM.Admin
         }
 
         public override IQueryable GetQuery(FilterTarifas filter)
-        {            
+        {
             var result = PdmContext
                         .Tarifas.Include(t => t.Vehiculo)
                         .Include(t => t.Medio)
@@ -145,14 +189,13 @@ namespace Irsa.PDM.Admin
             return result;
         }
 
-        
-
         #endregion
 
-
-        public void SetValues(FilterTarifas filter, double? importe, int? oc)
+        public void SetValues(FilterTarifas filter, double? importe = null, int? oc = null, bool takeOld = false)
         {
             var tarifas = GetQuery(filter).OfType<Tarifa>().ToList();
+            var tarifario = PdmContext.Tarifarios.Single(e => e.Id == filter.TarifarioId);
+            var tarifasFcMedios = new List<TarifaFcMediosUpdate>();
 
             tarifas.ForEach(t =>
             {
@@ -166,11 +209,48 @@ namespace Irsa.PDM.Admin
                     t.OrdenDeCompra = oc.Value.ToString();
                 }
 
+                if (takeOld)
+                {
+                    t.Importe = t.ImporteOld;
+                }
+
                 t.UpdateDate = DateTime.Now;
                 t.UpdatedBy = UsuarioLogged;
-            });            
+
+                if (t.Importe > 0)
+                {
+                    tarifasFcMedios.Add(new TarifaFcMediosUpdate
+                    {
+                        cod_programa = t.CodigoPrograma,
+                        bruto = t.Importe,
+                        descuento_1 = 0,
+                        descuento_2 = 0,
+                        descuento_3 = 0,
+                        descuento_4 = 0,
+                        descuento_5 = 0,
+                        fecha_tarifa = tarifario.FechaDesde.ToString("yyyy-dd-MM 00:00:00"),
+                    });
+                }
+            });
+
+            #region Sync
+
+            var json = string.Join(",", tarifasFcMedios.Select(e => string.Format("{{\"cod_programa\":{0},\"bruto\":{1},\"descuento_1\":{2},\"descuento_2\":{3},\"descuento_3\":{4},\"descuento_4\":{5},\"descuento_5\":{6},\"fecha_tarifa\":\"{7}\"}}",
+                e.cod_programa, e.bruto, e.descuento_1, e.descuento_2, e.descuento_3, e.descuento_4, e.descuento_5, e.fecha_tarifa)).ToList());
+
+            json = string.Format("[{0}]", json);
+
+            var result = string.Format("{0}{1}", FcMediosTarifarioUrl, PostTarifasAction).PostJsonToUrl(json);
+
+            if (!string.Equals(result, ErrorMessage))
+            {
+                throw new Exception(string.Format("Error en la sincronización con FC Medios: {0}", result));
+            }
+
+            #endregion
 
             PdmContext.BulkSaveChanges();
         }
     }
 }
+

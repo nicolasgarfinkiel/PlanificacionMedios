@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace Irsa.PDM.Dtos
 {
@@ -9,6 +8,6 @@ namespace Irsa.PDM.Dtos
         public Vehiculo Vehiculo { get; set; }        
         public DateTime FechaDesde { get; set; }
         public DateTime FechaHasta { get; set; }
-        public bool Enabled { get; set; }
+        public string Estado { get; set; }
     }
 }

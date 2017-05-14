@@ -1,11 +1,12 @@
 ﻿angular.module('irsa.pdm.tarifarios.ctrl.list', [])
        .controller('listCtrl', [
            '$scope',
+           '$timeout',
            'tarifariosService',
            'vehiculosService',
            'baseNavigationService',
            'listBootstraperService',
-           function ($scope, tarifariosService, vehiculosService, baseNavigationService, listBootstraperService) {
+           function ($scope, $timeout, tarifariosService, vehiculosService, baseNavigationService, listBootstraperService) {
                $scope.navigationService = baseNavigationService;
 
                //#region Base
@@ -21,8 +22,10 @@
                        { field: 'vehiculo.nombre', displayName: 'Vehículo' },
                        { field: 'fechaDesde', displayName: 'Fecha desde' },
                        { field: 'fechaHasta', displayName: 'Fecha hasta' },
-                   //   { field: 'cuit', displayName: 'Editar', width: 70, cellTemplate: '<div class="ng-grid-icon-container"><a href="javascript:void(0)" class="btn btn-rounded btn-xs btn-icon btn-default" ng-click="setEdit(row.entity)"><i class="fa fa-pencil"></i></a></div>' },
-                       { field: 'cuit', displayName: 'Admin', width: 70, cellTemplate: '<div class="ng-grid-icon-container"><a href="javascript:void(0)" class="btn btn-rounded btn-xs btn-icon btn-default" ng-click="navigationService.goToEdit(row.entity.id)" ><i class="fa fa-share-square-o"></i></a></div>' }
+                       { field: 'estado', displayName: 'Estado' },
+                       { field: 'cuit', displayName: 'Editar', width: 70, cellTemplate: '<div class="ng-grid-icon-container"><a ng-if="row.entity.estado == \'Editable\'" href="javascript:void(0)" class="btn btn-rounded btn-xs btn-icon btn-default" ng-click="setEdit(row.entity)"><i class="fa fa-pencil"></i></a></div>' },
+                       { field: 'cuit', displayName: 'Eliminar', width: 70, cellTemplate: '<div class="ng-grid-icon-container"><a ng-if="row.entity.estado == \'Editable\'" href="javascript:void(0)" class="btn btn-rounded btn-xs btn-icon btn-default" ng-click="remove(row.entity)"><i class="fa fa-remove"></i></a></div>' },
+                       { field: 'cuit', displayName: 'Admin', width: 70, cellTemplate: '<div class="ng-grid-icon-container">' +'<a title="Administrar" href="javascript:void(0)" class="btn btn-rounded btn-xs btn-icon btn-default" ng-click="navigationService.goToEdit(row.entity.id)" ><i ng-class="{\'fa fa-share-square-o\': row.entity.estado == \'Editable\', \'fa fa-search\': row.entity.estado != \'Editable\' }"></i></a></div>'}
                    ]
                });
                
@@ -49,7 +52,21 @@
                    $scope.operation = 'Edición';
                    $scope.entity = angular.copy(entity);                  
                    $('#tarifarioModal').modal('show');
-                   $scope.loading = false;
+                   $timeout(function () { $scope.loading = false; }, 200);
+               };
+
+               $scope.remove = function (entity) {
+                   if (!confirm('Desea llevar a cabo la operación?')) return;
+                   $scope.result.hasErrors = false;
+                                      
+                   tarifariosService.deleteEntity(entity.id).then(function (response) {
+                       if (!response.data.result.hasErrors) {
+                           $scope.search();                           
+                           return;
+                       }
+
+                       $scope.result = response.data.result;
+                   }, function () { throw 'Error on deleteEntity'; });
                };
 
                $scope.save = function () {

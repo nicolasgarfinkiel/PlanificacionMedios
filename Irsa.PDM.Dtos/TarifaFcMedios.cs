@@ -5,7 +5,7 @@ namespace Irsa.PDM.Dtos
     public class TarifaFcMedios
     {
         public int cod_programa { get; set; }
-        public int cod_medio { get; set; }
+        public string cod_medio { get; set; }
         public string des_medio { get; set; }
         public string cod_plaza { get; set; }
         public string des_plaza { get; set; }
@@ -21,7 +21,8 @@ namespace Irsa.PDM.Dtos
         public string dia_domingo { get; set; }
         public int hora_inicio { get; set; }
         public int hora_fin { get; set; }
-        public double bruto { get; set; }
+        public double bruto { get; set; }    
+
         public DateTime fecha_tarifa { get; set; }
 
         public bool Lunes

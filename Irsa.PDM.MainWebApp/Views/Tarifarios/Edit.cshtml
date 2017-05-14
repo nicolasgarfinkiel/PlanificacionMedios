@@ -115,7 +115,7 @@
                             </th>
                             <th style="width: 8%">
                                 Importe
-                                <div class="btn-group" style="float: right;">
+                                <div class="btn-group" style="float: right;" ng-show="entity.estado == 'Editable'">
                                     <button data-toggle="dropdown" class="btn btn-default btn-xs dropdown-toggle" ng-click="importe = null; invalidImporte = false;"><span class="fa fa-edit"></span></button>
                                     <ul class="dropdown-menu filter" role="menu">
                                         <li ng-class="{error: invalidImporte}">
@@ -124,14 +124,14 @@
                                         </li>
                                         <li class="divider"></li>
                                         <li class="text-right">
-                                            <button class="btn btn-primary btn-xs" ng-click="setImportes($event)" ng-show="importe">Aplicar</button>                                            
+                                            <button class="btn btn-primary btn-xs" ng-click="setImportes($event)" ng-show="importe">Aplicar</button>
                                         </li>
                                     </ul>
                                 </div>
                             </th>
                             <th style="width: 7%">
                                 O.C.
-                                <div class="btn-group" style="float: right;">
+                                <div class="btn-group" style="float: right;" ng-show="entity.estado == 'Editable'">
                                     <button data-toggle="dropdown" class="btn btn-default btn-xs dropdown-toggle" ng-click="oc = null; invalidOc = false;"><span class="fa fa-edit"></span></button>
                                     <ul class="dropdown-menu filter " role="menu" style=" left: -71px;">
                                         <li ng-class="{error: invalidOc}">
@@ -177,15 +177,15 @@
                                 <span>{{tarifa.descripcion}}</span>                                
                             </td>
                             <td data-title="Importe" ng-class="{error: tarifa.invalidTarifa}">
-                                <span ng-if="!entity.enabled">{{tarifa.importe | currency}}</span>
-                                <input type="text" ng-model="tarifa.importe" ng-if="entity.enabled" ng-keypress="tarifa.edited = true" fcsa-number="{ prepend: '$' }" />
+                                <span ng-if="entity.estado != 'Editable'">{{tarifa.importe | currency}}</span>
+                                <input type="text" ng-model="tarifa.importe" ng-if="entity.estado == 'Editable'" ng-keypress="tarifa.edited = true" fcsa-number="{ prepend: '$' }" />
                             </td>
                             <td data-title="OC" >
-                                <span ng-if="!entity.enabled">{{tarifa.ordenDeCompra}}</span>
-                                <input type="text" ng-model="tarifa.ordenDeCompra" int ng-if="entity.enabled" ng-keypress="tarifa.edited = true"  />
+                                <span ng-if="!entity.estado != 'Editable'">{{tarifa.ordenDeCompra}}</span>
+                                <input type="text" ng-model="tarifa.ordenDeCompra" int ng-if="entity.estado == 'Editable'" ng-keypress="tarifa.edited = true" />
                             </td>
                             <td>
-                                <button class="btn btn-primary btn-xs" type="button" ng-click="setEditable(tarifa)" ng-if="entity.enabled && tarifa.edited"><i class="fa fa-save"></i></button>
+                                <button class="btn btn-primary btn-xs" type="button" ng-click="setEditable(tarifa)" ng-if="entity.estado == 'Editable' && tarifa.edited"><i class="fa fa-save"></i></button>
                             </td>
                         </tr>
                     </tbody>

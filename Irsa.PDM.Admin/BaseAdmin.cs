@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Web;
 using AutoMapper;
@@ -10,6 +11,7 @@ namespace Irsa.PDM.Admin
 {
     public abstract class BaseAdmin<TID, TE, TD, TF> where TF: FilterBase
     {
+        public static string FcMediosTarifarioUrl = ConfigurationManager.AppSettings["fcMediosTarifarioUrl"];
         public readonly PDMContext PdmContext;
         public string UsuarioLogged { get; set; }
 

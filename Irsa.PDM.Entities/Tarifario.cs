@@ -9,5 +9,6 @@ namespace Irsa.PDM.Entities
         public DateTime FechaHasta { get; set; }
         public virtual Vehiculo Vehiculo { get; set; }
         public virtual IList<Tarifa> Tarifas { get; set; }
+        public EstadoTarifario Estado { get; set; }
     }
 }

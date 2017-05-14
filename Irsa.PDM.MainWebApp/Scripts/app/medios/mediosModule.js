@@ -19,17 +19,17 @@
     function ($routeProvider, $locationProvider, $httpProvider) {
 
         $routeProvider.when('/', {
-            templateUrl: 'medios/list',
+            templateUrl: 'medios/listt',
             controller: 'listCtrl'
         });
               
         $routeProvider.when('/create', {
-            templateUrl: 'medios/edit',
+            templateUrl: 'medios/editt',
             controller: 'editCtrl'
         });
         
         $routeProvider.when('/edit/:id', {
-            templateUrl: 'medios/edit',
+            templateUrl: 'medios/editt',
             controller: 'editCtrl'
         });
 

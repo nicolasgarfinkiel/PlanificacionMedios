@@ -5,7 +5,7 @@
             replace: true,
             template: '<div class="loading" style="display: none;"></div>',
             link: function (scope, element, attrs) {
-                var container = $("body")[0];
+                var container = $("#wrapper")[0];
                 
                 scope.$watch('activeCalls', function (newVal, oldVal) {
                     if (newVal == 0) {
@@ -32,7 +32,7 @@
                 };
 
                 scope.unblockUI = function () {
-                    setTimeout(function () { $(container).unblock(); }, 300);
+                    $(container).unblock();
                 };
             }
         };

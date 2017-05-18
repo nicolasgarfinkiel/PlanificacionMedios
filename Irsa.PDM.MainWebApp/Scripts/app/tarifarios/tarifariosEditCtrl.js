@@ -304,6 +304,8 @@
                    }
 
                    tarifasService.setValues($scope.filter, $scope.importe).then(function (response) {
+
+
                        $scope.filter.currentPage = 1;
                        $scope.findTarifas();
                    });
@@ -319,6 +321,10 @@
                    }
 
                    tarifasService.setValues($scope.filter, null, $scope.oc).then(function (response) {
+                       $scope.result = response.data.result;
+
+                       if ($scope.result.hasErrors) return;
+
                        $scope.filter.currentPage = 1;
                        $scope.findTarifas();
                    });

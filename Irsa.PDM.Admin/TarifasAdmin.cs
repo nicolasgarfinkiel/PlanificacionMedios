@@ -228,7 +228,7 @@ namespace Irsa.PDM.Admin
                         descuento_3 = 0,
                         descuento_4 = 0,
                         descuento_5 = 0,
-                        fecha_tarifa = tarifario.FechaDesde.ToString("yyyy-dd-MM 00:00:00"),
+                        fecha_tarifa = tarifario.FechaDesde.ToString("yyyy-MM-dd 00:00:00"),
                     });
                 }
             });

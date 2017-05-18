@@ -7,7 +7,7 @@
            'baseNavigationService',
            'editBootstraperService',
            function ($scope, $routeParams, tarifariosService, tarifasService, baseNavigationService, editBootstraperService) {
-               $scope.dias = ['Lunes', 'Martes', 'Miercoles', 'Juves', 'Viernes', 'Sabado', 'Domingo'];
+               $scope.dias = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo'];
                $scope.tarifaInit = { idTarifario: $routeParams.id, lunes: true, martes: true, miercoles: true, jueves: true, viernes: true, sabado: true, domingo: true };
                $scope.tarifas = [];
 

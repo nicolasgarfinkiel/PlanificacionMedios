@@ -2,7 +2,7 @@
 <div class="hpanel">
     <div class="panel-body">
         <h5 class="font-light m-b-xs">
-            Administración de campaña nro: {{entity.id}}
+            Administración de campaña {{entity.nombre}}
         </h5>
         <small>Fecha creacion: {{entity.createDate}}. Estado: {{entity.estado}}</small>
     </div>
@@ -19,8 +19,10 @@
                             <a data-toggle="collapse" data-parent="#accordion" href="#collapse{{pauta.id}}" target="_self" aria-expanded="true" aria-controls="collapse{{pauta.id}}">
                                 Pauta nro <b>{{pauta.codigo}}</b>. Estado: <b>{{pauta.estado}}</b>
                             </a>
-                            <button>Aprobar</button>
-                            <button>Rechazar</button>
+                            <span style="float: right; position: relative; top: -3px;">
+                                <button class="btn btn-primary btn-xs" ng-show="pauta.estado == 'Pendiente'" ng-click="changeEstadoPauta(pauta, 'Aprobada')">Aprobar</button>
+                                <button class="btn btn-danger btn-xs" ng-show="pauta.estado == 'Pendiente'" ng-click="changeEstadoPauta(pauta, 'Rechazada')">Rechazar</button>
+                            </span>                           
                         </h4>
                     </div>
                     <div id="collapse{{pauta.id}}" class="panel-collapse collapse in"  role="tabpanel" aria-labelledby="heading{{pauta.id}}">
@@ -30,7 +32,7 @@
                                 <table class="col-sm-12 table-bordered table-striped table-condensed cf">
                                     <thead class="cf">
                                         <tr>                                                                                       
-                                            <th>
+                                            <th style="width: 15%;">
                                                 Código programa
                                             </th>
                                             <th>
@@ -42,34 +44,34 @@
                                             <th>
                                                 Tema
                                             </th>
-                                            <th>
+                                            <th style="width: 10%;">
                                                 Costo unitario
                                             </th>
                                             <th>
                                                 Detalle Tarifa asociada
                                             </th>                                                                                 
                                         </tr>
-                                    </thead>
+                                    </thead>                                    
                                     <tbody style="font-size: 11px;">
-                                        <tr ng-repeat="item in pautas[].data">
+                                        <tr ng-repeat="item in pautas[pauta.id].data">
                                             <td data-title="Código programa">
-                                                <span>{{tarifa.medioNombre}}</span>
+                                                <span>{{item.codigoPrograma}}</span>
                                             </td>
                                             <td data-title="Proveedor">
-                                                <span>{{tarifa.medioNombre}}</span>
+                                                <span>{{item.proveedor}}</span>
                                             </td>
                                             <td data-title="Espacio">
-                                                <span>{{tarifa.medioNombre}}</span>
+                                                <span>{{item.espacio}}</span>
                                             </td>
                                             <td data-title="Tema">
-                                                <span>{{tarifa.medioNombre}}</span>
+                                                <span>{{item.tema}}</span>
                                             </td>
                                             <td data-title="Costo unitario">
-                                                <span>{{tarifa.medioNombre}}</span>
+                                                <span>{{item.costoUnitario | currency}}</span>
                                             </td>
                                             <td data-title="Tarifa asociada">
-                                                <span>{{tarifa.medioNombre}}</span>
-                                            </td>                                          
+                                                <span></span>
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -77,14 +79,14 @@
                                     <div class="col-sm-12">
                                         <div class="text-center">
                                             <ul class="pagination">
-                                                <li class="previous" ng-class="{'disabled': isFirstPage()}">
-                                                    <a href="javascript:void(0)" ng-click="goToPreviousPage()">Anterior</a>
+                                                <li class="previous" ng-class="{'disabled': isFirstPage(pauta.id)}">
+                                                    <a href="javascript:void(0)" ng-click="goToPreviousPage(pauta.id)">Anterior</a>
                                                 </li>
                                                 <li class="active">
-                                                    <a href="javascript:void(0)">Página {{filter.currentPage}} de {{filter.pageCount}} - Registros: <b>{{filter.count}}</b></a>
+                                                    <a href="javascript:void(0)">Página {{pautas[pauta.id].filter.currentPage}} de {{pautas[pauta.id].filter.pageCount}} - Registros: <b>{{pautas[pauta.id].filter.count}}</b></a>
                                                 </li>
-                                                <li class="next" ng-class="{'disabled': isLastPage()}">
-                                                    <a href="javascript:void(0)" ng-click="goToNextPage()">Siguiente</a>
+                                                <li class="next" ng-class="{'disabled': isLastPage(pauta.id)}">
+                                                    <a href="javascript:void(0)" ng-click="goToNextPage(pauta.id)">Siguiente</a>
                                                 </li>
                                             </ul>
                                         </div>

@@ -1,6 +1,11 @@
-﻿using System.Web.Mvc;
+﻿using System;
+using System.Collections.Generic;
+using System.Web.Mvc;
 using Irsa.PDM.Admin;
+using Irsa.PDM.Dtos;
 using Irsa.PDM.Dtos.Common;
+using Irsa.PDM.Dtos.Filters;
+using Irsa.PDM.Infrastructure;
 
 namespace Irsa.PDM.MainWebApp.Controllers
 {
@@ -31,6 +36,42 @@ namespace Irsa.PDM.MainWebApp.Controllers
             return new
             {                
             };
+        }   
+  
+        [HttpPost]
+        public ActionResult GetItemsByFilter(FilterPautaItems filter)
+        {
+            var response = new PagedListResponse<PautaItem>();
+
+            try
+            {
+                response = _admin.GetItemsByFilter(filter);
+            }
+            catch (Exception ex)
+            {
+                response.Result.HasErrors = true;
+                response.Result.Messages.Add(ex.Message);
+            }
+
+            return this.JsonNet(response);
+        }
+
+        [HttpPost]
+        public ActionResult ChangeEstadoPauta(int pautaId, string estado)
+        {
+            var response = new Response<int> { Result = new Result() { HasErrors = false, Messages = new List<string>() } };
+
+            try
+            {
+                _admin.ChangeEstadoPauta(pautaId, estado);
+            }
+            catch (Exception ex)
+            {
+                response.Result.HasErrors = true;
+                response.Result.Messages.Add(ex.Message);
+            }
+
+            return this.JsonNet(response);
         }     
     }
 }

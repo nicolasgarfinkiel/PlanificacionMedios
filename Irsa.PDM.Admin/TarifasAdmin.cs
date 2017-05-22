@@ -6,6 +6,7 @@ using AutoMapper;
 using Irsa.PDM.Dtos;
 using Irsa.PDM.Dtos.Filters;
 using ServiceStack.ServiceClient.Web;
+using ServiceStack.Text;
 using Tarifa = Irsa.PDM.Entities.Tarifa;
 
 namespace Irsa.PDM.Admin

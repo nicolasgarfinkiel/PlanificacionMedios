@@ -32,6 +32,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{662F32
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Lib", "Lib", "{12FCCF55-5F55-4002-A0F6-55BA851E2035}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ServiceStack", "ServiceStack", "{76768A28-C3DA-4A81-BD86-3BB2390386D6}"
+	ProjectSection(SolutionItems) = preProject
+		Lib\ServiceStack\ServiceStack.Common.dll = Lib\ServiceStack\ServiceStack.Common.dll
+		Lib\ServiceStack\ServiceStack.dll = Lib\ServiceStack\ServiceStack.dll
+		Lib\ServiceStack\ServiceStack.Interfaces.dll = Lib\ServiceStack\ServiceStack.Interfaces.dll
+		Lib\ServiceStack\ServiceStack.ServiceInterface.dll = Lib\ServiceStack\ServiceStack.ServiceInterface.dll
+		Lib\ServiceStack\ServiceStack.Text.dll = Lib\ServiceStack\ServiceStack.Text.dll
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -83,5 +94,6 @@ Global
 		{6C63B040-B0EE-4398-93C1-B8E55094313F} = {B6505AF2-2B4A-4728-94AA-7E234280FBA7}
 		{4130E5BF-5532-41DE-993F-89A532119814} = {BE4E0AA4-752F-4275-9600-4B7D7D7DDD5F}
 		{D4038283-12A1-47E7-8CC6-F26CE644C089} = {BE4E0AA4-752F-4275-9600-4B7D7D7DDD5F}
+		{76768A28-C3DA-4A81-BD86-3BB2390386D6} = {12FCCF55-5F55-4002-A0F6-55BA851E2035}
 	EndGlobalSection
 EndGlobal

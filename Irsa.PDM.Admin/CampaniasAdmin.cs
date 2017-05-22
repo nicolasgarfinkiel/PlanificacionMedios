@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
+using AutoMapper;
 using Irsa.PDM.Dtos;
 using Irsa.PDM.Dtos.Common;
 using Irsa.PDM.Entities;
@@ -146,5 +148,39 @@ namespace Irsa.PDM.Admin
         }
 
         #endregion
+
+        public PagedListResponse<Dtos.PautaItem> GetItemsByFilter(Dtos.Filters.FilterPautaItems filter)
+        {
+            var query = PdmContext
+                      .PautasItem.Include(p => p.Tarifa)
+                      .Where(t => t.Pauta.Id == filter.PautaId)
+                      .OrderBy(t => t.CodigoPrograma)
+                      .AsQueryable();
+
+            return new PagedListResponse<Dtos.PautaItem>
+            {
+                Count = query.Count(),
+                Data = Mapper.Map<IList<Entities.PautaItem>, IList<Dtos.PautaItem>>(query.Skip(filter.PageSize * (filter.CurrentPage - 1)).Take(filter.PageSize).ToList())
+            };           
+        }
+
+        public void ChangeEstadoPauta(int pautaId, string est)
+        {
+            var pauta = PdmContext.Pautas.Single(e => e.Id == pautaId);
+            var estado = (EstadoPauta) Enum.Parse(typeof (EstadoPauta), est);
+
+            pauta.Estado = estado;
+            pauta.UpdateDate = DateTime.Now;
+            pauta.UpdatedBy = UsuarioLogged;
+
+            if (pauta.Campania.Pautas.All(e => e.Estado == estado))
+            {
+                pauta.Campania.UpdateDate = DateTime.Now;
+                pauta.Campania.UpdatedBy = UsuarioLogged;
+                pauta.Campania.Estado = estado == EstadoPauta.Aprobada ? EstadoCampania.Aprobada : EstadoCampania.Rechazada;
+            }
+
+            PdmContext.SaveChanges();
+        }
     }
 }

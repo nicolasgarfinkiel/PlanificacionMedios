@@ -7,6 +7,7 @@ using Irsa.PDM.Dtos;
 using Irsa.PDM.Dtos.Common;
 using Irsa.PDM.Entities;
 using ServiceStack.ServiceClient.Web;
+using ServiceStack.Text;
 
 namespace Irsa.PDM.Admin
 {
@@ -14,6 +15,8 @@ namespace Irsa.PDM.Admin
     {        
         private const string ImportUser = "Import process";
         private const string GetPautas = "/client?method=get-list&action=pautas_a_aprobar";
+        private const string PostPautasAction = "/client?method=create&action=pautas_aprobadas";
+        private const string SuccessMessage = "Se actualizaron satisfactoriamente las pautas aprobadas.";
 
         #region Base
       
@@ -98,7 +101,7 @@ namespace Irsa.PDM.Admin
                         campania.Pautas.Add(pauta);                        
                     }
 
-                    if (pauta.Estado != EstadoPauta.Pendiente) return;
+                    if (pauta.Estado != EstadoPauta.Pendiente && pauta.Estado != EstadoPauta.ConflictoTarifas) return;
 
                     var items = pautas.Where(e => string.Equals(e.nro_pauta, pcodigo)).ToList();
 
@@ -138,7 +141,7 @@ namespace Irsa.PDM.Admin
                         item.FechaAviso = itemWs.fecha_aviso;
                     });
 
-
+                    pauta.Estado = pauta.Items.Any(e => e.Tarifa == null) ? EstadoPauta.ConflictoTarifas : pauta.Estado;
                 });
 
                 #endregion              
@@ -164,7 +167,7 @@ namespace Irsa.PDM.Admin
             };           
         }
 
-        public void ChangeEstadoPauta(int pautaId, string est)
+        public string ChangeEstadoPauta(int pautaId, string est, string motivo)
         {
             var pauta = PdmContext.Pautas.Single(e => e.Id == pautaId);
             var estado = (EstadoPauta) Enum.Parse(typeof (EstadoPauta), est);
@@ -180,7 +183,25 @@ namespace Irsa.PDM.Admin
                 pauta.Campania.Estado = estado == EstadoPauta.Aprobada ? EstadoCampania.Aprobada : EstadoCampania.Rechazada;
             }
 
+            #region Sync
+       
+            var json = string.Format("{{\"nro_pauta\":{0},\"aprobada\":{1},\"usuario\":\"{2}\",\"motivo\":\"{3}\"}}",
+                pauta.Codigo, estado == EstadoPauta.Aprobada ? 1 : 0, UsuarioLogged, motivo);
+
+            json = string.Format("[{0}]", json);
+
+            var result = string.Format("{0}{1}", FcMediosTarifarioUrl, PostPautasAction).PostJsonToUrl(json);
+
+            if (!string.Equals(result, SuccessMessage))
+            {
+                throw new Exception(string.Format("Error en la sincronización con FC Medios: {0}", result));
+            }
+
+            #endregion
+
             PdmContext.SaveChanges();
+
+            return pauta.Campania.Estado.ToString();
         }
     }
 }

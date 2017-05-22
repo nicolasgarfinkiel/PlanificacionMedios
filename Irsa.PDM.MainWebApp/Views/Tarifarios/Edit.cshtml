@@ -181,7 +181,7 @@
                                 <input type="text" ng-model="tarifa.importe" ng-if="entity.estado == 'Editable'" ng-keypress="tarifa.edited = true" fcsa-number="{ prepend: '$' }" />
                             </td>
                             <td data-title="OC" >
-                                <span ng-if="!entity.estado != 'Editable'">{{tarifa.ordenDeCompra}}</span>
+                                <span ng-if="entity.estado != 'Editable'">{{tarifa.ordenDeCompra}}</span>
                                 <input type="text" ng-model="tarifa.ordenDeCompra" int ng-if="entity.estado == 'Editable'" ng-keypress="tarifa.edited = true" />
                             </td>
                             <td>

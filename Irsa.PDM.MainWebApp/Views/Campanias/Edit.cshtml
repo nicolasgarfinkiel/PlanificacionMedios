@@ -18,10 +18,11 @@
                         <h4 class="panel-title">
                             <a data-toggle="collapse" data-parent="#accordion" href="#collapse{{pauta.id}}" target="_self" aria-expanded="true" aria-controls="collapse{{pauta.id}}">
                                 Pauta nro <b>{{pauta.codigo}}</b>. Estado: <b>{{pauta.estado}}</b>
+                                <i class="fa fa-exclamation-circle" style="color: red;" ng-if="pauta.estado == 'ConflictoTarifas'"></i>
                             </a>
                             <span style="float: right; position: relative; top: -3px;">
                                 <button class="btn btn-primary btn-xs" ng-show="pauta.estado == 'Pendiente'" ng-click="changeEstadoPauta(pauta, 'Aprobada')">Aprobar</button>
-                                <button class="btn btn-danger btn-xs" ng-show="pauta.estado == 'Pendiente'" ng-click="changeEstadoPauta(pauta, 'Rechazada')">Rechazar</button>
+                                <button class="btn btn-danger btn-xs" ng-show="pauta.estado == 'Pendiente' || pauta.estado == 'ConflictoTarifas'" ng-click="confirmRechazo(pauta)">Rechazar</button>
                             </span>                           
                         </h4>
                     </div>
@@ -70,7 +71,9 @@
                                                 <span>{{item.costoUnitario | currency}}</span>
                                             </td>
                                             <td data-title="Tarifa asociada">
-                                                <span></span>
+                                                <span>
+                                                    <i title="Tarifa NO asociada" class="fa fa-exclamation-circle" style="color: red;" ng-if="!item.tarifa"></i>
+                                                </span>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -112,6 +115,35 @@
 </div>
 
 
+<div class="modal fade pdm" id="rechazoModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-sm" style="width: 500px;">
+        <div class="modal-content">
+            <div class="color-line"></div>
+            <div class="modal-header">
+                <h4 class="modal-title">Ingrese el motivo de rechazo</h4>
+            </div>
+            <div class="modal-body">
 
+                <form class="form-horizontal ng-pristine ng-valid">                    
+                    <div class="form-group">
+                        <label class="col-lg-3 control-label">Motivo</label>
+                        <div class="col-lg-9">                            
+                                <textarea class="form-control" style="width: 100%;" ng-model="motivo"></textarea>                            
+                        </div>
+                    </div>                
+                </form>
+
+                <div class="alert alert-danger" ng-if="resultModal.hasErrors">
+                    <i class="fa fa-bolt"></i>
+                    <div ng-repeat="message in resultModal.messages">{{message}}</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" ng-click="changeEstadoPauta(currentPauta, 'Rechazada')">Aceptar</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 

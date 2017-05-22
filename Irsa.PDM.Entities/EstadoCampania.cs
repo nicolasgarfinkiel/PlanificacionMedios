@@ -4,6 +4,6 @@
     {
         Pendiente = 1,
         Aprobada,
-        Rechazada
+        Rechazada        
     }
 }

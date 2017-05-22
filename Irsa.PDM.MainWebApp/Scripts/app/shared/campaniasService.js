@@ -4,11 +4,11 @@
            'baseService',
            function ($http, baseService) {
                var result = angular.extend({
-                   changeEstadoPauta: function (pautaId, estado) {
+                   changeEstadoPauta: function (pautaId, estado, motivo) {
                        return $http({
                            method: 'POST',
                            url: '/Campanias/ChangeEstadoPauta',
-                           data: { pautaId: pautaId, estado: estado }
+                           data: { pautaId: pautaId, estado: estado, motivo: motivo }
                        });
                    },
                    getItemsByFilter: function (filter) {

@@ -7,6 +7,7 @@
            'editBootstraperService',
            function ($scope, $routeParams, campaniasService, baseNavigationService, editBootstraperService) {
                $scope.pautas = {};
+               $scope.resultModal = {hasErrors: false, messages: []};
 
                //#region base 
 
@@ -32,13 +33,32 @@
 
                //#endregion
 
-               $scope.changeEstadoPauta = function(pauta, estado) {
-                   if (!confirm('Desea continuar con la operación?')) return;
+               $scope.confirmRechazo = function (pauta) {
+                   $scope.resultModal = { hasErrors: false, messages: [] };
+                   $scope.motivo = null;
+                   $scope.currentPauta = pauta;
+                   $('#rechazoModal').modal('show');
+               }
 
-                   campaniasService.changeEstadoPauta(pauta.id, estado).then(function (response) {
-                       $scope.result = response.data.result;
+               $scope.changeEstadoPauta = function (pauta, estado) {
+                   $scope.resultModal = $scope.result = { hasErrors: false, messages: [] };
+
+                   if (!$scope.motivo && estado == 'Rechazada') {
+                       $scope.resultModal = { hasErrors: true, messages: ['Ingrese el motivo'] };
+                       return;
+                   }
+
+                   campaniasService.changeEstadoPauta(pauta.id, estado, $scope.motivo).then(function (response) {
+                       $scope.resultModal = $scope.result = response.data.result;                       
+
+                       if ($scope.resultModal.hasErrors) return;
+
+                       $scope.entity.estado = response.data.data;
                        pauta.estado = estado;
-                       $scope.entity.pautas = angular.copy($scope.entity.pautas);                       
+                       $scope.entity.pautas = angular.copy($scope.entity.pautas);
+                       $scope.motivo = null;
+                       $scope.currentPauta = null;
+                       $('#rechazoModal').modal('hide');
                    }, function () { throw 'Error on changeEstadoPauta'; });
                };
 

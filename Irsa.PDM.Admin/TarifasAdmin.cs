@@ -14,7 +14,7 @@ namespace Irsa.PDM.Admin
     public class TarifasAdmin : BaseAdmin<int, Entities.Tarifa, Dtos.Tarifa, FilterTarifas>
     {
         private const string PostTarifasAction = "/client?method=create&action=programas_tarifados";
-        private const string ErrorMessage = "Se actualizaron satisfactoriamente las tarifas.";
+        private const string SuccessMessage = "Se actualizaron satisfactoriamente las tarifas.";
 
         #region Base
 
@@ -46,7 +46,7 @@ namespace Irsa.PDM.Admin
 
             var result = string.Format("{0}{1}", FcMediosTarifarioUrl, PostTarifasAction).PostJsonToUrl(json);
 
-            if (!string.Equals(result, ErrorMessage))
+            if (!string.Equals(result, SuccessMessage))
             {
                 throw new Exception(string.Format("Error en la sincronización con FC Medios: {0}", result));
             }
@@ -243,7 +243,7 @@ namespace Irsa.PDM.Admin
 
             var result = string.Format("{0}{1}", FcMediosTarifarioUrl, PostTarifasAction).PostJsonToUrl(json);
 
-            if (!string.Equals(result, ErrorMessage))
+            if (!string.Equals(result, SuccessMessage))
             {
                 throw new Exception(string.Format("Error en la sincronización con FC Medios: {0}", result));
             }

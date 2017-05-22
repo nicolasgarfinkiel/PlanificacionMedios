@@ -40,7 +40,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Campania.cs" />
+    <Compile Include="Filters\FilterCampanias.cs" />
     <Compile Include="Filters\FilterTarifarios.cs" />
+    <Compile Include="Pauta.cs" />
+    <Compile Include="PautaFcMedios.cs" />
+    <Compile Include="PautaItem.cs" />
     <Compile Include="Tarifa.cs" />
     <Compile Include="TarifaFcMediosUpdate.cs" />
     <Compile Include="TarifaFcMedios.cs" />

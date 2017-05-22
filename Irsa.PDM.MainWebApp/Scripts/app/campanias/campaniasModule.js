@@ -1,21 +1,17 @@
-﻿angular.module('irsa.pdm.tarifarios', [
-    'irsa.pdm.tarifarios.ctrl.list',
-    'irsa.pdm.tarifarios.ctrl.edit',
-    'irsa.pdm.service.tarifarios',
-    'irsa.pdm.service.tarifas',
-    'irsa.pdm.service.vehiculos',
+﻿angular.module('irsa.pdm.campanias', [
+    'irsa.pdm.campanias.ctrl.list',
+    'irsa.pdm.campanias.ctrl.edit',
+    'irsa.pdm.service.campanias',
     'irsa.pdm.navigation.base',    
     'irsa.pdm.service.base',
     'irsa.pdm.service.bootstraper.list',
-    'irsa.pdm.service.bootstraper.edit',    
+    'irsa.pdm.service.bootstraper.edit',
     'ngRoute',
     'ngGrid',
     '$strap.directives',
     'irsa.pdm.directive.loading',    
     'irsa.pdm.directive.debounce',
-    'irsa.pdm.directive.int',
-    'fcsa-number',
-    'ui.select'
+    'irsa.pdm.directive.int'
 ]).config([
     '$routeProvider',
     '$locationProvider',
@@ -23,17 +19,17 @@
     function ($routeProvider, $locationProvider, $httpProvider) {
 
         $routeProvider.when('/', {
-            templateUrl: 'tarifarios/list',
+            templateUrl: 'campanias/list',
             controller: 'listCtrl'
         });
-
+              
         $routeProvider.when('/create', {
-            templateUrl: 'tarifarios/edit',
+            templateUrl: 'campanias/edit',
             controller: 'editCtrl'
         });
-
+        
         $routeProvider.when('/edit/:id', {
-            templateUrl: 'tarifarios/edit',
+            templateUrl: 'campanias/edit',
             controller: 'editCtrl'
         });
 
@@ -68,22 +64,22 @@
                
 
         var regexIso8601 = /^\d{4}(-\d\d(-\d\d(T\d\d:\d\d(:\d\d)?(\.\d+)?(([+-]\d\d:\d\d)|Z)?)?)?)?$/i;
-
+        
         $httpProvider.defaults.transformResponse.push(function (responseData) {
             convertDateStringsToDates(responseData);
             return responseData;
         });
-
+        
         function convertDateStringsToDates(input) {
             // Ignore things that aren't objects.
             if (typeof input !== "object") return input;
-
+                       
 
             for (var key in input) {
                 if (!input.hasOwnProperty(key)) continue;
 
                 var value = input[key];
-                var match;
+                var match;                
                 if (typeof value === "string" && value.length > 4 && (match = value.match(regexIso8601))) {
                     input[key] = moment(value).format('DD/MM/YYYY');
                 } else if (typeof value === "object") {

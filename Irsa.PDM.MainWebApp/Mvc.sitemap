@@ -11,6 +11,10 @@
       <mvcSiteMapNode title="Vehículos"                         controller="Vehiculos"              action="Index"                                           roles=""/>
       <mvcSiteMapNode title="Tarifarios"                        controller="Tarifarios"              action="Index"                                           roles=""/>
     </mvcSiteMapNode>
+
+    <mvcSiteMapNode   title="Campañas"                          controller="Home"                   action="index"             Class="fa fa-bookmark-o"      roles="" >
+      <mvcSiteMapNode title="Listado"                           controller="Campanias"                 action="Index"                                           roles=""/>      
+    </mvcSiteMapNode>
    
   </mvcSiteMapNode>
 </mvcSiteMap>

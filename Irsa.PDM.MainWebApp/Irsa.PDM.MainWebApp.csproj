@@ -134,6 +134,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\CampaniasController.cs" />
     <Compile Include="Controllers\TarifariosController.cs" />
     <Compile Include="Controllers\TarifasController.cs" />
     <Compile Include="Controllers\VehiculosController.cs" />
@@ -184,6 +185,10 @@
     <Content Include="Scripts\angularJs\quill\quill.min.js" />
     <Content Include="Scripts\angularJs\select.min.js" />
     <Content Include="Scripts\angularJs\ui-utils.min.js" />
+    <Content Include="Scripts\app\campanias\campaniasEditCtrl.js" />
+    <Content Include="Scripts\app\campanias\campaniasListCtrl.js" />
+    <Content Include="Scripts\app\campanias\campaniasModule.js" />
+    <Content Include="Scripts\app\shared\campaniasService.js" />
     <Content Include="Scripts\app\shared\tarifariosService.js" />
     <Content Include="Scripts\app\tarifarios\tarifariosListCtrl.js" />
     <Content Include="Scripts\app\tarifarios\tarifariosEditCtrl.js" />
@@ -310,6 +315,9 @@
     <Content Include="Views\Tarifarios\Edit.cshtml" />
     <Content Include="Views\Tarifarios\Index.cshtml" />
     <Content Include="Views\Tarifarios\List.cshtml" />
+    <Content Include="Views\Campanias\Edit.cshtml" />
+    <Content Include="Views\Campanias\Index.cshtml" />
+    <Content Include="Views\Campanias\List.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

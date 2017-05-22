@@ -39,8 +39,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EstadoCampania.cs" />
+    <Compile Include="EstadoPauta.cs" />
+    <Compile Include="PautaItem.cs" />
+    <Compile Include="Pauta.cs" />
     <Compile Include="ServiceSync.cs" />
     <Compile Include="EstadoTarifario.cs" />
+    <Compile Include="Campania.cs" />
     <Compile Include="Tarifario.cs" />
     <Compile Include="Vehiculo.cs" />
     <Compile Include="Plaza.cs" />

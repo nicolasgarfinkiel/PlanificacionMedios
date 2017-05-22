@@ -26,7 +26,9 @@ namespace Irsa.PDM.Repositories
         public IDbSet<Tarifario> Tarifarios { get; set; }
         public IDbSet<Tarifa> Tarifas { get; set; }
         public IDbSet<ServiceSync> ServiceSyncs { get; set; }
-
+        public IDbSet<Campania> Campanias { get; set; }
+        public IDbSet<Pauta> Pautas { get; set; }
+        public IDbSet<PautaItem> PautasItem { get; set; }
     }
 }
 

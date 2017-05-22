@@ -1,0 +1,21 @@
+﻿@using Irsa.PDM.Infrastructure
+
+@{
+    ViewBag.ngApp = "irsa.pdm.campanias";
+}
+<div>    
+    <script type="text/ng-template" id="campanias/list">
+        @RenderPage(Url.Content("~/Views/Campanias/List.cshtml"))
+    </script>
+    <script type="text/ng-template" id="campanias/edit">
+        @RenderPage(Url.Content("~/Views/Campanias/Edit.cshtml"))
+    </script>
+    <div ng-view></div>
+</div>
+
+@section scripts{
+    @Html.IncludeVersionedJs("Scripts/app/Campanias/campaniasModule.js")
+    @Html.IncludeVersionedJs("Scripts/app/Campanias/campaniasListCtrl.js")
+    @Html.IncludeVersionedJs("Scripts/app/Campanias/campaniasEditCtrl.js")        
+    @Html.IncludeVersionedJs("Scripts/app/shared/campaniasService.js")
+}

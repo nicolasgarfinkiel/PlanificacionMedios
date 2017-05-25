@@ -4,19 +4,19 @@
     </div>
     <div class="panel-body">
         <div class="row" style="margin-bottom: 10px;">
-            <div class="col-sm-2">
+            <div class="col-md-2 col-sm-12">
                 <div class="input-group input-append">
                     <input type="text" ng-model="filter.fechaDesde" data-date-format="dd/mm/yyyy" bs-datepicker class="form-control" placeholder="Fecha desde" />
                     <span class="input-group-addon" data-toggle="datepicker"><i class=" fa fa-calendar"></i></span>
                 </div>
             </div>
-            <div class="col-sm-2">
+            <div class="col-md-2 col-sm-12">
                 <div class="input-group input-append">
                     <input type="text" ng-model="filter.fechaHasta" data-date-format="dd/mm/yyyy" bs-datepicker class="form-control" placeholder="Fecha hasta" />
                     <span class="input-group-addon" data-toggle="datepicker"><i class=" fa fa-calendar"></i></span>
                 </div>
             </div>           
-            <div class="col-sm-5">
+            <div class="col-md-4 col-sm-12">
                 <ui-select  ng-model="filter.vehiculo" theme="select2" style="width: 100%;" append-to-body="true">
                     <ui-select-match placeholder="Vehículo">{{$select.selected.nombre}}</ui-select-match>
                     <ui-select-choices refresh-on-active="true" refresh="getSelectSource($select)" refresh-delay="300" repeat="item in selectList | filter: $select.search">
@@ -31,7 +31,7 @@
                     </ui-select-choices>
                 </ui-select>     
             </div>
-            <div class="col-sm-3 text-right">
+            <div class="col-md-4 text-right">
                 <a href="javascript:void(0)" class="btn btn-default" ng-click="clearFilter()">Limpiar</a>
                 <a href="javascript:void(0)" class="btn btn-info " ng-click="search()"><i class="fa fa-search"></i> Buscar</a>
                 <a href="javascript:void(0)" class="btn btn-success " ng-click="setCreate()"><i class="fa fa-plus"></i> Nuevo</a>

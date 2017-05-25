@@ -24,8 +24,23 @@ namespace Irsa.PDM.Admin
             Validate(dto);
             var entity = ToEntity(dto);
             PdmContext.Tarifarios.Add(entity);
+            PdmContext.SaveChanges();
 
-            var lastTarifario = PdmContext.Tarifarios.Where(e => e.Estado != EstadoTarifario.Eliminado && e.Vehiculo.Id == dto.Vehiculo.Id).OrderByDescending(e => e.Id).FirstOrDefault();
+            try
+            {
+                InitTarifario(entity);
+            }
+            catch (Exception)
+            {
+                PdmContext.Tarifarios.Remove(entity);
+                PdmContext.SaveChanges();
+                throw;
+            }
+
+            var lastTarifario = PdmContext.Tarifarios.Where(e => e.Estado != EstadoTarifario.Eliminado && 
+                e.Vehiculo.Id == dto.Vehiculo.Id && e.Id != entity.Id)
+                .OrderByDescending(e => e.Id)
+                .FirstOrDefault();
 
             if (lastTarifario != null)
             {
@@ -35,8 +50,6 @@ namespace Irsa.PDM.Admin
             }
 
             PdmContext.SaveChanges();
-
-            InitTarifario(entity);
 
             return Mapper.Map<Tarifario, Dtos.Tarifario>(entity);
         }

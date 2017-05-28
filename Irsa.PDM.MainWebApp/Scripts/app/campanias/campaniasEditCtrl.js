@@ -7,7 +7,7 @@
            'editBootstraperService',
            function ($scope, $routeParams, campaniasService, baseNavigationService, editBootstraperService) {
                $scope.pautas = {};
-               $scope.resultModal = {hasErrors: false, messages: []};
+               $scope.resultModal = { hasErrors: false, messages: [] };
 
                //#region base 
 
@@ -15,7 +15,7 @@
                    $scope.entity.pautas.forEach(function (pauta) {
                        $scope.pautas[pauta.id.toString()] = {
                            data: [],
-                           filter: {                               
+                           filter: {
                                currentPage: 1,
                                pageSize: 10,
                                pautaId: pauta.id
@@ -26,21 +26,20 @@
                    });
                };
 
-               editBootstraperService.init($scope, $routeParams,  {
+               editBootstraperService.init($scope, $routeParams, {
                    service: campaniasService,
                    navigation: baseNavigationService
                });
 
                //#endregion
 
-               $scope.confirmRechazo = function (pauta) {
+               $scope.confirmRechazo = function () {
                    $scope.resultModal = { hasErrors: false, messages: [] };
                    $scope.motivo = null;
-                   $scope.currentPauta = pauta;
                    $('#rechazoModal').modal('show');
-               }
+               };
 
-               $scope.changeEstadoPauta = function (pauta, estado) {
+               $scope.changeEstado = function (estado) {
                    $scope.resultModal = $scope.result = { hasErrors: false, messages: [] };
 
                    if (!$scope.motivo && estado == 'Rechazada') {
@@ -48,16 +47,19 @@
                        return;
                    }
 
-                   campaniasService.changeEstadoPauta(pauta.id, estado, $scope.motivo).then(function (response) {
-                       $scope.resultModal = $scope.result = response.data.result;                       
+                   campaniasService.changeEstadoCampania($scope.entity.id, estado, $scope.motivo).then(function (response) {
+                       $scope.resultModal = $scope.result = response.data.result;
 
                        if ($scope.resultModal.hasErrors) return;
 
-                       $scope.entity.estado = response.data.data;
-                       pauta.estado = estado;
+                       $scope.entity.estado = estado;
+
+                       $scope.entity.pautas.forEach(function (item) {
+                           item.estado = estado;
+                       });
+
                        $scope.entity.pautas = angular.copy($scope.entity.pautas);
                        $scope.motivo = null;
-                       $scope.currentPauta = null;
                        $('#rechazoModal').modal('hide');
                    }, function () { throw 'Error on changeEstadoPauta'; });
                };

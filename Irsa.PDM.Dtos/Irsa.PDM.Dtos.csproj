@@ -47,6 +47,7 @@
     <Compile Include="Pauta.cs" />
     <Compile Include="PautaFcMedios.cs" />
     <Compile Include="PautaItem.cs" />
+    <Compile Include="Proveedor.cs" />
     <Compile Include="Tarifa.cs" />
     <Compile Include="TarifaFcMediosUpdate.cs" />
     <Compile Include="TarifaFcMedios.cs" />

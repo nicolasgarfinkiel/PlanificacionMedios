@@ -1,0 +1,21 @@
+﻿@using Irsa.PDM.Infrastructure
+
+@{
+    ViewBag.ngApp = "irsa.pdm.proveedores";
+}
+<div>    
+    <script type="text/ng-template" id="proveedores/list">
+        @RenderPage(Url.Content("~/Views/Proveedores/List.cshtml"))
+    </script>
+    <script type="text/ng-template" id="proveedores/edit">
+        @RenderPage(Url.Content("~/Views/Proveedores/Edit.cshtml"))
+    </script>
+    <div ng-view></div>
+</div>
+
+@section scripts{
+    @Html.IncludeVersionedJs("Scripts/app/Proveedores/proveedoresModule.js")
+    @Html.IncludeVersionedJs("Scripts/app/Proveedores/proveedoresListCtrl.js")
+    @Html.IncludeVersionedJs("Scripts/app/Proveedores/proveedoresEditCtrl.js")        
+    @Html.IncludeVersionedJs("Scripts/app/shared/proveedoresService.js")    
+}

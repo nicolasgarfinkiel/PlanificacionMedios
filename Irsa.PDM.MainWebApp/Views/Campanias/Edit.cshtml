@@ -5,6 +5,10 @@
             Administración de campaña {{entity.nombre}}
         </h5>
         <small>Fecha creacion: {{entity.createDate}}. Estado: {{entity.estado}}</small>
+        <span style="float: right; position: relative; top: -3px;">
+            <button class="btn btn-primary btn-xs" ng-show="entity.estado == 'Pendiente'" ng-click="changeEstado('Aprobada')">Aprobar</button>
+            <button class="btn btn-danger btn-xs" ng-show="entity.estado == 'Pendiente'" ng-click="confirmRechazo()">Rechazar</button>
+        </span>      
     </div>
 </div>
 
@@ -19,11 +23,7 @@
                             <a data-toggle="collapse" data-parent="#accordion" href="#collapse{{pauta.id}}" target="_self" aria-expanded="true" aria-controls="collapse{{pauta.id}}">
                                 Pauta nro <b>{{pauta.codigo}}</b>. Estado: <b>{{pauta.estado}}</b>
                                 <i class="fa fa-exclamation-circle" style="color: red;" ng-if="pauta.estado == 'ConflictoTarifas'"></i>
-                            </a>
-                            <span style="float: right; position: relative; top: -3px;">
-                                <button class="btn btn-primary btn-xs" ng-show="pauta.estado == 'Pendiente'" ng-click="changeEstadoPauta(pauta, 'Aprobada')">Aprobar</button>
-                                <button class="btn btn-danger btn-xs" ng-show="pauta.estado == 'Pendiente' || pauta.estado == 'ConflictoTarifas'" ng-click="confirmRechazo(pauta)">Rechazar</button>
-                            </span>                           
+                            </a>                                               
                         </h4>
                     </div>
                     <div id="collapse{{pauta.id}}" class="panel-collapse collapse in"  role="tabpanel" aria-labelledby="heading{{pauta.id}}">
@@ -140,7 +140,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                <button type="button" class="btn btn-primary" ng-click="changeEstadoPauta(currentPauta, 'Rechazada')">Aceptar</button>
+                <button type="button" class="btn btn-primary" ng-click="changeEstado('Rechazada')">Aceptar</button>
             </div>
         </div>
     </div>

@@ -57,13 +57,13 @@ namespace Irsa.PDM.MainWebApp.Controllers
         }
 
         [HttpPost]
-        public ActionResult ChangeEstadoPauta(int pautaId, string estado, string motivo)
+        public ActionResult ChangeEstadoCampania(int id, string estado, string motivo)
         {
             var response = new Response<string> { Result = new Result() { HasErrors = false, Messages = new List<string>() } };
 
             try
             {
-              response.Data =  _admin.ChangeEstadoPauta(pautaId, estado, motivo);
+                _admin.ChangeEstadoCampania(id, estado, motivo);
             }
             catch (Exception ex)
             {

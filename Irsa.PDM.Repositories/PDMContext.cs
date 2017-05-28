@@ -29,6 +29,7 @@ namespace Irsa.PDM.Repositories
         public IDbSet<Campania> Campanias { get; set; }
         public IDbSet<Pauta> Pautas { get; set; }
         public IDbSet<PautaItem> PautasItem { get; set; }
+        public IDbSet<Proveedor> Proveedores { get; set; }
     }
 }
 

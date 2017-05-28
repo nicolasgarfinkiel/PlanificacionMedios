@@ -135,6 +135,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\CampaniasController.cs" />
+    <Compile Include="Controllers\ProveedoresController.cs" />
     <Compile Include="Controllers\TarifariosController.cs" />
     <Compile Include="Controllers\TarifasController.cs" />
     <Compile Include="Controllers\VehiculosController.cs" />
@@ -188,7 +189,11 @@
     <Content Include="Scripts\app\campanias\campaniasEditCtrl.js" />
     <Content Include="Scripts\app\campanias\campaniasListCtrl.js" />
     <Content Include="Scripts\app\campanias\campaniasModule.js" />
+    <Content Include="Scripts\app\proveedores\proveedoresEditCtrl.js" />
+    <Content Include="Scripts\app\proveedores\proveedoresListCtrl.js" />
+    <Content Include="Scripts\app\proveedores\proveedoresModule.js" />
     <Content Include="Scripts\app\shared\campaniasService.js" />
+    <Content Include="Scripts\app\shared\proveedoresService.js" />
     <Content Include="Scripts\app\shared\tarifariosService.js" />
     <Content Include="Scripts\app\tarifarios\tarifariosListCtrl.js" />
     <Content Include="Scripts\app\tarifarios\tarifariosEditCtrl.js" />
@@ -220,7 +225,6 @@
     <Content Include="Scripts\bootstrap-datepicker.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\homer.js" />
-    <Content Include="Scripts\html2canvas.min.js" />
     <Content Include="Scripts\icheck.min.js" />
     <Content Include="Scripts\index.js" />
     <Content Include="Scripts\jquery.blockUI.js" />
@@ -231,8 +235,6 @@
     <Content Include="Scripts\jquery.slimscroll.min.js" />
     <Content Include="Scripts\metisMenu.min.js" />
     <Content Include="Scripts\moment.js" />
-    <Content Include="Scripts\pdfmake.js" />
-    <Content Include="Scripts\vfs_fonts.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -321,6 +323,9 @@
     <Content Include="Views\Campanias\Edit.cshtml" />
     <Content Include="Views\Campanias\Index.cshtml" />
     <Content Include="Views\Campanias\List.cshtml" />
+    <Content Include="Views\Proveedores\Edit.cshtml" />
+    <Content Include="Views\Proveedores\Index.cshtml" />
+    <Content Include="Views\Proveedores\List.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

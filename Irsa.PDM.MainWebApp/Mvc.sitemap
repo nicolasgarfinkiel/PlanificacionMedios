@@ -9,6 +9,7 @@
       <mvcSiteMapNode title="Medios"                            controller="Medios"                 action="Index"                                           roles=""/>
       <mvcSiteMapNode title="Plazas"                            controller="Plazas"                 action="Index"                                           roles=""/>
       <mvcSiteMapNode title="Vehículos"                         controller="Vehiculos"              action="Index"                                           roles=""/>
+      <mvcSiteMapNode title="Proveedores"                       controller="Proveedores"              action="Index"                                           roles=""/>
       <mvcSiteMapNode title="Tarifarios"                        controller="Tarifarios"              action="Index"                                           roles=""/>
     </mvcSiteMapNode>
 

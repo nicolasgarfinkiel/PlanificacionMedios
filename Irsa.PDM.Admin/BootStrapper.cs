@@ -18,6 +18,7 @@ namespace Irsa.PDM.Admin
                 cfg.CreateMap<Campania, Dtos.Campania>();
                 cfg.CreateMap<Pauta, Dtos.Pauta>();
                 cfg.CreateMap<PautaItem, Dtos.PautaItem>();
+                cfg.CreateMap<Proveedor, Dtos.Proveedor>();
             });         
         }
     }

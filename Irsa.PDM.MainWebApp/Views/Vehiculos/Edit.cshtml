@@ -9,28 +9,7 @@
                 <div class="col-lg-10">
                     <input type="text" class="form-control" ng-model="entity.nombre">
                 </div>
-            </div>    
-            <div class="form-group">
-                <label class="col-lg-2 control-label">Medio</label>
-                <div class="col-lg-10" style="position: relative; top: 3px;">
-                    <ui-select ng-model="entity.medio" theme="select2" style="width: 100%;" append-to-body="true">
-                        <ui-select-match>{{$select.selected.nombre}}</ui-select-match>
-                        <ui-select-choices refresh-on-active="true" refresh="getSelectSource($select)" refresh-delay="300" repeat="item in selectList | filter: $select.search">
-                            <div ng-bind-html="item.nombre | highlight: $select.search"></div>
-                            <small>
-                                <span><b>Tipo de espacio: </b>{{item.tipoEspacio}}. <b>Descripción:</b> {{item.descripcion}}.</span>
-                            </small>
-                            <div ng-if="$index == $select.items.length-1 && currentPage < pageCount">
-                                <button class="btn btn-xs btn-info"
-                                        style="width: 100%; margin-top: 20px;"
-                                        ng-click="getSelectSource($select, $event);">
-                                    Siguiente
-                                </button>
-                            </div>
-                        </ui-select-choices>
-                    </ui-select>          
-                </div>
-            </div>       
+            </div>                  
             <div class="form-group">
                 <label class="col-lg-2 control-label">Descripción</label>
                 <div class="col-lg-10">

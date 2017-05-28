@@ -6,6 +6,7 @@ using AutoMapper;
 using Irsa.PDM.Dtos;
 using Irsa.PDM.Dtos.Common;
 using Irsa.PDM.Entities;
+using ServiceStack.Common.Extensions;
 using ServiceStack.ServiceClient.Web;
 using ServiceStack.Text;
 
@@ -167,27 +168,30 @@ namespace Irsa.PDM.Admin
             };           
         }
 
-        public string ChangeEstadoPauta(int pautaId, string est, string motivo)
+        public void ChangeEstadoCampania(int id, string est, string motivo)
         {
-            var pauta = PdmContext.Pautas.Single(e => e.Id == pautaId);
-            var estado = (EstadoPauta) Enum.Parse(typeof (EstadoPauta), est);
+            var campania = PdmContext.Campanias.Single(e => e.Id == id);
+            var estado = (EstadoCampania)Enum.Parse(typeof(EstadoCampania), est);           
 
-            pauta.Estado = estado;
-            pauta.UpdateDate = DateTime.Now;
-            pauta.UpdatedBy = UsuarioLogged;
+            campania.UpdateDate = DateTime.Now;
+            campania.UpdatedBy = UsuarioLogged;
+            campania.Estado = estado;
 
-            if (pauta.Campania.Pautas.All(e => e.Estado == estado))
+            campania.Pautas.ForEach(p =>
             {
-                pauta.Campania.UpdateDate = DateTime.Now;
-                pauta.Campania.UpdatedBy = UsuarioLogged;
-                pauta.Campania.Estado = estado == EstadoPauta.Aprobada ? EstadoCampania.Aprobada : EstadoCampania.Rechazada;
-            }
-
+                p.UpdateDate = DateTime.Now;
+                p.UpdatedBy = UsuarioLogged;
+                p.Estado = estado == EstadoCampania.Aprobada ? EstadoPauta.Aprobada : EstadoPauta.Rechazada;
+            });
+                      
             #region Sync
        
-            var json = string.Format("{{\"nro_pauta\":{0},\"aprobada\":{1},\"usuario\":\"{2}\",\"motivo\":\"{3}\"}}",
-                pauta.Codigo, estado == EstadoPauta.Aprobada ? 1 : 0, UsuarioLogged, motivo);
+            var list = campania.Pautas.Select(pauta =>  
+                string.Format("{{\"nro_pauta\":{0},\"aprobada\":{1},\"usuario\":\"{2}\",\"motivo\":\"{3}\"}}",
+                pauta.Codigo, estado == EstadoCampania.Aprobada ? 1 : 0, UsuarioLogged, motivo))
+                .ToList();
 
+            var json = string.Join(",", list);
             json = string.Format("[{0}]", json);
 
             var result = string.Format("{0}{1}", FcMediosTarifarioUrl, PostPautasAction).PostJsonToUrl(json);
@@ -199,9 +203,7 @@ namespace Irsa.PDM.Admin
 
             #endregion
 
-            PdmContext.SaveChanges();
-
-            return pauta.Campania.Estado.ToString();
+            PdmContext.SaveChanges();            
         }
     }
 }

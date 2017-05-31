@@ -11,7 +11,8 @@
     '$strap.directives',
     'irsa.pdm.directive.loading',    
     'irsa.pdm.directive.debounce',
-    'irsa.pdm.directive.int'
+    'irsa.pdm.directive.int',
+    'isteven-multi-select'
 ]).config([
     '$routeProvider',
     '$locationProvider',

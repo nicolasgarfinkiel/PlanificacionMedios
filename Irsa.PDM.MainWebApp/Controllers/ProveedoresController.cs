@@ -21,7 +21,7 @@ namespace Irsa.PDM.MainWebApp.Controllers
         {
             return new
             {   
-                Vehiculos  = new VehiculosAdmin().GetByFilter(new FilterBase{CurrentPage = 1, PageSize = 99999})
+                Vehiculos  = new VehiculosAdmin().GetByFilter(new FilterBase{CurrentPage = 1, PageSize = 99999}).Data
             };
         }
     }

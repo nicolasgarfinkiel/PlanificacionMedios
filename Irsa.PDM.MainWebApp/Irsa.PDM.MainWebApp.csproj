@@ -156,6 +156,7 @@
     <Content Include="Content\css\font-awesome.min.css" />
     <Content Include="Content\css\font.css" />
     <Content Include="Content\css\helper.css" />
+    <Content Include="Content\css\isteven-multi-select.css" />
     <Content Include="Content\css\jquery.fileupload.css" />
     <Content Include="Content\css\metisMenu.min.css" />
     <Content Include="Content\css\ng-grid.min.css" />
@@ -179,6 +180,7 @@
     <Content Include="Scripts\angularJs\angular-strap.min.js" />
     <Content Include="Scripts\angularJs\angular-v1.2.2.min.js" />
     <Content Include="Scripts\angularJs\angular.min.js" />
+    <Content Include="Scripts\angularJs\isteven-multi-select.js" />
     <Content Include="Scripts\angularJs\markdown.js" />
     <Content Include="Scripts\angularJs\ng-grid-2.0.7.min.js" />
     <Content Include="Scripts\angularJs\ng-map.min.js" />

@@ -9,13 +9,43 @@
 
                $scope.onInitEnd = function () {
                    $scope.entity.vehiculos = $scope.entity.vehiculos || [];
-                   $scope.operation = !$routeParams.id ? 'Nuevo proveedor' : 'Edición de proveedor';                   
+                   $scope.operation = !$routeParams.id ? 'Nuevo proveedor' : 'Edición de proveedor';
+
+                   var aux = $scope.entity.vehiculos;
+                   $scope.entity.vehiculos = [];
+
+                   aux.forEach(function(item) {
+                       var vehiculo = $scope.getVehiculoById(item.id);
+                       vehiculo.tick = true;
+                       $scope.entity.vehiculos.push(vehiculo);
+                   });
                };
 
                editBootstraperService.init($scope, $routeParams,  {
                    service: proveedoresService,
                    navigation: baseNavigationService
                });
+
+               $scope.localLang = {
+                   selectAll: "Seleccionar todos",
+                   selectNone: "Ninguno",
+                   reset: "Limpiar",
+                   search: "Buscar...",
+                   nothingSelected: "Seleccione uno o más vehículos" 
+               };
+
+               $scope.getVehiculoById = function (id) {
+                   var result = null;
+
+                   for (var i = 0; i < $scope.data.vehiculos.length; i++) {
+                       if ($scope.data.vehiculos[i].id == id) {
+                           result = $scope.data.vehiculos[i];
+                           break;
+                       }
+                   }
+
+                   return result;
+               };
               
                $scope.isValid = function() {
                    $scope.result = { hasErrors: false, messages: [] };                   

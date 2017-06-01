@@ -42,6 +42,24 @@ namespace Irsa.PDM.MainWebApp.Controllers
             }
 
             return this.JsonNet(response);
-        }     
+        }
+
+        [HttpPost]
+        public ActionResult SetValuesByProveedor(FilterTarifaProveedor tarifaProveedor)
+        {
+            var response = new Response<string> { Result = new Result() { HasErrors = false, Messages = new List<string>() } };
+
+            try
+            {
+              response.Data =  _admin.SetValuesByProveedor(tarifaProveedor);
+            }
+            catch (Exception ex)
+            {
+                response.Result.HasErrors = true;
+                response.Result.Messages.Add(ex.Message);
+            }
+
+            return this.JsonNet(response);
+        }    
     }
 }

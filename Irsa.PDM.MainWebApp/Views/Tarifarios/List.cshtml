@@ -1,6 +1,7 @@
 ﻿<div class="hpanel hblue">
     <div class="panel-heading hbuilt">
-        Listado de tarifarios
+        Tarifarios
+        <button style="float: right; margin-right: 10px;" title="Aplicar tarifas por proveedor" class="btn btn-primary btn-xs" ng-click="openProveedoresModal()"><i class="fa fa-star-o"></i> Tarifas por proveedor</button>
     </div>
     <div class="panel-body">
         <div class="row" style="margin-bottom: 10px;">
@@ -45,9 +46,74 @@
     </div>
 </div>
 
+<div class="modal fade pdm" id="proveedoresModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" >
+        <div class="modal-content">
+            <div class="color-line"></div>
+            <div class="modal-header">
+                <h4 class="modal-title">Aplicar tarifas por proveedor</h4>
+            </div>
+            <div class="modal-body">
+
+                <form class="form-horizontal ng-pristine ng-valid">
+                    <div class="form-group">
+                        <label class="col-lg-4 control-label">Proveedor</label>
+                        <div class="col-lg-8">
+                            <ui-select ng-model="tarifaProveedor.proveedor" theme="select2" style="width: 100%;" append-to-body="true">
+                                <ui-select-match>{{$select.selected.nombre}}</ui-select-match>
+                                <ui-select-choices refresh-on-active="true" refresh="getSelectSourceProveedor($select)" refresh-delay="300" repeat="item in selectList | filter: $select.search">
+                                    <div>{{item.nombre}}</div>
+                                    <div ng-if="$index == $select.items.length-1 && currentPage < pageCount">
+                                        <button class="btn btn-xs btn-info"
+                                                style="width: 100%; margin-top: 20px;"
+                                                ng-click="getSelectSource($select, $event);">
+                                            Siguiente
+                                        </button>
+                                    </div>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div> 
+                    <div ng-show="tarifaProveedor.proveedor">
+                        <div class="hpanel">
+                            <div class="panel-heading">                                
+                                Vehículos asociados
+                            </div>
+                            <div class="panel-body" style="display: block; padding: 10px;">
+                                <span style="margin: 5px;" class="label label-info" ng-repeat="vehiculo in tarifaProveedor.proveedor.vehiculos">{{vehiculo.nombre}}</span>                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-4 control-label">Importe</label>
+                        <div class="col-lg-8">
+                            <input type="text" class="form-control" ng-model="tarifaProveedor.importe" />                           
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-4 control-label">Órden de compra</label>
+                        <div class="col-lg-8">
+                            <input type="text" class="form-control" ng-model="tarifaProveedor.oc" int/>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="alert alert-danger" ng-if="resultModal.hasErrors">
+                    <i class="fa fa-bolt"></i>
+                    <div ng-repeat="message in resultModal.messages">{{message}}</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" ng-click="setTarifasProveedor()">Aceptar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <div class="modal fade pdm" id="tarifarioModal" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-sm" style="width: 500px;">
+    <div class="modal-dialog" >
         <div class="modal-content">
             <div class="color-line"></div>
             <div class="modal-header">
@@ -107,5 +173,6 @@
         </div>
     </div>
 </div>
+
 
 

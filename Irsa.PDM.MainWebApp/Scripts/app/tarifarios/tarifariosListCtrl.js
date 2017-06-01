@@ -3,10 +3,12 @@
            '$scope',
            '$timeout',
            'tarifariosService',
+           'tarifasService',
+           'proveedoresService',
            'vehiculosService',
            'baseNavigationService',
            'listBootstraperService',
-           function ($scope, $timeout, tarifariosService, vehiculosService, baseNavigationService, listBootstraperService) {
+           function ($scope, $timeout, tarifariosService, tarifasService, proveedoresService, vehiculosService, baseNavigationService, listBootstraperService) {
                $scope.navigationService = baseNavigationService;
 
                //#region Base
@@ -97,8 +99,7 @@
                };
 
                $scope.isValid = function () {
-                   $scope.resultModal.hasErrors = false;
-                   $scope.resultModal.messages = [];                   
+                   $scope.resultModal = { hasErrors: false, messages: [] };
 
                    if (!$scope.entity.vehiculo) {
                        $scope.resultModal.messages.push('Seleccione un vehículo');
@@ -118,8 +119,8 @@
 
                $scope.getFechaDesde = function () {
                    if (!$scope.entity.vehiculo.id) return;
-                   $scope.resultModal.hasErrors = false;
-                   $scope.resultModal.messages = [];
+
+                   $scope.resultModal = { hasErrors: false, messages: [] };
                    $scope.entity.fechaDesde = null;
                  
                    tarifariosService.getFechaDesde($scope.entity.vehiculo.id).then(function (response) {
@@ -132,13 +133,62 @@
                    }, function () { throw 'Error on getFechaDesde'; });
                };
 
+               $scope.openProveedoresModal = function () {
+                   $scope.resultModal = { hasErrors: false, messages: [] };
+                   $scope.tarifaProveedor = {};
+                   $('#proveedoresModal').modal('show');
+               };
+
+               $scope.setTarifasProveedor = function() {
+                   if (!$scope.isValidTarifaProveedor()) return;
+
+                   tarifasService.setValuesByProveedor($scope.tarifaProveedor).then(function (response) {
+                       if (!response.data.result.hasErrors) {
+                           $('#proveedoresModal').modal('hide');
+
+                           toastr.options = {
+                               "debug": false,
+                               "newestOnTop": false,                               
+                               "closeButton": true,                               
+                           };
+
+                           toastr.info(response.data.data);
+
+                           return;
+                       }
+
+                       $scope.resultModal = response.data.result;
+                   }, function () { throw 'Error on getFechaDesde'; });
+                   
+               };
+
+               $scope.isValidTarifaProveedor = function () {
+                   $scope.resultModal = { hasErrors: false, messages: [] };
+
+                   if (!$scope.tarifaProveedor.proveedor) {
+                       $scope.resultModal.messages.push('Seleccione un proveedor');
+                   }
+
+                   if (!$scope.tarifaProveedor.importe) {
+                       $scope.resultModal.messages.push('Ingrese el importe');
+                   }
+
+                   if ($scope.tarifaProveedor.importe && isNaN($scope.tarifaProveedor.importe)) {
+                       $scope.resultModal.messages.push('El importe debe ser numérico');
+                   }
+
+                   $scope.resultModal.hasErrors = $scope.resultModal.messages.length;
+                   return !$scope.resultModal.hasErrors;
+                   
+               };
+
                $scope.$watch('entity.vehiculo', function (newValue) {
                    if (!newValue || $scope.loading) return;
 
                    $scope.getFechaDesde();
                });
 
-               //#region Select UI
+               //#region Select UI Vehiculos
 
                $scope.selectList = [];
                $scope.currentPage = 0;
@@ -168,4 +218,32 @@
                };
 
                //#endregion         
+
+               //#region Select UI Proveedores
+
+               $scope.filterProveedores = { pageSize: 20 };
+
+               $scope.getSelectSourceProveedor = function ($select, $event) {
+                   if ($scope.loading) return;
+
+                   if (!$event) {
+                       $scope.currentPage = 1;
+                       $scope.pageCount = 0;
+                       $scope.selectList = [];
+                   } else {
+                       $event.stopPropagation();
+                       $event.preventDefault();
+                       $scope.currentPage++;
+                   }
+
+                   $scope.filterProveedores.currentPage = $scope.currentPage;
+                   $scope.filterProveedores.multiColumnSearchText = $select.search;
+
+                   proveedoresService.getByFilter($scope.filterProveedores).then(function (response) {
+                       $scope.selectList = $scope.selectList.concat(response.data.data);
+                       $scope.pageCount = Math.ceil(response.data.count / 20);
+                   }, function () { throw 'Error on getByFilter'; });
+               };
+
+               //#endregion     
            }]);

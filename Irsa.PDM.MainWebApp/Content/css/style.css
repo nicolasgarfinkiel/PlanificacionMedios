@@ -4552,6 +4552,10 @@ ul.h-list {
     padding: 20px 20px 0 20px;
 }
 
+div.toast.toast-info {
+    color: #444 !important;
+}
+
 @media only screen and (max-width: 800px) {
 
     .day-edit {

@@ -5,6 +5,7 @@ using System.Linq;
 using AutoMapper;
 using Irsa.PDM.Dtos;
 using Irsa.PDM.Dtos.Filters;
+using Irsa.PDM.Entities;
 using ServiceStack.ServiceClient.Web;
 using ServiceStack.Text;
 using Tarifa = Irsa.PDM.Entities.Tarifa;
@@ -251,6 +252,28 @@ namespace Irsa.PDM.Admin
             #endregion
 
             PdmContext.BulkSaveChanges();
+        }
+
+        public string SetValuesByProveedor(FilterTarifaProveedor tarifaProveedor)
+        {
+            if (tarifaProveedor.Proveedor.Vehiculos == null || !tarifaProveedor.Proveedor.Vehiculos.Any())
+            {
+                throw new Exception("EL proveedor no posee vehículos asociados");
+            }
+
+            var vehiculosId = tarifaProveedor.Proveedor.Vehiculos.Select(v => v.Id).ToList();
+            var tarifarios = PdmContext.Tarifarios.Where(e => e.Estado == EstadoTarifario.Editable && vehiculosId.Contains(e.Vehiculo.Id)).ToList();
+
+            tarifarios.ForEach(t =>
+            {
+                SetValues(new FilterTarifas {TarifarioId = t.Id}, tarifaProveedor.Importe, tarifaProveedor.Oc);
+            });
+
+            return !tarifarios.Any() ? 
+                "Operación finalizada correctamente. No hay tarifarios abiertos asociados a ninguno de los vehículos."
+                : tarifarios.Count() < tarifaProveedor.Proveedor.Vehiculos.Count()
+                ? "Operación finalizada correctamente. Alguno de los vehículos no poseen tarifario abiertos." :
+                  "Operación finalizada correctamente. Se actualizarion todos los tarifarios.";
         }
     }
 }

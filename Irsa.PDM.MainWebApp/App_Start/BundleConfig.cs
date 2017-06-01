@@ -25,6 +25,7 @@ namespace Irsa.PDM.MainWebApp
             .Include("~/Content/css/style.css")
             .Include("~/Content/css/table-responsive.css")
             .Include("~/Content/css/isteven-multi-select.css")
+            .Include("~/Content/css/toastr.min.css")
             );
           
             bundles.Add(new ScriptBundle("~/bundles/scripts/basicScripts")
@@ -39,6 +40,7 @@ namespace Irsa.PDM.MainWebApp
               .Include("~/Scripts/moment.js")
               .Include("~/Scripts/homer.js")
               .Include("~/Scripts/moment.js")
+              .Include("~/Scripts/toastr.min.js")
               );      
 
             bundles.Add(new ScriptBundle("~/bundles/scripts/angularScripts")

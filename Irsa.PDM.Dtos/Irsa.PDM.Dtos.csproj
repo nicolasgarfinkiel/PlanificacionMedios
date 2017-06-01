@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Campania.cs" />
+    <Compile Include="Filters\FilterTarifaProveedor.cs" />
     <Compile Include="Filters\FilterPautaItems.cs" />
     <Compile Include="Filters\FilterCampanias.cs" />
     <Compile Include="Filters\FilterTarifarios.cs" />

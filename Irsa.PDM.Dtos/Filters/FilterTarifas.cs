@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Security.AccessControl;
+﻿using System.Collections.Generic;
 using Irsa.PDM.Dtos.Common;
 
 namespace Irsa.PDM.Dtos.Filters
@@ -50,6 +48,5 @@ namespace Irsa.PDM.Dtos.Filters
         {
             get { return Dias != null && Dias.Contains("Domingo"); }
         }
-
     }
 }

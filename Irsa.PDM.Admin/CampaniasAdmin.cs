@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using AutoMapper;
 using Irsa.PDM.Dtos;
 using Irsa.PDM.Dtos.Common;
 using Irsa.PDM.Entities;
+using OfficeOpenXml;
 using ServiceStack.Common.Extensions;
 using ServiceStack.ServiceClient.Web;
 using ServiceStack.Text;
@@ -204,6 +206,34 @@ namespace Irsa.PDM.Admin
             #endregion
 
             PdmContext.SaveChanges();            
+        }
+
+        public ExcelPackage GetExcelVisualDePauta(int campaniaId)
+        {
+            var campania = PdmContext.Campanias.Single(e => e.Id == campaniaId);
+
+            var template = new FileInfo(String.Format(@"{0}\Reports\Rpt_VisualDePauta.xlsx", AppDomain.CurrentDomain.BaseDirectory));
+            var pck = new ExcelPackage(template, true);
+            var ws = pck.Workbook.Worksheets[1];
+            var row = 2;
+
+
+
+            return pck;
+        }
+
+        public ExcelPackage GetExcelPauta(int pautaId)
+        {
+            var pauta = PdmContext.Pautas.Single(e => e.Id == pautaId);
+
+            var template = new FileInfo(String.Format(@"{0}\Reports\Rpt_Pauta.xlsx", AppDomain.CurrentDomain.BaseDirectory));
+            var pck = new ExcelPackage(template, true);
+            var ws = pck.Workbook.Worksheets[1];
+            var row = 2;
+
+
+
+            return pck;
         }
     }
 }

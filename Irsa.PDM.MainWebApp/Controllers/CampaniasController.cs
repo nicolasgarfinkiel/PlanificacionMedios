@@ -6,6 +6,7 @@ using Irsa.PDM.Dtos;
 using Irsa.PDM.Dtos.Common;
 using Irsa.PDM.Dtos.Filters;
 using Irsa.PDM.Infrastructure;
+using Irsa.PDM.Infrastructure.ActionResults;
 
 namespace Irsa.PDM.MainWebApp.Controllers
 {
@@ -72,6 +73,40 @@ namespace Irsa.PDM.MainWebApp.Controllers
             }
 
             return this.JsonNet(response);
-        }     
+        }
+
+        [HttpPost]
+        public ActionResult GetExcelVisualDePauta(int campaniaId)
+        {
+            var excelPackage = _admin.GetExcelVisualDePauta(campaniaId);            
+
+            return new ExcelResult
+            {
+                ExcelPackage = excelPackage,
+                FileName = string.Format("Visual_de_Pauta.xlsx")
+            };
+        }
+
+        //[HttpPost]
+        //public ActionResult GetPdfVisualDePauta(int campaniaId)
+        //{         
+        //    var urlBuilder = new System.UriBuilder(Request.Url.AbsoluteUri)
+        //    {
+        //        Path = Url.Content("~/Content/images/logo-irsa.png"),
+        //        Query = null,
+        //    };
+
+        //    var imageUrl = urlBuilder.ToString();
+        //    var model = new { ImageUrl = imageUrl };
+
+        //    var html = GetHtml("Test", model);
+        //    var pdf = new  PdfGenerator(html).Generate();
+
+        //    return new PdfResult
+        //    {
+        //        Content = pdf,
+        //        FileName = string.Format("Visual_de_Pauta.pdf")
+        //    };
+        //}
     }
 }

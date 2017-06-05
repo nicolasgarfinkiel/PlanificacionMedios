@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Web.Mvc;
 using Irsa.PDM.Admin;
 using Irsa.PDM.Dtos;
@@ -158,7 +159,33 @@ namespace Irsa.PDM.MainWebApp.Controllers
 
             return this.JsonNet(response);
         }
-       
+
+        #region Report
+
+        protected string GetHtml(string templateName, object model)
+        {
+            var template = GetTemplate(templateName);
+            var body = RazorEngineHelper.Render(template, model);
+            return body;
+        }
+
+        public static string GetTemplate(string templateName)
+        {
+            var basePath = AppDomain.CurrentDomain.BaseDirectory;
+            var fileName = string.Format("{0}.cshtml", templateName);
+            var path = Path.Combine(basePath, "Reports", "Templates", fileName);
+
+            var template = templateName;
+            if (System.IO.File.Exists(path))
+            {
+                template = System.IO.File.ReadAllText(path);
+            }
+
+            return template;
+        }        
+
+        #endregion
+
         #region Abstract Methods
 
         public abstract object GetDataList();

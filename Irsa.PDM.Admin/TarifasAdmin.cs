@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using AutoMapper;
+using EntityFramework.Utilities;
 using Irsa.PDM.Dtos;
 using Irsa.PDM.Dtos.Filters;
 using Irsa.PDM.Entities;
@@ -30,7 +31,7 @@ namespace Irsa.PDM.Admin
                 new TarifaFcMediosUpdate
                 {
                     cod_programa = entity.CodigoPrograma,
-                    fecha_tarifa = entity.Tarifario.FechaDesde.ToString("yyyy-dd-MM 00:00:00"),
+                    fecha_tarifa = entity.Tarifario.FechaDesde.ToString("yyyy-MM-dd 00:00:00"),
                     bruto = entity.Importe,
                     descuento_1 = 0,
                     descuento_2 = 0,
@@ -251,7 +252,8 @@ namespace Irsa.PDM.Admin
 
             #endregion
 
-            PdmContext.BulkSaveChanges();
+            EFBatchOperation.For(PdmContext, PdmContext.Tarifas).UpdateAll(tarifas, x => x.ColumnsToUpdate(t => t.Importe, t => t.OrdenDeCompra, t => t.UpdateDate, t => t.UpdatedBy));
+            //PdmContext.BulkSaveChanges();
         }
 
         public string SetValuesByProveedor(FilterTarifaProveedor tarifaProveedor)

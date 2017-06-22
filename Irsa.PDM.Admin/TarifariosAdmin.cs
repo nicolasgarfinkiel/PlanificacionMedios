@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using AutoMapper;
+using EntityFramework.Utilities;
 using Irsa.PDM.Dtos;
 using Irsa.PDM.Dtos.Filters;
 using Irsa.PDM.Entities;
+using Irsa.PDM.Repositories;
 using ServiceStack.Common.Extensions;
 using ServiceStack.ServiceClient.Web;
 using Tarifario = Irsa.PDM.Entities.Tarifario;
@@ -13,7 +15,7 @@ using Tarifario = Irsa.PDM.Entities.Tarifario;
 namespace Irsa.PDM.Admin
 {
     public class TarifariosAdmin : BaseAdmin<int, Entities.Tarifario, Dtos.Tarifario, FilterTarifarios>
-    {        
+    {
         private const string ImportUser = "Import process";
         private const string GetTarifasAction = "/client?method=get-list&action=programas_a_tarifar";
 
@@ -37,7 +39,7 @@ namespace Irsa.PDM.Admin
                 throw;
             }
 
-            var lastTarifario = PdmContext.Tarifarios.Where(e => e.Estado != EstadoTarifario.Eliminado && 
+            var lastTarifario = PdmContext.Tarifarios.Where(e => e.Estado != EstadoTarifario.Eliminado &&
                 e.Vehiculo.Id == dto.Vehiculo.Id && e.Id != entity.Id)
                 .OrderByDescending(e => e.Id)
                 .FirstOrDefault();
@@ -58,7 +60,7 @@ namespace Irsa.PDM.Admin
         {
             var entity = PdmContext.Tarifarios.Single(c => c.Id == id);
 
-            new TarifasAdmin().SetValues(new FilterTarifas{TarifarioId = id}, null, null, true);
+            new TarifasAdmin().SetValues(new FilterTarifas { TarifarioId = id }, null, null, true);
 
             entity.Estado = EstadoTarifario.Eliminado;
             entity.UpdatedBy = UsuarioLogged;
@@ -79,7 +81,7 @@ namespace Irsa.PDM.Admin
                     CreateDate = DateTime.Now,
                     CreatedBy = UsuarioLogged,
                     Enabled = true,
-                    Estado =EstadoTarifario.Editable, 
+                    Estado = EstadoTarifario.Editable,
                     FechaDesde = dto.FechaDesde,
                     FechaHasta = dto.FechaHasta,
                     Vehiculo = vehiculo
@@ -112,14 +114,14 @@ namespace Irsa.PDM.Admin
             {
                 throw new Exception("Ya existe otro tarifario con misma fecha desde");
             }
-           
+
         }
 
         public override IQueryable GetQuery(FilterTarifarios filter)
         {
             var result = PdmContext.Tarifarios
                 .Where(e => e.Estado != EstadoTarifario.Eliminado)
-                .OrderBy(r => r.FechaDesde).AsQueryable();
+                .OrderByDescending(r => r.Id).AsQueryable();
 
 
             if (filter.FechaDesde.HasValue)
@@ -326,12 +328,21 @@ namespace Irsa.PDM.Admin
             });
 
 
-            PdmContext.BulkInsert(toAdd);
-            PdmContext.BulkSaveChanges();
+            PdmContext.Configuration.AutoDetectChangesEnabled = false;
+            toAdd.ForEach(e => PdmContext.Tarifas.Add(e));
+
+            PdmContext.SaveChanges();
+            PdmContext.Configuration.AutoDetectChangesEnabled = true;
+            PdmContext = new PDMContext();
 
             #endregion
         }
 
         #endregion
     }
+
+
+
 }
+
+

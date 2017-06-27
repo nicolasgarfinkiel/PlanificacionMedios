@@ -4,6 +4,7 @@ namespace Irsa.PDM.Dtos
 {
     public class Tarifa
     {
+        public int CodigoPrograma { get; set; }
         public int? Id { get; set; }
         public int IdTarifario { get; set; }
         public string MedioNombre { get; set; }

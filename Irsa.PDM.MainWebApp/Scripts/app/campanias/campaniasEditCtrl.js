@@ -91,4 +91,9 @@
                        $scope.pautas[pautaId.toString()].filter.pageCount = Math.ceil($scope.pautas[pautaId.toString()].filter.count / $scope.pautas[pautaId.toString()].filter.pageSize);
                    });
                };
+
+               $scope.openTarifaModal = function(tarifa) {
+                   $scope.currentTarifa = tarifa;
+                   $('#tarifaModal').modal('show');
+               };
            }]);

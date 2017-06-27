@@ -147,6 +147,9 @@ namespace Irsa.PDM.Admin
                     pauta.Estado = pauta.Items.Any(e => e.Tarifa == null) ? EstadoPauta.ConflictoTarifas : pauta.Estado;
                 });
 
+
+                campania.Estado = campania.Pautas.Any(e => e.Estado == EstadoPauta.ConflictoTarifas) ? EstadoCampania.ConflictoTarifas : campania.Estado;
+
                 #endregion              
             });
 

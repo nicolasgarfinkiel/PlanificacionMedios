@@ -7,7 +7,7 @@
         <small>Fecha creacion: {{entity.createDate}}. Estado: {{entity.estado}}</small>
         <span style="float: right; position: relative; top: -3px;">
             <button class="btn btn-primary btn-xs" ng-show="entity.estado == 'Pendiente'" ng-click="changeEstado('Aprobada')">Aprobar</button>
-            <button class="btn btn-danger btn-xs" ng-show="entity.estado == 'Pendiente'" ng-click="confirmRechazo()">Rechazar</button>
+            <button class="btn btn-danger btn-xs" ng-show="entity.estado == 'Pendiente' || entity.estado == 'ConflictoTarifas' " ng-click="confirmRechazo()">Rechazar</button>
         </span>      
     </div>
 </div>
@@ -28,31 +28,31 @@
                     </div>
                     <div id="collapse{{pauta.id}}" class="panel-collapse collapse in"  role="tabpanel" aria-labelledby="heading{{pauta.id}}">
                         <div class="panel-body">
-            
+
                             <div id="no-more-tables">
                                 <table class="col-sm-12 table-bordered table-striped table-condensed cf">
                                     <thead class="cf">
-                                        <tr>                                                                                       
+                                        <tr>
                                             <th style="width: 15%;">
                                                 Código programa
                                             </th>
-                                            <th>
+                                            <th style="width: 25%;">
                                                 Proveedor
                                             </th>
-                                            <th>
+                                            <th style="width: 25%;">
                                                 Espacio
                                             </th>
-                                            <th>
+                                            <th style="width: 10%;">
                                                 Tema
                                             </th>
                                             <th style="width: 10%;">
                                                 Costo unitario
                                             </th>
-                                            <th>
+                                            <th style="width: 20%;">
                                                 Detalle Tarifa asociada
-                                            </th>                                                                                 
+                                            </th>
                                         </tr>
-                                    </thead>                                    
+                                    </thead>
                                     <tbody style="font-size: 11px;">
                                         <tr ng-repeat="item in pautas[pauta.id].data">
                                             <td data-title="Código programa">
@@ -70,9 +70,10 @@
                                             <td data-title="Costo unitario">
                                                 <span>{{item.costoUnitario | currency}}</span>
                                             </td>
-                                            <td data-title="Tarifa asociada">
+                                            <td data-title="Tarifa asociada" style="text-align: center;">
                                                 <span>
                                                     <i title="Tarifa NO asociada" class="fa fa-exclamation-circle" style="color: red;" ng-if="!item.tarifa"></i>
+                                                    <i title="Tarifa asociada" class="fa fa-search" ng-if="item.tarifa" ng-click="openTarifaModal(item.tarifa)"></i>
                                                 </span>
                                             </td>
                                         </tr>
@@ -128,7 +129,7 @@
                     <div class="form-group">
                         <label class="col-lg-3 control-label">Motivo</label>
                         <div class="col-lg-9">                            
-                                <textarea class="form-control" style="width: 100%;" ng-model="motivo"></textarea>                            
+                            <textarea class="form-control" style="width: 100%;" ng-model="motivo"></textarea>                            
                         </div>
                     </div>                
                 </form>
@@ -141,6 +142,79 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
                 <button type="button" class="btn btn-primary" ng-click="changeEstado('Rechazada')">Aceptar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade pdm" id="tarifaModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-sm" style="width: 500px;">
+        <div class="modal-content">
+            <div class="color-line"></div>
+            <div class="modal-header">
+                <h4 class="modal-title">Detalle de tarifa</h4>
+            </div>
+            <div class="modal-body">
+
+                <form class="form-horizontal ng-pristine ng-valid">
+                    <div class="form-group">
+                        <label class="col-lg-4 control-label">Código de programa</label>
+                        <div class="col-lg-8">
+                            <span style="position: relative; top: 7px;">{{currentTarifa.codigoPrograma}}</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-4 control-label">Medio</label>
+                        <div class="col-lg-8">
+                            <span style="position: relative; top: 7px;">{{currentTarifa.medioNombre}}</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-4 control-label">Plaza</label>
+                        <div class="col-lg-8">
+                            <span style="position: relative; top: 7px;">{{currentTarifa.plazaCodigo}}</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-4 control-label">Vehículo</label>
+                        <div class="col-lg-8">
+                            <span style="position: relative; top: 7px;">{{currentTarifa.vehiculoNombre}}</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-4 control-label">Descripción</label>
+                        <div class="col-lg-8">
+                            <span style="position: relative; top: 7px;">{{currentTarifa.descripcion}}</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-4 control-label">Importe</label>
+                        <div class="col-lg-8">
+                            <span style="position: relative; top: 7px;"><b>{{currentTarifa.importe}}</b></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-4 control-label">Hora desde</label>
+                        <div class="col-lg-8">
+                            <span style="position: relative; top: 7px;">{{currentTarifa.horaDesdeFormatted}}</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-4 control-label">Hora hasta</label>
+                        <div class="col-lg-8">
+                            <span style="position: relative; top: 7px;">{{currentTarifa.horaHastaFormatted}}</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-4 control-label">Orden de compra</label>
+                        <div class="col-lg-8">
+                            <span style="position: relative; top: 7px;">{{currentTarifa.ordenDeCompra}}</span>
+                        </div>
+                    </div>                   
+                </form>              
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>                
             </div>
         </div>
     </div>

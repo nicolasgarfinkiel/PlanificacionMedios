@@ -59,7 +59,7 @@ namespace Irsa.PDM.Admin
             {                                
                 #region Campanias
 
-                var campania = PdmContext.Campanias.SingleOrDefault(cc => string.Equals(cc.Nombre, c));
+                var campania = PdmContext.Campanias.SingleOrDefault(cc => string.Equals(cc.Nombre, c) && cc.Estado != EstadoCampania.Rechazada);
 
                 if (campania == null)
                 {
@@ -86,7 +86,7 @@ namespace Irsa.PDM.Admin
 
                 pautasWs.ForEach(pcodigo =>
                 {
-                    var pauta = campania.Pautas.SingleOrDefault(ee => string.Equals(ee.Codigo, pcodigo));
+                    var pauta = campania.Pautas.SingleOrDefault(ee => string.Equals(ee.Codigo, pcodigo) && ee.Estado != EstadoPauta.Rechazada);
 
                     if (pauta == null)
                     {

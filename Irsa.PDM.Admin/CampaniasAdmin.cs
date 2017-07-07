@@ -74,9 +74,7 @@ namespace Irsa.PDM.Admin
                     };
 
                     PdmContext.Campanias.Add(campania);
-                }
-                                
-                if (campania.Estado != EstadoCampania.Pendiente) return;
+                }                                            
 
                 #endregion
 
@@ -86,7 +84,7 @@ namespace Irsa.PDM.Admin
 
                 pautasWs.ForEach(pcodigo =>
                 {
-                    var pauta = campania.Pautas.SingleOrDefault(ee => string.Equals(ee.Codigo, pcodigo) && ee.Estado != EstadoPauta.Rechazada);
+                    var pauta = campania.Pautas.SingleOrDefault(ee => string.Equals(ee.Codigo, pcodigo) );
 
                     if (pauta == null)
                     {
@@ -102,9 +100,7 @@ namespace Irsa.PDM.Admin
                         };
 
                         campania.Pautas.Add(pauta);                        
-                    }
-
-                    if (pauta.Estado != EstadoPauta.Pendiente && pauta.Estado != EstadoPauta.ConflictoTarifas) return;
+                    }                    
 
                     var items = pautas.Where(e => string.Equals(e.nro_pauta, pcodigo)).ToList();
 
@@ -144,11 +140,11 @@ namespace Irsa.PDM.Admin
                         item.FechaAviso = itemWs.fecha_aviso;
                     });
 
-                    pauta.Estado = pauta.Items.Any(e => e.Tarifa == null) ? EstadoPauta.ConflictoTarifas : pauta.Estado;
+                    pauta.Estado = pauta.Items.Any(e => e.Tarifa == null) ? EstadoPauta.ProgramasNoTarifados : pauta.Estado;
                 });
 
 
-                campania.Estado = campania.Pautas.Any(e => e.Estado == EstadoPauta.ConflictoTarifas) ? EstadoCampania.ConflictoTarifas : campania.Estado;
+                campania.Estado = campania.Pautas.Any(e => e.Estado == EstadoPauta.ProgramasNoTarifados || e.Estado == EstadoPauta.DiferenciaEnMontoTarifas) ? EstadoCampania.InconsistenciasEnPautas : campania.Estado;
 
                 #endregion              
             });
@@ -209,6 +205,43 @@ namespace Irsa.PDM.Admin
             #endregion
 
             PdmContext.SaveChanges();            
+        }
+
+        public string ChangeEstadoPauta(int pautaId, string est, string motivo)
+        {
+            var pauta = PdmContext.Pautas.Single(e => e.Id == pautaId);
+            var estado = (EstadoPauta)Enum.Parse(typeof(EstadoPauta), est);
+
+            pauta.Estado = estado;
+            pauta.UpdateDate = DateTime.Now;
+            pauta.UpdatedBy = UsuarioLogged;
+
+            if (pauta.Campania.Pautas.All(e => e.Estado == estado))
+            {
+                pauta.Campania.UpdateDate = DateTime.Now;
+                pauta.Campania.UpdatedBy = UsuarioLogged;
+                pauta.Campania.Estado = estado == EstadoPauta.Aprobada ? EstadoCampania.Aprobada : EstadoCampania.Rechazada;
+            }
+
+            #region Sync
+
+            var json = string.Format("{{\"nro_pauta\":{0},\"aprobada\":{1},\"usuario\":\"{2}\",\"motivo\":\"{3}\"}}",
+                pauta.Codigo, estado == EstadoPauta.Aprobada ? 1 : 0, UsuarioLogged, motivo);
+
+            json = string.Format("[{0}]", json);
+
+            var result = string.Format("{0}{1}", FcMediosTarifarioUrl, PostPautasAction).PostJsonToUrl(json);
+
+            if (!string.Equals(result, SuccessMessage))
+            {
+                throw new Exception(string.Format("Error en la sincronización con FC Medios: {0}", result));
+            }
+
+            #endregion
+
+            PdmContext.SaveChanges();
+
+            return pauta.Campania.Estado.ToString();
         }
 
         public ExcelPackage GetExcelVisualDePauta(int campaniaId)

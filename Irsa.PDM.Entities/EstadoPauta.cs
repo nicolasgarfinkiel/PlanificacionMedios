@@ -5,6 +5,7 @@
         Pendiente = 1,
         Aprobada,
         Rechazada,
-        ConflictoTarifas
+        ProgramasNoTarifados,
+        DiferenciaEnMontoTarifas
     }
 }

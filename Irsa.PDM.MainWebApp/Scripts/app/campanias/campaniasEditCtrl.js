@@ -7,6 +7,7 @@
            'editBootstraperService',
            function ($scope, $routeParams, campaniasService, baseNavigationService, editBootstraperService) {
                $scope.pautas = {};
+               $scope.currentPauta = null;
                $scope.resultModal = { hasErrors: false, messages: [] };
 
                //#region base 
@@ -33,13 +34,21 @@
 
                //#endregion
 
-               $scope.confirmRechazo = function () {
+               $scope.confirmRechazoCampania = function () {
+                   $scope.currentPauta = null;
                    $scope.resultModal = { hasErrors: false, messages: [] };
                    $scope.motivo = null;
                    $('#rechazoModal').modal('show');
                };
 
-               $scope.changeEstado = function (estado) {
+               $scope.confirmRechazoPauta = function (pauta) {
+                   $scope.currentPauta = pauta;
+                   $scope.resultModal = { hasErrors: false, messages: [] };
+                   $scope.motivo = null;
+                   $('#rechazoModal').modal('show');
+               };
+
+               $scope.changeEstadoCampania = function (estado) {
                    $scope.resultModal = $scope.result = { hasErrors: false, messages: [] };
 
                    if (!$scope.motivo && estado == 'Rechazada') {
@@ -60,6 +69,28 @@
 
                        $scope.entity.pautas = angular.copy($scope.entity.pautas);
                        $scope.motivo = null;
+                       $('#rechazoModal').modal('hide');
+                   }, function () { throw 'Error on changeEstadoCampania'; });
+               };
+
+               $scope.changeEstadoPauta = function (pauta, estado) {
+                   $scope.resultModal = $scope.result = { hasErrors: false, messages: [] };
+
+                   if (!$scope.motivo && estado == 'Rechazada') {
+                       $scope.resultModal = { hasErrors: true, messages: ['Ingrese el motivo'] };
+                       return;
+                   }
+
+                   campaniasService.changeEstadoPauta(pauta.id, estado, $scope.motivo).then(function (response) {
+                       $scope.resultModal = $scope.result = response.data.result;
+
+                       if ($scope.resultModal.hasErrors) return;
+
+                       $scope.entity.estado = response.data.data;
+                       pauta.estado = estado;
+                       $scope.entity.pautas = angular.copy($scope.entity.pautas);
+                       $scope.motivo = null;
+                       $scope.currentPauta = null;
                        $('#rechazoModal').modal('hide');
                    }, function () { throw 'Error on changeEstadoPauta'; });
                };

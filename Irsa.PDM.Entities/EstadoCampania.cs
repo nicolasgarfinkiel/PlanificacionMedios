@@ -5,6 +5,6 @@
         Pendiente = 1,
         Aprobada,
         Rechazada,
-        ConflictoTarifas
+        InconsistenciasEnPautas
     }
 }

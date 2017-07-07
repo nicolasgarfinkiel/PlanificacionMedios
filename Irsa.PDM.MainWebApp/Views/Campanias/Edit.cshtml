@@ -6,8 +6,8 @@
         </h5>
         <small>Fecha creacion: {{entity.createDate}}. Estado: {{entity.estado}}</small>
         <span style="float: right; position: relative; top: -3px;">
-            <button class="btn btn-primary btn-xs" ng-show="entity.estado == 'Pendiente'" ng-click="changeEstado('Aprobada')">Aprobar</button>
-            <button class="btn btn-danger btn-xs" ng-show="entity.estado == 'Pendiente' || entity.estado == 'ConflictoTarifas' " ng-click="confirmRechazo()">Rechazar</button>
+            <button class="btn btn-primary btn-xs" ng-show="entity.estado == 'Pendiente'" ng-click="changeEstadoCampania('Aprobada')">Aprobar</button>
+            <button class="btn btn-danger btn-xs" ng-show="entity.estado == 'Pendiente' || entity.estado == 'InconsistenciasEnPautas' " ng-click="confirmRechazoCampania()">Rechazar</button>
         </span>      
     </div>
 </div>
@@ -22,8 +22,12 @@
                         <h4 class="panel-title">
                             <a data-toggle="collapse" data-parent="#accordion" href="#collapse{{pauta.id}}" target="_self" aria-expanded="true" aria-controls="collapse{{pauta.id}}">
                                 Pauta nro <b>{{pauta.codigo}}</b>. Estado: <b>{{pauta.estado}}</b>
-                                <i class="fa fa-exclamation-circle" style="color: red;" ng-if="pauta.estado == 'ConflictoTarifas'"></i>
-                            </a>                                               
+                                <i class="fa fa-exclamation-circle" style="color: red;" ng-if="pauta.estado == 'ProgramasNoTarifados' || pauta.estado == 'DiferenciaEnMontoTarifas'"></i>
+                            </a> 
+                            <span style="float: right; position: relative; top: -3px;">
+                                <button class="btn btn-primary btn-xs" ng-show="pauta.estado == 'Pendiente'" ng-click="changeEstadoPauta(pauta, 'Aprobada')">Aprobar</button>
+                                <button class="btn btn-danger btn-xs" ng-show="pauta.estado == 'Pendiente' || pauta.estado == 'ProgramasNoTarifados' || pauta.estado == 'DiferenciaEnMontoTarifas'" ng-click="confirmRechazoPauta(pauta)">Rechazar</button>
+                            </span>                                                
                         </h4>
                     </div>
                     <div id="collapse{{pauta.id}}" class="panel-collapse collapse in"  role="tabpanel" aria-labelledby="heading{{pauta.id}}">
@@ -73,7 +77,8 @@
                                             <td data-title="Tarifa asociada" style="text-align: center;">
                                                 <span>
                                                     <i title="Tarifa NO asociada" class="fa fa-exclamation-circle" style="color: red;" ng-if="!item.tarifa"></i>
-                                                    <i title="Tarifa asociada" class="fa fa-search" ng-if="item.tarifa" ng-click="openTarifaModal(item.tarifa)"></i>
+                                                    <i title="Diferencia en tarifa" class="fa fa-search" style="color: orange;" ng-if="item.tarifa && item.tarifa.importe !=  item.costoUnitario" ng-click="openTarifaModal(item.tarifa)"></i>
+                                                    <i title="Tarifa asociada" class="fa fa-search" style="color: greenyellow;" ng-if="item.tarifa && item.tarifa.importe ==  item.costoUnitario" ng-click="openTarifaModal(item.tarifa)"></i>
                                                 </span>
                                             </td>
                                         </tr>
@@ -141,7 +146,8 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                <button type="button" class="btn btn-primary" ng-click="changeEstado('Rechazada')">Aceptar</button>
+                <button type="button" class="btn btn-primary" ng-click="changeEstadoCampania('Rechazada')" ng-if="!currentPauta">Aceptar</button>
+                <button type="button" class="btn btn-primary" ng-click="changeEstadoPauta(currentPauta, 'Rechazada')" ng-if="currentPauta">Aceptar</button>
             </div>
         </div>
     </div>

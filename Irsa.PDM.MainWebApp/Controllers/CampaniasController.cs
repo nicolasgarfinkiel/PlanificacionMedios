@@ -24,8 +24,12 @@ namespace Irsa.PDM.MainWebApp.Controllers
         }
 
         public override object GetDataList()
-        {            
-            _admin.SyncCampanias(); //TODO: mover llamada a  windows service
+        {
+            if (PDMSession.Current.ShouldSync) //TODO: mover llamada a  windows service
+            {
+                _admin.SyncCampanias();
+                PDMSession.Current.LastSync = DateTime.Now;
+            }
 
             return new
             {               
@@ -56,6 +60,24 @@ namespace Irsa.PDM.MainWebApp.Controllers
 
             return this.JsonNet(response);
         }
+
+        [HttpPost]
+        public ActionResult ChangeEstadoPauta(int pautaId, string estado, string motivo)
+        {
+            var response = new Response<string> { Result = new Result() { HasErrors = false, Messages = new List<string>() } };
+
+            try
+            {
+                response.Data = _admin.ChangeEstadoPauta(pautaId, estado, motivo);
+            }
+            catch (Exception ex)
+            {
+                response.Result.HasErrors = true;
+                response.Result.Messages.Add(ex.Message);
+            }
+
+            return this.JsonNet(response);
+        }     
 
         [HttpPost]
         public ActionResult ChangeEstadoCampania(int id, string estado, string motivo)

@@ -40,6 +40,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Certificacion.cs" />
+    <Compile Include="CertificacionFcMedios.cs" />
     <Compile Include="Campania.cs" />
     <Compile Include="Filters\FilterTarifaProveedor.cs" />
     <Compile Include="Filters\FilterPautaItems.cs" />

@@ -19,6 +19,7 @@ namespace Irsa.PDM.Admin
                 cfg.CreateMap<Pauta, Dtos.Pauta>();
                 cfg.CreateMap<PautaItem, Dtos.PautaItem>();
                 cfg.CreateMap<Proveedor, Dtos.Proveedor>();
+                cfg.CreateMap<Certificacion, Dtos.Certificacion>();
             });         
         }
     }

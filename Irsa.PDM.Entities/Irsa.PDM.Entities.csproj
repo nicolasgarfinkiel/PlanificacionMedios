@@ -39,6 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Certificacion.cs" />
     <Compile Include="Proveedor.cs" />
     <Compile Include="EstadoCampania.cs" />
     <Compile Include="EstadoPauta.cs" />

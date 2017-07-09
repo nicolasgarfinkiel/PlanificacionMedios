@@ -6,6 +6,7 @@
         Aprobada,
         Rechazada,
         ProgramasNoTarifados,
-        DiferenciaEnMontoTarifas
+        DiferenciaEnMontoTarifas,
+        Cerrada
     }
 }

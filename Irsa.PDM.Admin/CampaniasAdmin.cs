@@ -7,6 +7,7 @@ using AutoMapper;
 using Irsa.PDM.Dtos;
 using Irsa.PDM.Dtos.Common;
 using Irsa.PDM.Entities;
+using Irsa.PDM.Repositories;
 using OfficeOpenXml;
 using ServiceStack.Common.Extensions;
 using ServiceStack.ServiceClient.Web;
@@ -59,7 +60,7 @@ namespace Irsa.PDM.Admin
             {                                
                 #region Campanias
 
-                var campania = PdmContext.Campanias.SingleOrDefault(cc => string.Equals(cc.Nombre, c) && cc.Estado != EstadoCampania.Rechazada);
+                var campania = PdmContext.Campanias.FirstOrDefault(cc => string.Equals(cc.Nombre, c));
 
                 if (campania == null)
                 {
@@ -74,7 +75,7 @@ namespace Irsa.PDM.Admin
                     };
 
                     PdmContext.Campanias.Add(campania);
-                }                                            
+                }
 
                 #endregion
 
@@ -106,7 +107,7 @@ namespace Irsa.PDM.Admin
 
                     items.ForEach(itemWs =>
                     {
-                        var item = pauta.Items.SingleOrDefault(e => string.Equals(e.CodigoPrograma, itemWs.cod_programa));
+                        var item = pauta.Items.FirstOrDefault(e => string.Equals(e.CodigoPrograma, itemWs.cod_programa));
 
                         if (item == null)
                         {
@@ -127,7 +128,8 @@ namespace Irsa.PDM.Admin
                             e.CodigoPrograma == itemWs.cod_programa &&
                             e.Tarifario.Estado == EstadoTarifario.Editable);
 
-                        item.CostoUnitario = itemWs.costo_unitario;
+                        item.DiferenciaEnMontoTarifas = item.Tarifa != null && item.Tarifa.Importe != itemWs.costo_unitario;
+                        item.CostoUnitario = itemWs.costo_unitario;                        
                         item.Descuento1 = itemWs.descuento_1;
                         item.Descuento2 = itemWs.descuento_2;
                         item.Descuento3 = itemWs.descuento_3;
@@ -140,16 +142,20 @@ namespace Irsa.PDM.Admin
                         item.FechaAviso = itemWs.fecha_aviso;
                     });
 
-                    pauta.Estado = pauta.Items.Any(e => e.Tarifa == null) ? EstadoPauta.ProgramasNoTarifados : pauta.Estado;
+                    pauta.Estado = pauta.Items.Any(e => e.Tarifa == null) ? EstadoPauta.ProgramasNoTarifados :
+                                   pauta.Items.Any(e => e.DiferenciaEnMontoTarifas) ? EstadoPauta.DiferenciaEnMontoTarifas : 
+                                    pauta.Estado;
                 });
-
 
                 campania.Estado = campania.Pautas.Any(e => e.Estado == EstadoPauta.ProgramasNoTarifados || e.Estado == EstadoPauta.DiferenciaEnMontoTarifas) ? EstadoCampania.InconsistenciasEnPautas : campania.Estado;
 
                 #endregion              
             });
 
+            PdmContext.Configuration.AutoDetectChangesEnabled = false;
             PdmContext.SaveChanges();
+            PdmContext.Configuration.AutoDetectChangesEnabled = true;
+            PdmContext = new PDMContext();
         }
 
         #endregion

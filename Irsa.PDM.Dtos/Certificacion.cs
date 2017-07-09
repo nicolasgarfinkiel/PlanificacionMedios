@@ -4,6 +4,8 @@ namespace Irsa.PDM.Dtos
 {
     public class Certificacion 
     {
+        public DateTime? CreateDate { get; set; }
+        public string CampaniaNombre { get; set; }
         public string PautaEjecutadaCodigo { get; set; }
         public string PautaAprobadaCodigo { get; set; }
         public int CodigoPrograma { get; set; }
@@ -18,8 +20,7 @@ namespace Irsa.PDM.Dtos
         public double Descuento2 { get; set; }
         public double Descuento3 { get; set; }
         public double Descuento4 { get; set; }
-        public double Descuento5 { get; set; }
-        public Tarifa Tarifa { get; set; }
+        public double Descuento5 { get; set; }     
     }
 }
 

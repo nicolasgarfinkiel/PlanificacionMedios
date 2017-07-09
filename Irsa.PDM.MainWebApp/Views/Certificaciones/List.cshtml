@@ -1,0 +1,29 @@
+﻿<div class="hpanel hblue">
+    <div class="panel-heading hbuilt">
+        Listado de certificaciones
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="input-group m-b">
+                    <input type="text" class="input-sm form-control" placeholder="Buscar" ng-model="filter.multiColumnSearchText" ng-debounce="1200">
+                    <span class="input-group-addon">
+                        <i class="fa fa-search"></i>
+                    </span>
+                </div>
+            </div>            
+        </div>
+        <div class="alert alert-danger" ng-if="result.hasErrors">
+            <i class="fa fa-bolt"></i>
+            <div ng-repeat="message in result.messages">{{message}}</div>
+        </div>
+
+        <form method="POST" action="/Certificaciones/GetExcel">
+            <input type="hidden" name="campaniaId" value="1" />
+            <button type="submit">Exportar</button>
+        </form>
+        
+        <div class="gridStyleLarge" ng-grid="gridOptions"></div>
+    </div>
+</div>
+

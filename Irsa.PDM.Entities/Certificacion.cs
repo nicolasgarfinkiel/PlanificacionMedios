@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Security.AccessControl;
 
 namespace Irsa.PDM.Entities
 {

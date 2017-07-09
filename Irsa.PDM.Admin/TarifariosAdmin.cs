@@ -279,7 +279,10 @@ namespace Irsa.PDM.Admin
 
             #endregion
 
+            PdmContext.Configuration.AutoDetectChangesEnabled = false;
             PdmContext.SaveChanges();
+            PdmContext.Configuration.AutoDetectChangesEnabled = true;
+            PdmContext = new PDMContext();
         }
 
         private void InitTarifario(Tarifario entity)

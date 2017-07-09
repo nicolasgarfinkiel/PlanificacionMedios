@@ -138,6 +138,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\CertificacionesController.cs" />
     <Compile Include="Controllers\CampaniasController.cs" />
     <Compile Include="Controllers\ProveedoresController.cs" />
     <Compile Include="Controllers\TarifariosController.cs" />
@@ -193,12 +194,15 @@
     <Content Include="Scripts\angularJs\quill\quill.min.js" />
     <Content Include="Scripts\angularJs\select.min.js" />
     <Content Include="Scripts\angularJs\ui-utils.min.js" />
+    <Content Include="Scripts\app\certificaciones\certificacionesListCtrl.js" />
+    <Content Include="Scripts\app\certificaciones\certificacionesModule.js" />
     <Content Include="Scripts\app\campanias\campaniasEditCtrl.js" />
     <Content Include="Scripts\app\campanias\campaniasListCtrl.js" />
     <Content Include="Scripts\app\campanias\campaniasModule.js" />
     <Content Include="Scripts\app\proveedores\proveedoresEditCtrl.js" />
     <Content Include="Scripts\app\proveedores\proveedoresListCtrl.js" />
     <Content Include="Scripts\app\proveedores\proveedoresModule.js" />
+    <Content Include="Scripts\app\shared\certificacionesService.js" />
     <Content Include="Scripts\app\shared\campaniasService.js" />
     <Content Include="Scripts\app\shared\proveedoresService.js" />
     <Content Include="Scripts\app\shared\tarifariosService.js" />
@@ -341,6 +345,8 @@
     <Content Include="Reports\Rpt_Pauta.xlsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Views\Certificaciones\Index.cshtml" />
+    <Content Include="Views\Certificaciones\List.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

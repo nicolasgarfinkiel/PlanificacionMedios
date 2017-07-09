@@ -1,0 +1,17 @@
+﻿@using Irsa.PDM.Infrastructure
+
+@{
+    ViewBag.ngApp = "irsa.pdm.certificaciones";
+}
+<div>    
+    <script type="text/ng-template" id="certificaciones/list">
+        @RenderPage(Url.Content("~/Views/Certificaciones/List.cshtml"))
+    </script>    
+    <div ng-view></div>
+</div>
+
+@section scripts{
+    @Html.IncludeVersionedJs("Scripts/app/Certificaciones/certificacionesModule.js")
+    @Html.IncludeVersionedJs("Scripts/app/Certificaciones/certificacionesListCtrl.js")    
+    @Html.IncludeVersionedJs("Scripts/app/shared/certificacionesService.js")
+}

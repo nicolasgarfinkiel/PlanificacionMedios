@@ -18,6 +18,8 @@ namespace Irsa.PDM.Entities
         public double Descuento2 { get; set; }
         public double Descuento3 { get; set; }
         public double Descuento4 { get; set; }
-        public double Descuento5 { get; set; }        
+        public double Descuento5 { get; set; }
+
+        public bool DiferenciaEnMontoTarifas { get; set; }
     }
 }

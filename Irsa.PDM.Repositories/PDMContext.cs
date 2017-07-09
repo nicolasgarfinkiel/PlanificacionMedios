@@ -30,6 +30,7 @@ namespace Irsa.PDM.Repositories
         public IDbSet<Pauta> Pautas { get; set; }
         public IDbSet<PautaItem> PautasItem { get; set; }
         public IDbSet<Proveedor> Proveedores { get; set; }
+        public IDbSet<Certificacion> Certificaciones { get; set; }
     }
 }
 

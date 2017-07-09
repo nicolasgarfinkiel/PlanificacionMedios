@@ -1,23 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
-using System.IO;
 using System.Linq;
-using AutoMapper;
 using Irsa.PDM.Dtos;
 using Irsa.PDM.Dtos.Common;
 using Irsa.PDM.Entities;
+using Irsa.PDM.Repositories;
 using OfficeOpenXml;
-using ServiceStack.Common.Extensions;
 using ServiceStack.ServiceClient.Web;
-using ServiceStack.Text;
 
 namespace Irsa.PDM.Admin
 {
     public class CertificacionesAdmin : BaseAdmin<int, Entities.Certificacion, Dtos.Certificacion, FilterBase>
-    {        
+    {
         private const string ImportUser = "Import process";
-        private const string GetCertificaciones = "/client?method=create&action=pautas_controladas";                
+        private const string GetCertificaciones = "/client?method=create&action=pautas_controladas";
 
         #region Base
 
@@ -27,145 +23,97 @@ namespace Irsa.PDM.Admin
         }
 
         public override void Validate(Dtos.Certificacion dto)
-        {                      
+        {
         }
 
         public override IQueryable GetQuery(FilterBase filter)
         {
-            var result = PdmContext.Campanias.OrderBy(e => e.Nombre).AsQueryable();
+            var result = PdmContext.Certificaciones
+                        .OrderBy(e => e.Campania)
+                        .ThenBy(e => e.PautaCodigo)
+                        .ThenBy(e => e.PautaEjecutadaCodigo)
+                        .AsQueryable();
 
             if (filter.MultiColumnSearchText != null)
             {
                 var multiColumnSearchText = filter.MultiColumnSearchText.ToLower();
-                result = result.Where(e => e.Nombre != null && e.Nombre.ToLower().Contains(multiColumnSearchText)).AsQueryable();
+                result = result.Where(e =>
+                    (
+                        (e.Campania.Nombre.ToLower().Contains(multiColumnSearchText)) ||
+                        (System.Data.Entity.SqlServer.SqlFunctions.StringConvert((decimal)e.CodigoPrograma).Contains(multiColumnSearchText)) ||
+                        (e.Campania.Nombre.ToLower().Contains(multiColumnSearchText)) ||
+                        (e.Espacio.ToLower().Contains(multiColumnSearchText)) ||
+                        (e.PautaCodigo.ToLower().Contains(multiColumnSearchText)) ||
+                        (e.PautaEjecutadaCodigo.ToLower().Contains(multiColumnSearchText)) ||
+                        (e.Proveedor.ToLower().Contains(multiColumnSearchText)) ||
+                        (e.Tema.ToLower().Contains(multiColumnSearchText))
+                    )).AsQueryable();
             }
 
             return result;
         }
 
-        #endregion      
+        #endregion
 
         #region Sync
 
-        public void SyncCampanias()
-        {
+        public void SyncCertificaciones()
+        {                        
+            var pautas = PdmContext.Pautas.Where(e => e.Estado == EstadoPauta.Aprobada ).Select(e => new {nro_pauta_aprobada = e.Codigo}).ToList();
+
             var client = new JsonServiceClient(FcMediosTarifarioUrl);
-            var pautas = client.Get<IList<PautaFcMedios>>(GetPautas).ToList();
-            var campanias = pautas.Select(e => e.campania).Distinct().ToList();
+            var certificaciones = client.Post<IList<CertificacionFcMedios>>(GetCertificaciones, pautas).ToList();
+            var campaniaNombres = certificaciones.Select(e => e.campania).Distinct().ToList();            
+            var campanias = PdmContext.Campanias.Where(e => campaniaNombres.Contains(e.Nombre)).ToList();
+            
+            certificaciones.ForEach(c =>
+            {
+                var campania = campanias.SingleOrDefault(e => string.Equals(e.Nombre, c.campania) );
+                if (campania == null) return;
 
-            campanias.ForEach(c =>
-            {                                
-                #region Campanias
+                if (PdmContext.Certificaciones.Any(e => e.Campania.Id == campania.Id && 
+                    string.Equals(e.PautaCodigo, c.nro_pauta_aprobada) &&
+                    string.Equals(e.PautaEjecutadaCodigo, c.nro_pauta_ejecutada) &&
+                    e.CodigoPrograma == c.cod_programa))  return;
 
-                var campania = PdmContext.Campanias.SingleOrDefault(cc => string.Equals(cc.Nombre, c) && cc.Estado != EstadoCampania.Rechazada);
-
-                if (campania == null)
+                var certificacion = new Entities.Certificacion
                 {
-                    campania = new Entities.Campania
-                    {
-                        CreateDate = DateTime.Now,
-                        CreatedBy = ImportUser,
-                        Enabled = true,
-                        Estado = EstadoCampania.Pendiente,
-                        Nombre = c,
-                        Pautas = new List<Entities.Pauta>()
-                    };
+                    Campania = campania,
+                    CodigoAviso = c.cod_aviso,
+                    CodigoPrograma = c.cod_programa,
+                    CostoUnitario = c.costo_unitario,
+                    CreateDate = DateTime.Now,
+                    CreatedBy = ImportUser,
+                    Descuento1 = c.descuento_1,
+                    Descuento2 = c.descuento_2,
+                    Descuento3 = c.descuento_3,
+                    Descuento4 = c.descuento_4,
+                    Descuento5 = c.descuento_5,
+                    DuracionTema = c.duracion_tema,
+                    Enabled = true,
+                    Espacio = c.espacio,
+                    FechaAviso = c.fecha_aviso,
+                    PautaCodigo = c.nro_pauta_aprobada,
+                    PautaEjecutadaCodigo = c.nro_pauta_ejecutada,
+                    Proveedor = c.des_proveedor,
+                    Tema = c.des_tema                    
+                };
 
-                    PdmContext.Campanias.Add(campania);
-                }                                            
-
-                #endregion
-
-                #region Pautas
-
-                var pautasWs = pautas.Where(e => string.Equals(e.campania, c)).Select(e => e.nro_pauta).Distinct().ToList();
-
-                pautasWs.ForEach(pcodigo =>
-                {
-                    var pauta = campania.Pautas.SingleOrDefault(ee => string.Equals(ee.Codigo, pcodigo) );
-
-                    if (pauta == null)
-                    {
-                        pauta = new Entities.Pauta
-                        {
-                            CreateDate = DateTime.Now,
-                            CreatedBy = ImportUser,
-                            Enabled = true,
-                            Estado = EstadoPauta.Pendiente,
-                            Campania = campania,
-                            Codigo = pcodigo,
-                            Items = new List<Entities.PautaItem>()
-                        };
-
-                        campania.Pautas.Add(pauta);                        
-                    }                    
-
-                    var items = pautas.Where(e => string.Equals(e.nro_pauta, pcodigo)).ToList();
-
-                    items.ForEach(itemWs =>
-                    {
-                        var item = pauta.Items.SingleOrDefault(e => string.Equals(e.CodigoPrograma, itemWs.cod_programa));
-
-                        if (item == null)
-                        {
-                            item = new Entities.PautaItem
-                            {
-                                CreateDate = DateTime.Now,
-                                CreatedBy = ImportUser,
-                                Enabled = true,
-                                Pauta = pauta,
-                                CodigoAviso = itemWs.cod_aviso,
-                                CodigoPrograma = itemWs.cod_programa                                                     
-                            };
-
-                            pauta.Items.Add(item);
-                        }
-
-                        item.Tarifa = PdmContext.Tarifas.FirstOrDefault(e =>
-                            e.CodigoPrograma == itemWs.cod_programa &&
-                            e.Tarifario.Estado == EstadoTarifario.Editable);
-
-                        item.CostoUnitario = itemWs.costo_unitario;
-                        item.Descuento1 = itemWs.descuento_1;
-                        item.Descuento2 = itemWs.descuento_2;
-                        item.Descuento3 = itemWs.descuento_3;
-                        item.Descuento4 = itemWs.descuento_4;
-                        item.Descuento5 = itemWs.descuento_5;
-                        item.Tema = itemWs.des_tema;
-                        item.Proveedor = itemWs.des_proveedor;
-                        item.DuracionTema = itemWs.duracion_tema;
-                        item.Espacio = itemWs.espacio;
-                        item.FechaAviso = itemWs.fecha_aviso;
-                    });
-
-                    pauta.Estado = pauta.Items.Any(e => e.Tarifa == null) ? EstadoPauta.ProgramasNoTarifados : pauta.Estado;
-                });
-
-
-                campania.Estado = campania.Pautas.Any(e => e.Estado == EstadoPauta.ProgramasNoTarifados || e.Estado == EstadoPauta.DiferenciaEnMontoTarifas) ? EstadoCampania.InconsistenciasEnPautas : campania.Estado;
-
-                #endregion              
+                PdmContext.Certificaciones.Add(certificacion);
             });
 
+            PdmContext.Configuration.AutoDetectChangesEnabled = false;
             PdmContext.SaveChanges();
+            PdmContext.Configuration.AutoDetectChangesEnabled = true;
+            PdmContext = new PDMContext();
         }
 
         #endregion
 
-        public PagedListResponse<Dtos.PautaItem> GetItemsByFilter(Dtos.Filters.FilterPautaItems filter)
-        {
-            var query = PdmContext
-                      .PautasItem.Include(p => p.Tarifa)
-                      .Where(t => t.Pauta.Id == filter.PautaId)
-                      .OrderBy(t => t.CodigoPrograma)
-                      .AsQueryable();
 
-            return new PagedListResponse<Dtos.PautaItem>
-            {
-                Count = query.Count(),
-                Data = Mapper.Map<IList<Entities.PautaItem>, IList<Dtos.PautaItem>>(query.Skip(filter.PageSize * (filter.CurrentPage - 1)).Take(filter.PageSize).ToList())
-            };           
+        public ExcelPackage GetExcel(FilterBase filter)
+        {
+            throw new NotImplementedException();
         }
-       
     }
 }

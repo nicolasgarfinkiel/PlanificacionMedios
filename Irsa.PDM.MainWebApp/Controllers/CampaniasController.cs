@@ -25,10 +25,10 @@ namespace Irsa.PDM.MainWebApp.Controllers
 
         public override object GetDataList()
         {
-            if (PDMSession.Current.ShouldSync) //TODO: mover llamada a  windows service
+            if (PDMSession.Current.ShouldSyncCampanias) //TODO: mover llamada a  windows service
             {
                 _admin.SyncCampanias();
-                PDMSession.Current.LastSync = DateTime.Now;
+                PDMSession.Current.LastSyncCampanias = DateTime.Now;
             }
 
             return new

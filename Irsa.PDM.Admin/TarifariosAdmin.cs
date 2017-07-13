@@ -30,7 +30,7 @@ namespace Irsa.PDM.Admin
 
             try
             {
-                InitTarifario(entity);
+                SyncTarifario(entity);
             }
             catch (Exception)
             {
@@ -152,9 +152,9 @@ namespace Irsa.PDM.Admin
             return lastTarifario == null ? DateTime.Now : lastTarifario.FechaHasta.AddDays(1);
         }
 
-        #region Init
+        #region Sync
 
-        public void InitTablasBasicas()
+        public void SyncTablasBasicas()
         {
             var serviceSync = PdmContext.ServiceSyncs.FirstOrDefault();
 
@@ -285,7 +285,7 @@ namespace Irsa.PDM.Admin
             PdmContext = new PDMContext();
         }
 
-        private void InitTarifario(Tarifario entity)
+        private void SyncTarifario(Tarifario entity)
         {
             var client = new JsonServiceClient(FcMediosTarifarioUrl);
             var tarifas = client.Get<IList<TarifaFcMedios>>(GetTarifasAction)

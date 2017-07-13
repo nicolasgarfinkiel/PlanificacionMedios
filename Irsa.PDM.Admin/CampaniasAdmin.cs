@@ -9,9 +9,12 @@ using Irsa.PDM.Dtos.Common;
 using Irsa.PDM.Entities;
 using Irsa.PDM.Repositories;
 using OfficeOpenXml;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.DateTime;
 using ServiceStack.Common.Extensions;
 using ServiceStack.ServiceClient.Web;
 using ServiceStack.Text;
+using Pauta = Irsa.PDM.Entities.Pauta;
+using Tarifa = Irsa.PDM.Entities.Tarifa;
 
 namespace Irsa.PDM.Admin
 {
@@ -52,6 +55,10 @@ namespace Irsa.PDM.Admin
 
         public void SyncCampanias()
         {
+            var actualMedios = PdmContext.Medios.ToList();
+            var actualPlazas = PdmContext.Plazas.ToList();
+            var actualVehiculos = PdmContext.Vehiculos.ToList();
+
             var client = new JsonServiceClient(FcMediosTarifarioUrl);
             var pautas = client.Get<IList<PautaFcMedios>>(GetPautas).ToList();
             var campanias = pautas.Select(e => e.campania).Distinct().ToList();
@@ -61,6 +68,7 @@ namespace Irsa.PDM.Admin
                 #region Campanias
 
                 var campania = PdmContext.Campanias.FirstOrDefault(cc => string.Equals(cc.Nombre, c));
+                var pautasWs = pautas.Where(e => string.Equals(e.campania, c)).Select(e => e.nro_pauta).Distinct().ToList();
 
                 if (campania == null)
                 {
@@ -76,12 +84,15 @@ namespace Irsa.PDM.Admin
 
                     PdmContext.Campanias.Add(campania);
                 }
+                else if (campania.Estado == EstadoCampania.Cerrada)
+                {
+                    SyncEstadoPautas(pautasWs.Select(p => new Entities.Pauta {Codigo = p}).ToList(), 0, Resource.RechazoCampaniaCerrada);                    
+                    return;
+                }
 
                 #endregion
 
-                #region Pautas
-
-                var pautasWs = pautas.Where(e => string.Equals(e.campania, c)).Select(e => e.nro_pauta).Distinct().ToList();
+                #region Pautas              
 
                 pautasWs.ForEach(pcodigo =>
                 {
@@ -149,6 +160,55 @@ namespace Irsa.PDM.Admin
 
                 campania.Estado = campania.Pautas.Any(e => e.Estado == EstadoPauta.ProgramasNoTarifados || e.Estado == EstadoPauta.DiferenciaEnMontoTarifas) ? EstadoCampania.InconsistenciasEnPautas : campania.Estado;
 
+                if (campania.Estado == EstadoCampania.InconsistenciasEnPautas)
+                {
+                    campania.Pautas.ForEach(p =>
+                    {
+                        var sinTarifa = p.Items.Where(i => i.Tarifa == null).Select(i => i.CodigoPrograma).ToList();
+                        var diferenteMonto = p.Items.Where(i => i.DiferenciaEnMontoTarifas).Select(i => i.CodigoPrograma).ToList();
+
+                        if (!sinTarifa.Any() && !diferenteMonto.Any()) return;
+
+                        var motivo = sinTarifa.Any()
+                            ? string.Format(Resource.ProgramasNoTarifados, string.Join(",", sinTarifa))
+                            : string.Format(Resource.DiferenciaEnMontoTarifas, string.Join(",", diferenteMonto));
+
+                        SyncEstadoPautas(new List<Pauta>{p}, 0, motivo);
+     
+                        sinTarifa.ForEach(st =>
+                        {
+                           var  tfc = pautas.Single(t => t.cod_programa == st && string.Equals(t.nro_pauta, p.Codigo));
+                           var medio = actualMedios.Single(e => e.Codigo == tfc.cod_medio);
+                           var plaza = actualPlazas.Single(e => e.Codigo == tfc.cod_plaza);
+                           var vehiculo = actualVehiculos.Single(e => e.Codigo == tfc.cod_vehiculo);
+                           var tarifario = PdmContext.Tarifarios.SingleOrDefault(tarif => tarif.Estado == EstadoTarifario.Editable && tarif.Vehiculo.Codigo == vehiculo.Codigo);
+
+                            if (tarifario == null)
+                            {
+                                return;
+                            }
+
+                            var tarifa = new Entities.Tarifa
+                            {
+                                 CodigoPrograma = tfc.cod_programa,
+                                 CreateDate = DateTime.Now,
+                                 CreatedBy = ImportUser,
+                                 Descripcion = tfc.espacio,
+                                 Enabled = true,
+                                 HoraDesde = tfc.hora_inicio,
+                                 HoraHasta = tfc.hora_fin,
+                                 Importe = tfc.costo_unitario,
+                                 Plaza = plaza,
+                                 Tarifario = tarifario,
+                                 Vehiculo = vehiculo,
+                                 Medio = medio
+                            };
+
+                            tarifario.Tarifas.Add(tarifa);
+                        });
+                    });                    
+                }                
+
                 #endregion              
             });
 
@@ -173,7 +233,7 @@ namespace Irsa.PDM.Admin
                 Count = query.Count(),
                 Data = Mapper.Map<IList<Entities.PautaItem>, IList<Dtos.PautaItem>>(query.Skip(filter.PageSize * (filter.CurrentPage - 1)).Take(filter.PageSize).ToList())
             };           
-        }
+        }      
 
         public void ChangeEstadoCampania(int id, string est, string motivo)
         {
@@ -190,26 +250,8 @@ namespace Irsa.PDM.Admin
                 p.UpdatedBy = UsuarioLogged;
                 p.Estado = estado == EstadoCampania.Aprobada ? EstadoPauta.Aprobada : EstadoPauta.Rechazada;
             });
-                      
-            #region Sync
-       
-            var list = campania.Pautas.Select(pauta =>  
-                string.Format("{{\"nro_pauta\":{0},\"aprobada\":{1},\"usuario\":\"{2}\",\"motivo\":\"{3}\"}}",
-                pauta.Codigo, estado == EstadoCampania.Aprobada ? 1 : 0, UsuarioLogged, motivo))
-                .ToList();
 
-            var json = string.Join(",", list);
-            json = string.Format("[{0}]", json);
-
-            var result = string.Format("{0}{1}", FcMediosTarifarioUrl, PostPautasAction).PostJsonToUrl(json);
-
-            if (!string.Equals(result, SuccessMessage))
-            {
-                throw new Exception(string.Format("Error en la sincronización con FC Medios: {0}", result));
-            }
-
-            #endregion
-
+            SyncEstadoPautas(campania.Pautas, (estado == EstadoCampania.Aprobada ? 1 : 0), motivo);                                          
             PdmContext.SaveChanges();            
         }
 
@@ -229,11 +271,20 @@ namespace Irsa.PDM.Admin
                 pauta.Campania.Estado = estado == EstadoPauta.Aprobada ? EstadoCampania.Aprobada : EstadoCampania.Rechazada;
             }
 
-            #region Sync
+            SyncEstadoPautas(new List<Pauta> { pauta }, (estado == EstadoPauta.Aprobada ? 1 : 0), motivo);           
+            PdmContext.SaveChanges();
 
-            var json = string.Format("{{\"nro_pauta\":{0},\"aprobada\":{1},\"usuario\":\"{2}\",\"motivo\":\"{3}\"}}",
-                pauta.Codigo, estado == EstadoPauta.Aprobada ? 1 : 0, UsuarioLogged, motivo);
+            return pauta.Campania.Estado.ToString();
+        }
 
+        private void SyncEstadoPautas(IList<Entities.Pauta> pautas, int estado, string motivo)
+        {
+            var list = pautas.Select(pauta =>
+               string.Format("{{\"nro_pauta\":{0},\"aprobada\":{1},\"usuario\":\"{2}\",\"motivo\":\"{3}\"}}",
+               pauta.Codigo, estado, UsuarioLogged, motivo))
+               .ToList();
+
+            var json = string.Join(",", list);
             json = string.Format("[{0}]", json);
 
             var result = string.Format("{0}{1}", FcMediosTarifarioUrl, PostPautasAction).PostJsonToUrl(json);
@@ -242,12 +293,6 @@ namespace Irsa.PDM.Admin
             {
                 throw new Exception(string.Format("Error en la sincronización con FC Medios: {0}", result));
             }
-
-            #endregion
-
-            PdmContext.SaveChanges();
-
-            return pauta.Campania.Estado.ToString();
         }
 
         public ExcelPackage GetExcelVisualDePauta(int campaniaId)

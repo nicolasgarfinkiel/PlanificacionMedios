@@ -32,7 +32,7 @@ namespace Irsa.PDM.MainWebApp.Controllers
 
         public override object GetDataList()
         {
-            _admin.InitTablasBasicas();
+            _admin.SyncTablasBasicas();
 
             return new
             {

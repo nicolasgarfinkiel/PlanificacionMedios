@@ -1,41 +1,41 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
+using System.Text;
 using AutoMapper;
-using EntityFramework.Utilities;
 using Irsa.PDM.Dtos;
 using Irsa.PDM.Dtos.Filters;
 using Irsa.PDM.Entities;
 using Irsa.PDM.Repositories;
-using ServiceStack.Common.Extensions;
+using Newtonsoft.Json;
 using ServiceStack.ServiceClient.Web;
 using Tarifario = Irsa.PDM.Entities.Tarifario;
 
 namespace Irsa.PDM.Admin
 {
     public class TarifariosAdmin : BaseAdmin<int, Entities.Tarifario, Dtos.Tarifario, FilterTarifarios>
-    {
-        private const string ImportUser = "Import process";
-        private const string GetTarifasAction = "/client?method=get-list&action=programas_a_tarifar";
-
+    {        
+        private const string GetTarifasAction = "/client?method=get-list&action=programas_a_tarifar";        
+        
         #region Base
 
         public override Dtos.Tarifario Create(Dtos.Tarifario dto)
         {
             Validate(dto);
+
             var entity = ToEntity(dto);
             PdmContext.Tarifarios.Add(entity);
             PdmContext.SaveChanges();
-
+            
             try
             {
-                SyncTarifario(entity);
+                InitTarifario(entity);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 PdmContext.Tarifarios.Remove(entity);
                 PdmContext.SaveChanges();
+                LogCreateError(dto, ex);
                 throw;
             }
 
@@ -52,23 +52,35 @@ namespace Irsa.PDM.Admin
             }
 
             PdmContext.SaveChanges();
+            dto = Mapper.Map<Tarifario, Dtos.Tarifario>(entity);
+            LogCreateInfo(dto);
 
-            return Mapper.Map<Tarifario, Dtos.Tarifario>(entity);
-        }
+            return dto;
+        }      
 
         public override void Delete(int id)
         {
-            var entity = PdmContext.Tarifarios.Single(c => c.Id == id);
+            var entity = default(Entities.Tarifario);
 
-            new TarifasAdmin().SetValues(new FilterTarifas { TarifarioId = id }, null, null, true);
+            try
+            {
+                new TarifasAdmin().SetValues(new FilterTarifas { TarifarioId = id }, null, null, true);
+                entity = PdmContext.Tarifarios.Single(c => c.Id == id);
 
-            entity.Estado = EstadoTarifario.Eliminado;
-            entity.UpdatedBy = UsuarioLogged;
-            entity.UpdateDate = DateTime.Now;
+                entity.Estado = EstadoTarifario.Eliminado;
+                entity.UpdatedBy = UsuarioLogged;
+                entity.UpdateDate = DateTime.Now;                
+                PdmContext.SaveChanges();
 
-            PdmContext.SaveChanges();
+                LogDeleteInfo(entity);
+            }
+            catch (Exception ex)
+            {
+                LogDeleteError(entity, ex);
+                throw;
+            }            
         }
-
+        
         public override Tarifario ToEntity(Dtos.Tarifario dto)
         {
             var entity = default(Tarifario);
@@ -201,7 +213,7 @@ namespace Irsa.PDM.Admin
                         Descripcion = t.Descripcion,
                         Nombre = t.Descripcion,
                         CreateDate = DateTime.Now,
-                        CreatedBy = ImportUser,
+                        CreatedBy = App.ImportUser,
                         Enabled = true
                     };
 
@@ -211,7 +223,7 @@ namespace Irsa.PDM.Admin
                 {
                     medio.Descripcion = t.Descripcion;
                     medio.UpdateDate = DateTime.Now;
-                    medio.UpdatedBy = ImportUser;
+                    medio.UpdatedBy = App.ImportUser;
                 }
             });
 
@@ -230,7 +242,7 @@ namespace Irsa.PDM.Admin
                         Codigo = t.Codigo,
                         Descripcion = t.Descripcion,
                         CreateDate = DateTime.Now,
-                        CreatedBy = ImportUser,
+                        CreatedBy = App.ImportUser,
                         Enabled = true
                     };
 
@@ -240,7 +252,7 @@ namespace Irsa.PDM.Admin
                 {
                     plaza.Descripcion = t.Descripcion;
                     plaza.UpdateDate = DateTime.Now;
-                    plaza.UpdatedBy = ImportUser;
+                    plaza.UpdatedBy = App.ImportUser;
                 }
             });
 
@@ -259,7 +271,7 @@ namespace Irsa.PDM.Admin
                         Codigo = t.Codigo,
                         Descripcion = t.Descripcion,
                         CreateDate = DateTime.Now,
-                        CreatedBy = ImportUser,
+                        CreatedBy = App.ImportUser,
                         Enabled = true,
                         Nombre = t.Descripcion
                     };
@@ -271,7 +283,7 @@ namespace Irsa.PDM.Admin
                     vehiculo.Nombre = t.Descripcion;
                     vehiculo.Descripcion = t.Descripcion;
                     vehiculo.UpdateDate = DateTime.Now;
-                    vehiculo.UpdatedBy = ImportUser;
+                    vehiculo.UpdatedBy = App.ImportUser;
                 }
             });
 
@@ -285,7 +297,7 @@ namespace Irsa.PDM.Admin
             PdmContext = new PDMContext();
         }
 
-        private void SyncTarifario(Tarifario entity)
+        private void InitTarifario(Tarifario entity)
         {
             var client = new JsonServiceClient(FcMediosTarifarioUrl);
             var tarifas = client.Get<IList<TarifaFcMedios>>(GetTarifasAction)
@@ -325,11 +337,10 @@ namespace Irsa.PDM.Admin
                     Tarifario = entity,
                     Vehiculo = vehiculo,
                     CreateDate = DateTime.Now,
-                    CreatedBy = ImportUser,
+                    CreatedBy = App.ImportUser,
                     Enabled = true,
                 });
             });
-
 
             PdmContext.Configuration.AutoDetectChangesEnabled = false;
             toAdd.ForEach(e => PdmContext.Tarifas.Add(e));
@@ -342,10 +353,77 @@ namespace Irsa.PDM.Admin
         }
 
         #endregion
+
+        #region Logs
+
+        private void LogCreateInfo(Dtos.Tarifario dto)
+        {
+            var log = new Dtos.Log
+            {
+                Accion = "TarifarioAdmin.CreateTarifario",
+                App = "Irsa.PDM.Web",
+                CreateDate = DateTime.Now,
+                Modulo = "Tarifarios",
+                Tipo = App.Info,
+                UsuarioAccion = UsuarioLogged,
+                Descripcion = string.Format("Nuevo tarifario. ID: {0}", dto.Id)
+            };
+
+            LogAdmin.Create(log);
+        }
+
+        private void LogCreateError(Dtos.Tarifario dto, Exception ex)
+        {                   
+            var log = new Dtos.Log
+            {
+                Accion = "TarifarioAdmin.CreateTarifario",
+                App = "Irsa.PDM.Web",
+                CreateDate = DateTime.Now,
+                Modulo = "Tarifarios",
+                Tipo = App.Error,
+                UsuarioAccion = UsuarioLogged,
+                Descripcion = JsonConvert.SerializeObject(dto),
+                StackTrace = GetExceptionDetail(ex)
+            };
+
+            LogAdmin.Create(log);
+        }
+
+        private void LogDeleteInfo(Tarifario entity)
+        {
+            var log = new Dtos.Log
+            {
+                Accion = "TarifarioAdmin.DeleteTarifario",
+                App = "Irsa.PDM.Web",
+                CreateDate = DateTime.Now,
+                Modulo = "Tarifarios",
+                Tipo = App.Info,
+                UsuarioAccion = UsuarioLogged,
+                Descripcion = string.Format("Tarifario dado de baja. ID: {0}", entity.Id)
+            };
+
+            LogAdmin.Create(log);
+        }
+
+        private void LogDeleteError(Tarifario entity, Exception ex)
+        {           
+            var log = new Dtos.Log
+            {
+                Accion = "TarifarioAdmin.DeleteTarifario",
+                App = "Irsa.PDM.Web",
+                CreateDate = DateTime.Now,
+                Modulo = "Tarifarios",
+                Tipo = App.Error,
+                UsuarioAccion = UsuarioLogged,
+                Descripcion = string.Format("Tarifario. ID: {0}", entity.Id),
+                StackTrace = GetExceptionDetail(ex)
+            };
+
+            LogAdmin.Create(log);
+        }
+      
+        #endregion
     }
-
-
-
 }
 
 

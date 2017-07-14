@@ -7,6 +7,7 @@ using EntityFramework.Utilities;
 using Irsa.PDM.Dtos;
 using Irsa.PDM.Dtos.Filters;
 using Irsa.PDM.Entities;
+using Newtonsoft.Json;
 using ServiceStack.ServiceClient.Web;
 using ServiceStack.Text;
 using Tarifa = Irsa.PDM.Entities.Tarifa;
@@ -24,41 +25,50 @@ namespace Irsa.PDM.Admin
         {
             var entity = ToEntity(dto);
 
-            #region Sync
-
-            var tarifasFcMedios = new List<TarifaFcMediosUpdate>
+            try
             {
-                new TarifaFcMediosUpdate
+                #region Sync
+
+                var tarifasFcMedios = new List<TarifaFcMediosUpdate>
                 {
-                    cod_programa = entity.CodigoPrograma,
-                    fecha_tarifa = entity.Tarifario.FechaDesde.ToString("yyyy-MM-dd 00:00:00"),
-                    bruto = entity.Importe,
-                    descuento_1 = 0,
-                    descuento_2 = 0,
-                    descuento_3 = 0,
-                    descuento_4 = 0,
-                    descuento_5 = 0
+                    new TarifaFcMediosUpdate
+                    {
+                        cod_programa = entity.CodigoPrograma,
+                        fecha_tarifa = entity.Tarifario.FechaDesde.ToString("yyyy-MM-dd 00:00:00"),
+                        bruto = entity.Importe,
+                        descuento_1 = 0,
+                        descuento_2 = 0,
+                        descuento_3 = 0,
+                        descuento_4 = 0,
+                        descuento_5 = 0
+                    }
+                };
+
+                var json = string.Join(",", tarifasFcMedios.Select(e => string.Format("{{\"cod_programa\":{0},\"bruto\":{1},\"descuento_1\":{2},\"descuento_2\":{3},\"descuento_3\":{4},\"descuento_4\":{5},\"descuento_5\":{6},\"fecha_tarifa\":\"{7}\"}}",
+                   e.cod_programa, e.bruto, e.descuento_1, e.descuento_2, e.descuento_3, e.descuento_4, e.descuento_5, e.fecha_tarifa)).ToList());
+
+                json = string.Format("[{0}]", json);
+
+                var result = string.Format("{0}{1}", FcMediosTarifarioUrl, PostTarifasAction).PostJsonToUrl(json);
+
+                if (!string.Equals(result, SuccessMessage))
+                {
+                    throw new Exception(string.Format("Error en la sincronización con FC Medios: {0}", result));
                 }
-            };
 
-            var json = string.Join(",", tarifasFcMedios.Select(e => string.Format("{{\"cod_programa\":{0},\"bruto\":{1},\"descuento_1\":{2},\"descuento_2\":{3},\"descuento_3\":{4},\"descuento_4\":{5},\"descuento_5\":{6},\"fecha_tarifa\":\"{7}\"}}",
-               e.cod_programa, e.bruto, e.descuento_1, e.descuento_2, e.descuento_3, e.descuento_4, e.descuento_5, e.fecha_tarifa)).ToList());
+                #endregion
 
-            json = string.Format("[{0}]", json);
-
-            var result = string.Format("{0}{1}", FcMediosTarifarioUrl, PostTarifasAction).PostJsonToUrl(json);
-
-            if (!string.Equals(result, SuccessMessage))
+                PdmContext.SaveChanges();
+                LogUpdateInfo(dto);
+            }
+            catch (Exception ex)
             {
-                throw new Exception(string.Format("Error en la sincronización con FC Medios: {0}", result));
+                LogUpdateError(dto, ex);
+                throw;
             }
 
-            #endregion
-
-            PdmContext.SaveChanges();
-
             return Mapper.Map<Entities.Tarifa, Dtos.Tarifa>(entity);
-        }
+        }      
 
         public override Tarifa ToEntity(Dtos.Tarifa dto)
         {
@@ -260,23 +270,105 @@ namespace Irsa.PDM.Admin
         {
             if (tarifaProveedor.Proveedor.Vehiculos == null || !tarifaProveedor.Proveedor.Vehiculos.Any())
             {
-                throw new Exception("EL proveedor no posee vehículos asociados");
+                throw new Exception("El proveedor no posee vehículos asociados");
             }
 
-            var vehiculosId = tarifaProveedor.Proveedor.Vehiculos.Select(v => v.Id).ToList();
-            var tarifarios = PdmContext.Tarifarios.Where(e => e.Estado == EstadoTarifario.Editable && vehiculosId.Contains(e.Vehiculo.Id)).ToList();
+            var tarifarios = default (List<Entities.Tarifario>);
 
-            tarifarios.ForEach(t =>
+            try
             {
-                SetValues(new FilterTarifas {TarifarioId = t.Id}, tarifaProveedor.Importe, tarifaProveedor.Oc);
-            });
+                var vehiculosId = tarifaProveedor.Proveedor.Vehiculos.Select(v => v.Id).ToList();
+                tarifarios = PdmContext.Tarifarios.Where(e => e.Estado == EstadoTarifario.Editable && vehiculosId.Contains(e.Vehiculo.Id)).ToList();
 
-            return !tarifarios.Any() ? 
+                tarifarios.ForEach(t =>
+                {
+                    SetValues(new FilterTarifas { TarifarioId = t.Id }, tarifaProveedor.Importe, tarifaProveedor.Oc);
+                });
+
+                LogSetValuesByProveedorInfo(tarifaProveedor);
+            }
+            catch (Exception ex)
+            {
+                LogSetValuesByProveedorError(tarifaProveedor, ex);
+                throw;
+            }           
+
+            return !tarifarios.Any() ?
                 "Operación finalizada correctamente. No hay tarifarios abiertos asociados a ninguno de los vehículos."
                 : tarifarios.Count() < tarifaProveedor.Proveedor.Vehiculos.Count()
                 ? "Operación finalizada correctamente. Alguno de los vehículos no poseen tarifario abiertos." :
                   "Operación finalizada correctamente. Se actualizarion todos los tarifarios.";
+        }      
+
+        #region Log
+
+        private void LogUpdateInfo(Dtos.Tarifa dto)
+        {
+            var log = new Dtos.Log
+            {
+                Accion = "TarifasAdmin.UpdateTarifa",
+                App = "Irsa.PDM.Web",
+                CreateDate = DateTime.Now,
+                Modulo = "Tarifas",
+                Tipo = App.Info,
+                UsuarioAccion = UsuarioLogged,
+                Descripcion = JsonConvert.SerializeObject(dto)
+            };
+
+            LogAdmin.Create(log);
         }
+
+        private void LogUpdateError(Dtos.Tarifa dto, Exception ex)
+        {
+            var log = new Dtos.Log
+            {
+                Accion = "TarifasAdmin.UpdateTarifa",
+                App = "Irsa.PDM.Web",
+                CreateDate = DateTime.Now,
+                Modulo = "Tarifas",
+                Tipo = App.Error,
+                UsuarioAccion = UsuarioLogged,
+                Descripcion = JsonConvert.SerializeObject(dto),
+                StackTrace = GetExceptionDetail(ex)
+            };
+
+            LogAdmin.Create(log);
+        }
+
+        private void LogSetValuesByProveedorInfo(FilterTarifaProveedor tarifaProveedor)
+        {
+            var log = new Dtos.Log
+            {
+                Accion = "TarifasAdmin.SetValuesByProveedor",
+                App = "Irsa.PDM.Web",
+                CreateDate = DateTime.Now,
+                Modulo = "Tarifas",
+                Tipo = App.Info,
+                UsuarioAccion = UsuarioLogged,
+                Descripcion = JsonConvert.SerializeObject(tarifaProveedor)
+            };
+
+            LogAdmin.Create(log);
+        }
+
+        private void LogSetValuesByProveedorError(FilterTarifaProveedor tarifaProveedor, Exception ex)
+        {
+            var log = new Dtos.Log
+            {
+                Accion = "TarifasAdmin.SetValuesByProveedor",
+                App = "Irsa.PDM.Web",
+                CreateDate = DateTime.Now,
+                Modulo = "Tarifas",
+                Tipo = App.Error,
+                UsuarioAccion = UsuarioLogged,
+                Descripcion = JsonConvert.SerializeObject(tarifaProveedor),
+                StackTrace = GetExceptionDetail(ex)
+            };
+
+            LogAdmin.Create(log);
+        }      
+
+        #endregion
     }
 }
 

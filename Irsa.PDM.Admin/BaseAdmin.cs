@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using System.Text;
 using System.Web;
 using AutoMapper;
 using Irsa.PDM.Dtos.Common;
@@ -14,9 +15,11 @@ namespace Irsa.PDM.Admin
         public static string FcMediosTarifarioUrl = ConfigurationManager.AppSettings["fcMediosTarifarioUrl"];
         public  PDMContext PdmContext;
         public string UsuarioLogged { get; set; }
+        protected readonly LogAdmin LogAdmin;
 
         public BaseAdmin()
         {
+            LogAdmin = new LogAdmin();
             PdmContext = new PDMContext();
 
             try
@@ -81,6 +84,23 @@ namespace Irsa.PDM.Admin
             PdmContext.Set(typeof (TE)).Remove(entity);
 
             PdmContext.SaveChanges();            
+        }
+
+        public string GetExceptionDetail(Exception ex)
+        {
+            var sb = new StringBuilder();
+
+            sb.Append(ex.StackTrace);
+            sb.Append(" | ");
+
+            while (ex != null)
+            {
+                sb.Append(ex.Message);
+                sb.Append(" | ");
+                ex = ex.InnerException;
+            }
+
+            return sb.ToString();
         }
 
         #region Abstract Methods

@@ -47,6 +47,7 @@
     <Compile Include="Filters\FilterPautaItems.cs" />
     <Compile Include="Filters\FilterCampanias.cs" />
     <Compile Include="Filters\FilterTarifarios.cs" />
+    <Compile Include="Log.cs" />
     <Compile Include="Pauta.cs" />
     <Compile Include="PautaFcMedios.cs" />
     <Compile Include="PautaItem.cs" />

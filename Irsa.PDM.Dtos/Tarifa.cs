@@ -22,6 +22,7 @@ namespace Irsa.PDM.Dtos
         public string OrdenDeCompra { get; set; }
         public string Descripcion { get; set; }
         public double Importe { get; set; }
+        public bool Nueva { get; set; }
 
         public string HoraDesdeFormatted
         {

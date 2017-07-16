@@ -15,7 +15,13 @@ namespace Irsa.PDM.Admin
 {
     public class TarifariosAdmin : BaseAdmin<int, Entities.Tarifario, Dtos.Tarifario, FilterTarifarios>
     {        
-        private const string GetTarifasAction = "/client?method=get-list&action=programas_a_tarifar";        
+        private const string GetTarifasAction = "/client?method=get-list&action=programas_a_tarifar";   
+        private readonly LogAdmin LogAdmin;
+
+        public TarifariosAdmin()
+        {
+            LogAdmin = new LogAdmin();   
+        }
         
         #region Base
 

@@ -13,5 +13,6 @@
         public double Descuento4 { get; set; }
         public double Descuento5 { get; set; }
         public Tarifa Tarifa { get; set; }
+        public bool DiferenciaEnMontoTarifas { get; set; }
     }
 }

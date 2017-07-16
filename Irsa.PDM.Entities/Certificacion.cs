@@ -19,7 +19,8 @@ namespace Irsa.PDM.Entities
         public double Descuento3 { get; set; }
         public double Descuento4 { get; set; }
         public double Descuento5 { get; set; }
-        public virtual Campania Campania { get; set; }       
+        public virtual Campania Campania { get; set; }
+        public EstadoCertificacion Estado { get; set; }
     }
 }
 

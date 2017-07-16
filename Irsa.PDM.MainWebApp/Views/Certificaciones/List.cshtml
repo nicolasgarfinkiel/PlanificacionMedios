@@ -13,17 +13,201 @@
                 </div>
             </div>            
         </div>
+        
+        <form method="POST" action="/Certificaciones/GetExcel" style="display: block; text-align: right; margin-bottom: 10px;" ng-if="certificaciones.length">
+            <input type="hidden" name="multiColumnSearchText" ng-value="filter.multiColumnSearchText" />
+            <button class="btn btn-success" type="submit">Exportar</button>
+        </form>
+        
+        <div id="no-more-tables">
+            <table class="col-sm-12 table-bordered table-striped table-condensed cf">
+                <thead class="cf">
+                    <tr>
+                        <th style="width: 6%">
+                            Cod.Campaña                          
+                        </th>
+                        <th style="width: 8%">
+                            Nombre
+                        </th>
+                        <th style="width: 5%">
+                            Pauta                          
+                        </th>
+                        <th style="width: 5%">
+                            Ejecutada
+                        </th>
+                        <th style="width: 6%">
+                            Cod.Programa
+                        </th>                   
+                        <th>
+                            Proveedor
+                        </th>                   
+                        <th>
+                            Espacio
+                        </th>                   
+                        <th style="width: 6%">
+                            Cod.Aviso
+                        </th>                   
+                        <th style="width: 6%">
+                            Fecha
+                        </th>                   
+                        <th style="width: 8%">
+                            Costo Unit.
+                        </th>                   
+                        <th style="width: 12%">
+                            Estado
+                        </th>                   
+                    </tr>
+                </thead>                                               
+                <tbody style="font-size: 11px;">
+                    <tr ng-repeat="certificacion in certificaciones">
+                        <td data-title="Cod.Campaña">
+                            <span>{{certificacion.campaniaCodigo}}</span>
+
+                        </td>
+                        <td data-title="Nombre">
+                            <span>{{certificacion.campaniaNombre}}</span>
+                        </td>
+                        <td data-title="Pauta">
+                            <span ng-if="certificacion.estado == 'Aceptada'">
+                                <span ng-click="openModalPauta(certificacion)" style="color: #3276b1;cursor: pointer;position: relative; border-bottom: dot-dash;">{{certificacion.pautaCodigo}}</span>
+                            </span>                            
+                            <span ng-if="certificacion.estado != 'Aceptada'">
+                                <span>{{certificacion.pautaCodigo}}</span>                                
+                            </span>                            
+                        </td>
+                        <td data-title="Pauta Ejecutada">
+                            <span>{{certificacion.pautaEjecutadaCodigo}}</span>
+                        </td>
+                        <td data-title="Cod.Programa">
+                            <span>{{certificacion.codigoPrograma}}</span>
+                        </td>
+                        <td data-title="Proveedor">
+                            <span>{{certificacion.proveedor}}</span>
+                        </td>    
+                        <td data-title="Espacio">
+                            <span>{{certificacion.espacio}}</span>
+                        </td>                   
+                        <td data-title="Cod.Aviso">
+                            <span>{{certificacion.codigoAviso}}</span>
+                        </td>
+                        <td data-title="Fecha">
+                            <span>{{certificacion.fechaAviso}}</span>
+                        </td>
+                        <td data-title="Costo Unitario">
+                            <span>{{certificacion.costoUnitario | currency}}</span>
+                        </td>
+                        <td data-title="Estado">
+                            <span>{{certificacion.estado}}</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="row pdm-pager">
+                <div class="col-sm-12">
+                    <div class="text-center">
+                        <ul class="pagination">
+                            <li class="previous" ng-class="{'disabled': isFirstPage()}">
+                                <a href="javascript:void(0)" ng-click="goToPreviousPage()"><</a>
+                            </li>
+                            <li class="active">
+                                <a href="javascript:void(0)">Página {{filter.currentPage}} de {{filter.pageCount}} - Registros: <b>{{filter.count}}</b></a>
+                            </li>
+                            <li class="next" ng-class="{'disabled': isLastPage()}">
+                                <a href="javascript:void(0)" ng-click="goToNextPage()">></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="alert alert-danger" ng-if="result.hasErrors">
             <i class="fa fa-bolt"></i>
             <div ng-repeat="message in result.messages">{{message}}</div>
-        </div>
-
-        <form method="POST" action="/Certificaciones/GetExcel">
-            <input type="hidden" name="campaniaId" value="1" />
-            <button type="submit">Exportar</button>
-        </form>
-        
-        <div class="gridStyleLarge" ng-grid="gridOptions"></div>
+        </div>                   
     </div>
 </div>
+
+<div class="modal fade pdm" id="pautaModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="color-line"></div>
+            <div class="modal-header">
+                <h4 class="modal-title">Detalle de pauta</h4>
+                <div class="row" style="margin-top: 10px;">
+                    <div class="col-sm-4">
+                        <div class="project-label"><strong>CAMPAÑA</strong></div>
+                        <small>{{currentCertificacion.campaniaCodigo}} - {{currentCertificacion.campaniaNombre}} </small>
+                    </div>                   
+                    <div class="col-sm-3">
+                        <div class="project-label"><strong>PAUTA</strong></div>
+                        <small>{{currentCertificacion.pautaCodigo}} </small>
+                    </div>                   
+                </div>
+            </div>
+            <div class="modal-body">
+                
+                <div id="no-more-tables">
+                    <table class="col-sm-12 table-bordered table-striped table-condensed cf">
+                        <thead class="cf">
+                            <tr>
+                                <th style="width: 10%;">
+                                    Cod.Programa
+                                </th>
+                                <th>
+                                    Proveedor
+                                </th>
+                                <th style="width: 24%;">
+                                    Espacio
+                                </th>                              
+                                <th style="width: 16%;">
+                                    Costo unit.
+                                </th>                              
+                            </tr>
+                        </thead>
+                        <tbody style="font-size: 11px;">
+                            <tr ng-repeat="item in pautaItemList">
+                                <td data-title="Código programa">
+                                    <span>{{item.codigoPrograma}}</span>
+                                </td>
+                                <td data-title="Proveedor">
+                                    <span>{{item.proveedor}}</span>
+                                </td>
+                                <td data-title="Espacio">
+                                    <span>{{item.espacio}}</span>
+                                </td>                               
+                                <td data-title="Costo unitario">
+                                    <span>{{item.costoUnitario | currency}}</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="row pdm-pager">
+                        <div class="col-sm-12">
+                            <div class="text-center">
+                                <ul class="pagination">
+                                    <li class="previous" ng-class="{'disabled': isFirstPagePauta(pauta.id)}">
+                                        <a href="javascript:void(0)" ng-click="goToPreviousPagePauta(pauta.id)">Anterior</a>
+                                    </li>
+                                    <li class="active">
+                                        <a href="javascript:void(0)">Página {{filterPauta.currentPage}} de {{filterPauta.pageCount}} - Registros: <b>{{filterPauta.count}}</b></a>
+                                    </li>
+                                    <li class="next" ng-class="{'disabled': isLastPagePauta(pauta.id)}">
+                                        <a href="javascript:void(0)" ng-click="goToNextPagePauta(pauta.id)">Siguiente</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+             
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>                
+            </div>
+        </div>
+    </div>
+</div>
+
+
 

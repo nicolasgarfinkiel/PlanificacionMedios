@@ -2,7 +2,7 @@
 <div class="hpanel">
     <div class="panel-body">
         <h5 class="font-light m-b-xs">
-            Administración de campaña {{entity.nombre}}
+            Administración de campaña  {{entity.codigo}} - {{entity.nombre}}
         </h5>
         <small>Fecha creacion: {{entity.createDate}}. Estado: {{entity.estado}}</small>
         <span style="float: right; position: relative; top: -3px;">
@@ -78,7 +78,7 @@
                                                 <span>
                                                     <i title="Tarifa NO asociada" class="fa fa-exclamation-circle" style="color: red;" ng-if="!item.tarifa"></i>
                                                     <i title="Diferencia en tarifa" class="fa fa-search" style="color: orange;" ng-if="item.tarifa && item.diferenciaEnMontoTarifas" ng-click="openTarifaModal(item.tarifa)"></i>
-                                                    <i title="Tarifa asociada" class="fa fa-search" style="color: greenyellow;" ng-if="item.tarifa && item.tarifa.importe ==  item.costoUnitario" ng-click="openTarifaModal(item.tarifa)"></i>
+                                                    <i title="Tarifa asociada" class="fa fa-search" style="color: greenyellow;" ng-if="item.tarifa && !item.diferenciaEnMontoTarifas" ng-click="openTarifaModal(item.tarifa)"></i>
                                                 </span>
                                             </td>
                                         </tr>
@@ -196,7 +196,7 @@
                     <div class="form-group">
                         <label class="col-lg-4 control-label">Importe</label>
                         <div class="col-lg-8">
-                            <span style="position: relative; top: 7px;"><b>{{currentTarifa.importe}}</b></span>
+                            <span style="position: relative; top: 7px;"><b>{{currentTarifa.importe | currency}}</b></span>
                         </div>
                     </div>
                     <div class="form-group">

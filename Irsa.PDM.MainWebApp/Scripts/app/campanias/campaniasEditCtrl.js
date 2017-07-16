@@ -19,7 +19,8 @@
                            filter: {
                                currentPage: 1,
                                pageSize: 10,
-                               pautaId: pauta.id
+                               pautaId: pauta.id,
+                               campaniaCodigo: $scope.entity.codigo
                            }
                        };
 

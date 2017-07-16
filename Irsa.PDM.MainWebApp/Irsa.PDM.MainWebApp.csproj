@@ -347,6 +347,9 @@
     </Content>
     <Content Include="Views\Certificaciones\Index.cshtml" />
     <Content Include="Views\Certificaciones\List.cshtml" />
+    <Content Include="Reports\Rpt_Certificaciones.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

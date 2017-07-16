@@ -5,7 +5,9 @@ namespace Irsa.PDM.Dtos.Filters
 {
     public class FilterPautaItems : FilterBase
     {
-        public int PautaId { get; set; }
+        public int CampaniaCodigo { get; set; }
+        public int? PautaId { get; set; }
+        public string PautaCodigo { get; set; }
 
     }
 }

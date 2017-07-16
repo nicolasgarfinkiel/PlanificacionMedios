@@ -18,6 +18,12 @@ namespace Irsa.PDM.Admin
     {
         private const string PostTarifasAction = "/client?method=create&action=programas_tarifados";
         private const string SuccessMessage = "Se actualizaron satisfactoriamente las tarifas.";
+        private readonly LogAdmin LogAdmin;
+
+        public TarifasAdmin()
+        {
+            LogAdmin = new LogAdmin();   
+        }
 
         #region Base
 

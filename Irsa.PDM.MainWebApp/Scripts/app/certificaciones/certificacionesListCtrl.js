@@ -2,24 +2,115 @@
        .controller('listCtrl', [
            '$scope',
            'certificacionesService',
+           'campaniasService',
            'baseNavigationService',
            'listBootstraperService',
-           function ($scope, certificacionesService, baseNavigationService, listBootstraperService) {
+           function ($scope, certificacionesService, campaniasService, baseNavigationService, listBootstraperService) {
                $scope.navigationService = baseNavigationService;
+               $scope.certificaciones = [];
 
-               $scope.onInitEnd = function () {                          
+               $scope.openModalPauta = function (certificacion) {
+                   $scope.currentCertificacion = certificacion;
+
+                   $scope.filterPauta = {
+                       currentPage: 1,
+                       pageSize: 10,
+                       pautaCodigo: certificacion.pautaCodigo,
+                       campaniaCodigo: certificacion.campaniaCodigo
+                   };
+                   
+                   $scope.findItems();
+                   $('#pautaModal').modal('show');
                };
 
-               listBootstraperService.init($scope, {
-                   service: certificacionesService,
-                   navigation: baseNavigationService,
-                   columns: [                       
-                       { field: 'nombre', displayName: 'Nombre' },
-                       { field: 'estado', displayName: 'Estado' },
-                       { field: 'createDate', displayName: 'Fecha de alta', width: 100 },
-                       { field: 'cuit', displayName: 'Administrar', width: 100, cellTemplate: '<div class="ng-grid-icon-container">' + '<a title="Administrar" href="javascript:void(0)" class="btn btn-rounded btn-xs btn-icon btn-default" ng-click="navigationService.goToEdit(row.entity.id)" ><i ng-class="{\'fa fa-share-square-o\': row.entity.estado == \'Pendiente\', \'fa fa-search\': row.entity.estado != \'Pendiente\' }"></i></a></div>' }
-                   ]
+               //#region Filters
+
+               $scope.filter = {                 
+                   currentPage: 1,
+                   pageSize: 10                   
+               };
+
+               $scope.isFirstPage = function () {
+                   return $scope.filter.currentPage == 1;
+               };
+
+               $scope.isLastPage = function () {
+                   return $scope.filter.currentPage == $scope.filter.pageCount;
+               };
+
+               $scope.goToNextPage = function () {
+                   if ($scope.isLastPage()) return;
+                   $scope.filter.currentPage++;
+                   $scope.find();
+               };
+
+               $scope.goToPreviousPage = function () {
+                   if ($scope.isFirstPage()) return;
+                   $scope.filter.currentPage--;
+                   $scope.find();
+               };
+
+               $scope.$watch('filter.multiColumnSearchText', function (newValue, oldValue) {
+                   if (typeof newValue == 'undefined' || newValue == oldValue) return;
+                   $scope.filter.currentPage = 1;
+                   $scope.find();
                });
 
 
+               $scope.find = function () {
+                   certificacionesService.getByFilter($scope.filter).then(function (response) {
+                       $scope.certificaciones = response.data.data;
+                       $scope.filter.count = response.data.count;
+                       $scope.filter.pageCount = Math.ceil($scope.filter.count / $scope.filter.pageSize);
+                   });
+               };
+
+               //#endregion
+
+               //#region PautaDetail
+
+               $scope.pautaItemList = [];
+
+               $scope.filterPauta = {
+                   currentPage: 1,
+                   pageSize: 10
+               };
+
+               $scope.isFirstPagePauta = function () {
+                   return $scope.filterPauta.currentPage == 1;
+               };
+
+               $scope.isLastPagePauta = function () {
+                   return $scope.filterPauta.currentPage == $scope.filterPauta.pageCount;
+               };
+
+               $scope.goToNextPagePauta = function () {
+                   if ($scope.isLastPage()) return;
+                   $scope.filterPauta.currentPage++;
+                   $scope.findItems();
+               };
+
+               $scope.goToPreviousPagePauta = function () {
+                   if ($scope.isFirstPage()) return;
+                   $scope.filterPauta.currentPage--;
+                   $scope.findItems();
+               };
+
+               $scope.findItems = function () {
+                   campaniasService.getItemsByFilter($scope.filterPauta).then(function (response) {
+                       $scope.pautaItemList = response.data.data;
+                       $scope.filterPauta.count = response.data.count;
+                       $scope.filterPauta.pageCount = Math.ceil($scope.filterPauta.count / $scope.filterPauta.pageSize);
+                   });
+               };              
+
+               //#endregion
+
+               //#region Init
+
+               certificacionesService.getDataListInit().then(function (response) {
+                   $scope.find();
+               });
+
+               //#endregion
            }]);

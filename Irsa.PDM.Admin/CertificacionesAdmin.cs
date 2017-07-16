@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Irsa.PDM.Dtos;
 using Irsa.PDM.Dtos.Common;
@@ -14,6 +15,12 @@ namespace Irsa.PDM.Admin
     public class CertificacionesAdmin : BaseAdmin<int, Entities.Certificacion, Dtos.Certificacion, FilterBase>
     {        
         private const string GetCertificaciones = "/client?method=create&action=pautas_controladas";
+        private readonly LogAdmin LogAdmin;
+
+        public CertificacionesAdmin()
+        {
+            LogAdmin = new LogAdmin();   
+        }
 
         #region Base
 
@@ -29,7 +36,7 @@ namespace Irsa.PDM.Admin
         public override IQueryable GetQuery(FilterBase filter)
         {
             var result = PdmContext.Certificaciones
-                        .OrderBy(e => e.Campania)
+                        .OrderBy(e => e.Campania.Codigo)
                         .ThenBy(e => e.PautaCodigo)
                         .ThenBy(e => e.PautaEjecutadaCodigo)
                         .AsQueryable();
@@ -39,7 +46,8 @@ namespace Irsa.PDM.Admin
                 var multiColumnSearchText = filter.MultiColumnSearchText.ToLower();
                 result = result.Where(e =>
                     (
-                        (e.Campania.Nombre.ToLower().Contains(multiColumnSearchText)) ||
+                        (e.Campania != null && e.Campania.Nombre.ToLower().Contains(multiColumnSearchText)) ||
+                        (e.Campania != null && System.Data.Entity.SqlServer.SqlFunctions.StringConvert((decimal)e.Campania.Codigo).Contains(multiColumnSearchText)) ||
                         (System.Data.Entity.SqlServer.SqlFunctions.StringConvert((decimal)e.CodigoPrograma).Contains(multiColumnSearchText)) ||
                         (e.Campania.Nombre.ToLower().Contains(multiColumnSearchText)) ||
                         (e.Espacio.ToLower().Contains(multiColumnSearchText)) ||
@@ -67,20 +75,19 @@ namespace Irsa.PDM.Admin
 
                 var client = new JsonServiceClient(FcMediosTarifarioUrl);
                 var certificaciones = client.Post<IList<CertificacionFcMedios>>(GetCertificaciones, pautas).ToList();
-                var campaniaNombres = certificaciones.Select(e => e.campania).Distinct().ToList();            
-                var campanias = PdmContext.Campanias.Where(e => campaniaNombres.Contains(e.Nombre)).ToList();
+                var campaniasCodigos = certificaciones.Select(e => e.cod_campania).Distinct().ToList();            
+                var campanias = PdmContext.Campanias.Where(e => campaniasCodigos.Contains(e.Codigo)).ToList();
 
-                LogSyncCertificacionesDetail(pautas, certificaciones);
+                LogSyncCertificacionesDetail(certificaciones);
             
                 certificaciones.ForEach(c =>
-                {
-                    var campania = campanias.SingleOrDefault(e => string.Equals(e.Nombre, c.campania) );
-                    if (campania == null) return;
+                {                  
+                    var campania = campanias.SingleOrDefault(e => c.cod_campania == e.Codigo );
 
-                    if (PdmContext.Certificaciones.Any(e => e.Campania.Id == campania.Id && 
-                        string.Equals(e.PautaCodigo, c.nro_pauta_aprobada) &&
-                        string.Equals(e.PautaEjecutadaCodigo, c.nro_pauta_ejecutada) &&
-                        e.CodigoPrograma == c.cod_programa))  return;
+                    if (PdmContext.Certificaciones.Any(e => string.Equals(e.PautaCodigo, c.nro_pauta_aprobada) &&
+                                                            string.Equals(e.PautaEjecutadaCodigo, c.nro_pauta_ejecutada) &&
+                                                            e.CodigoPrograma == c.cod_programa))
+                        return;
 
                     var certificacion = new Entities.Certificacion
                     {
@@ -105,6 +112,29 @@ namespace Irsa.PDM.Admin
                         Tema = c.des_tema                    
                     };
 
+                    var estado = EstadoCertificacion.Aceptada;
+
+                    if (campania == null)
+                    {
+                        estado = EstadoCertificacion.CampaniaNoRegistrada;
+                    }
+                    else if (campania.Estado == EstadoCampania.Cerrada)
+                    {
+                        estado = EstadoCertificacion.CampaniaCerrada;
+                    }
+                    else if (!PdmContext.PautasItem.Any(i =>
+                        i.CodigoPrograma == c.cod_programa &&
+                        i.Pauta.Codigo == c.nro_pauta_aprobada &&
+                        i.Pauta.Campania.Id == campania.Id))
+                    {
+                        estado = EstadoCertificacion.ProgramaNoPautado;
+                    }    
+                    else if (campania.Estado != EstadoCampania.Cerrada && campania.Estado != EstadoCampania.Aprobada)
+                    {
+                        estado = EstadoCertificacion.CampaniaNoAprobada;
+                    }                                   
+
+                    certificacion.Estado = estado;
                     PdmContext.Certificaciones.Add(certificacion);
                 });
 
@@ -127,17 +157,42 @@ namespace Irsa.PDM.Admin
 
         public ExcelPackage GetExcel(FilterBase filter)
         {
-            throw new NotImplementedException();
+            var template = new FileInfo(String.Format(@"{0}\Reports\Rpt_Certificaciones.xlsx", AppDomain.CurrentDomain.BaseDirectory));
+            var pck = new ExcelPackage(template, true);
+            var ws = pck.Workbook.Worksheets[1];
+            var row = 8;
+
+            filter.CurrentPage = 1;
+            filter.PageSize = 99999999;
+            var data = GetByFilter(filter).Data;
+
+            foreach (var item in data)
+            {
+                row++;
+                ws.Cells[row, 1].Value = item.CampaniaCodigo;
+                ws.Cells[row, 2].Value = item.CampaniaNombre;
+                ws.Cells[row, 3].Value = item.PautaCodigo;
+                ws.Cells[row, 4].Value = item.PautaEjecutadaCodigo;
+                ws.Cells[row, 5].Value = item.CodigoPrograma;
+                ws.Cells[row, 6].Value = item.Proveedor;
+                ws.Cells[row, 7].Value = item.Espacio;
+                ws.Cells[row, 8].Value = item.CodigoAviso;
+                ws.Cells[row, 9].Value =  item.FechaAviso.HasValue ? item.FechaAviso.Value.ToString("dd/MM/yyyy") : string.Empty;
+                ws.Cells[row, 10].Value = item.CostoUnitario;
+                ws.Cells[row, 11].Value = item.Estado;
+            }
+
+            return pck;
         }
 
         #region Log
 
-        private void LogSyncCertificacionesDetail(object pautas, List<CertificacionFcMedios> certificaciones)
+        private void LogSyncCertificacionesDetail(List<CertificacionFcMedios> certificaciones)
         {
             var log = new Dtos.Log
             {
                 Accion = "CertificaionesAdmin.SyncCertificaciones",
-                App = "Irsa.PDM.Web",
+                App = "Irsa.PDM.WindowsService",
                 CreateDate = DateTime.Now,
                 Modulo = "Certificaciones",
                 Tipo = App.Info,
@@ -153,7 +208,7 @@ namespace Irsa.PDM.Admin
             var log = new Dtos.Log
             {
                 Accion = "CertificaionesAdmin.SyncCertificaciones",
-                App = "Irsa.PDM.Web",
+                App = "Irsa.PDM.WindowsService",
                 CreateDate = DateTime.Now,
                 Modulo = "Certificaciones",
                 Tipo = App.Error,
@@ -170,7 +225,7 @@ namespace Irsa.PDM.Admin
             var log = new Dtos.Log
             {
                 Accion = "CertificaionesAdmin.SyncCertificaciones",
-                App = "Irsa.PDM.Web",
+                App = "Irsa.PDM.WindowsService",
                 CreateDate = DateTime.Now,
                 Modulo = "Certificaciones",
                 Tipo = App.Info,
@@ -186,7 +241,7 @@ namespace Irsa.PDM.Admin
             var log = new Dtos.Log
             {
                 Accion = "CertificaionesAdmin.SyncCertificaciones",
-                App = "Irsa.PDM.Web",
+                App = "Irsa.PDM.WindowsService",
                 CreateDate = DateTime.Now,
                 Modulo = "Certificaciones",
                 Tipo = App.Info,

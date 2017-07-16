@@ -22,6 +22,12 @@ namespace Irsa.PDM.Admin
         private const string GetPautas = "/client?method=get-list&action=pautas_a_aprobar";
         private const string PostPautasAction = "/client?method=create&action=pautas_aprobadas";
         private const string SuccessMessage = "Se actualizaron satisfactoriamente las pautas aprobadas.";
+        private readonly LogAdmin LogAdmin;
+
+        public CampaniasAdmin()
+        {
+            LogAdmin = new LogAdmin();   
+        }
 
         #region Base
       
@@ -62,8 +68,8 @@ namespace Irsa.PDM.Admin
                 var actualVehiculos = PdmContext.Vehiculos.ToList();
 
                 var client = new JsonServiceClient(FcMediosTarifarioUrl);
-                var pautas = client.Get<IList<PautaFcMedios>>(GetPautas).ToList();
-                var campanias = pautas.Select(e => e.campania).Distinct().ToList();
+                var pautas = GetPautasMock(); //client.Get<IList<PautaFcMedios>>(GetPautas).ToList(); 
+                var campanias = pautas.Select(e => new {e.cod_campania, e.des_campania}).Distinct().ToList();
 
                 LogSyncCampaniasDetail(pautas);
 
@@ -71,8 +77,8 @@ namespace Irsa.PDM.Admin
                 {
                     #region Campanias
 
-                    var campania = PdmContext.Campanias.FirstOrDefault(cc => string.Equals(cc.Nombre, c));
-                    var pautasWs = pautas.Where(e => string.Equals(e.campania, c)).Select(e => e.nro_pauta).Distinct().ToList();
+                    var campania = PdmContext.Campanias.FirstOrDefault(cc => cc.Codigo == c.cod_campania);
+                    var pautasWs = pautas.Where(e => string.Equals(e.cod_campania, c.cod_campania)).Select(e => e.nro_pauta).Distinct().ToList();
 
                     if (campania == null)
                     {
@@ -82,7 +88,8 @@ namespace Irsa.PDM.Admin
                             CreatedBy = App.ImportUser,
                             Enabled = true,
                             Estado = EstadoCampania.Pendiente,
-                            Nombre = c,
+                            Nombre = c.des_campania,
+                            Codigo = c.cod_campania,
                             Pautas = new List<Entities.Pauta>()
                         };
 
@@ -186,11 +193,11 @@ namespace Irsa.PDM.Admin
                                 : string.Format(Resource.DiferenciaEnMontoTarifas, string.Join(",", diferenteMonto));
 
                             LogSyncCampaniasRechazoInconsistencias(p, motivo);
-                            SyncEstadoPautas(new List<Pauta> {p}, 0, motivo);
+                         //   SyncEstadoPautas(new List<Pauta> {p}, 0, motivo);
 
                             sinTarifa.ForEach(st =>
                             {
-                                var tfc = pautas.Single(t => t.cod_programa == st && string.Equals(t.nro_pauta, p.Codigo));
+                                var tfc = pautas.First(t => t.cod_programa == st && string.Equals(t.nro_pauta, p.Codigo));
                                 var medio = actualMedios.Single(e => e.Codigo == tfc.cod_medio);
                                 var plaza = actualPlazas.Single(e => e.Codigo == tfc.cod_plaza);
                                 var vehiculo = actualVehiculos.Single(e => e.Codigo == tfc.cod_vehiculo);
@@ -228,10 +235,10 @@ namespace Irsa.PDM.Admin
                     #endregion
                 });
 
-                PdmContext.Configuration.AutoDetectChangesEnabled = false;
+            //    PdmContext.Configuration.AutoDetectChangesEnabled = false;
                 PdmContext.SaveChanges();
-                PdmContext.Configuration.AutoDetectChangesEnabled = true;
-                PdmContext = new PDMContext();
+              //  PdmContext.Configuration.AutoDetectChangesEnabled = true;
+                //PdmContext = new PDMContext();
             }
             catch (Exception ex)
             {
@@ -241,16 +248,64 @@ namespace Irsa.PDM.Admin
             }
 
             LogSyncCampaniasEnd();
-        }      
-   
+        }
 
+        private IList<PautaFcMedios> GetPautasMock()
+        {
+            return new List<PautaFcMedios>
+            {
+                new PautaFcMedios
+                {
+                  cod_aviso  = 10.ToString(),
+                  cod_campania = 4760,
+                  cod_plaza = "GBA",
+                  cod_medio = "T",
+                  cod_programa = 100,
+                  cod_proveedor = 10,
+                  cod_vehiculo = 10055,
+                  costo_unitario = 100,
+                  des_campania = "Demo 1",
+                  des_proveedor = "prov",
+                  des_tema = "Tesma",
+                  duracion_tema = 10,
+                  espacio = "l a v",
+                  hora_fin = 23,
+                  hora_inicio = 0,
+                  fecha_aviso = DateTime.Now,
+                  nro_pauta = "120"                  
+                },
+                 new PautaFcMedios
+                {
+                  cod_aviso  = 10.ToString(),
+                  cod_campania = 4761,
+                  cod_plaza = "GBA",
+                  cod_medio = "T",
+                  cod_programa = 41474,
+                  cod_proveedor = 10,
+                  cod_vehiculo = 964,
+                  costo_unitario = 100,
+                  des_campania = "Demo 2",
+                  des_proveedor = "prov",
+                  des_tema = "Tesma",
+                  duracion_tema = 10,
+                  espacio = "l a v",
+                  hora_fin = 23,
+                  hora_inicio = 0,
+                  fecha_aviso = DateTime.Now,
+                  nro_pauta = "121"                  
+                },
+            };
+        }
+   
         #endregion
 
         public PagedListResponse<Dtos.PautaItem> GetItemsByFilter(Dtos.Filters.FilterPautaItems filter)
-        {
+        {            
+            var pautaId = filter.PautaId.HasValue ? filter.PautaId.Value : PdmContext.Pautas.Single(e => string.Equals(e.Codigo, filter.PautaCodigo)).Id;
+
             var query = PdmContext
                       .PautasItem.Include(p => p.Tarifa)
-                      .Where(t => t.Pauta.Id == filter.PautaId)
+                      .Where(t => t.Pauta.Id == pautaId && t.Pauta.Campania.Codigo == filter.CampaniaCodigo)
                       .OrderBy(t => t.CodigoPrograma)
                       .AsQueryable();
 
@@ -378,12 +433,12 @@ namespace Irsa.PDM.Admin
             var log = new Dtos.Log
             {
                 Accion = "CampaniasAdmin.SyncCampanias",
-                App = "Irsa.PDM.Web",
+                App = "Irsa.PDM.WindowsService",
                 CreateDate = DateTime.Now,
                 Modulo = "Campanias",
                 Tipo = App.Warning,
                 UsuarioAccion = UsuarioLogged,
-                Descripcion = string.Format("Pauta ID: {0}. {1}. Se insertaron las tarifas para esos códigos de programa", pauta.Id, motivo)
+                Descripcion = string.Format("Pauta Codigo: {0}. {1}.", pauta.Codigo, motivo)
             };
 
             LogAdmin.Create(log);
@@ -394,7 +449,7 @@ namespace Irsa.PDM.Admin
             var log = new Dtos.Log
             {
                 Accion = "CampaniasAdmin.SyncCampanias",
-                App = "Irsa.PDM.Web",
+                App = "Irsa.PDM.WindowsService",
                 CreateDate = DateTime.Now,
                 Modulo = "Campanias",
                 Tipo = App.Warning,
@@ -405,12 +460,12 @@ namespace Irsa.PDM.Admin
             LogAdmin.Create(log);
         }       
 
-        private void LogSyncCampaniasDetail(List<PautaFcMedios> pautas)
+        private void LogSyncCampaniasDetail(IList<PautaFcMedios> pautas)
         {
             var log = new Dtos.Log
             {
                 Accion = "CampaniasAdmin.SyncCampanias",
-                App = "Irsa.PDM.Web",
+                App = "Irsa.PDM.WindowsService",
                 CreateDate = DateTime.Now,
                 Modulo = "Campanias",
                 Tipo = App.Info,
@@ -426,7 +481,7 @@ namespace Irsa.PDM.Admin
             var log = new Dtos.Log
             {
                 Accion = "CampaniasAdmin.SyncCampanias",
-                App = "Irsa.PDM.Web",
+                App = "Irsa.PDM.WindowsService",
                 CreateDate = DateTime.Now,
                 Modulo = "Campanias",
                 Tipo = App.Info,
@@ -442,7 +497,7 @@ namespace Irsa.PDM.Admin
             var log = new Dtos.Log
             {
                 Accion = "CampaniasAdmin.SyncCampanias",
-                App = "Irsa.PDM.Web",
+                App = "Irsa.PDM.WindowsService",
                 CreateDate = DateTime.Now,
                 Modulo = "Campanias",
                 Tipo = App.Info,
@@ -458,7 +513,7 @@ namespace Irsa.PDM.Admin
             var log = new Dtos.Log
             {
                 Accion = "CampaniasAdmin.SyncCampanias",
-                App = "Irsa.PDM.Web",
+                App = "Irsa.PDM.WindowsService",
                 CreateDate = DateTime.Now,
                 Modulo = "Campanias",
                 Tipo = App.Error,
@@ -475,7 +530,7 @@ namespace Irsa.PDM.Admin
             var log = new Dtos.Log
             {
                 Accion = "CampaniasAdmin.ChangeEstadoCampania",
-                App = "Irsa.PDM.Web",
+                App = "Irsa.PDM.WindowsService",
                 CreateDate = DateTime.Now,
                 Modulo = "Campanias",
                 Tipo = App.Info,
@@ -491,7 +546,7 @@ namespace Irsa.PDM.Admin
             var log = new Dtos.Log
             {
                 Accion = "CampaniasAdmin.ChangeEstadoPauta",
-                App = "Irsa.PDM.Web",
+                App = "Irsa.PDM.WindowsService",
                 CreateDate = DateTime.Now,
                 Modulo = "Campanias",
                 Tipo = App.Info,
@@ -507,7 +562,7 @@ namespace Irsa.PDM.Admin
             var log = new Dtos.Log
             {
                 Accion = "CampaniasAdmin.ChangeEstadoCampania",
-                App = "Irsa.PDM.Web",
+                App = "Irsa.PDM.WindowsService",
                 CreateDate = DateTime.Now,
                 Modulo = "Campanias",
                 Tipo = App.Info,
@@ -525,7 +580,7 @@ namespace Irsa.PDM.Admin
             var log = new Dtos.Log
             {
                 Accion = "CampaniasAdmin.ChangeEstadoPauta",
-                App = "Irsa.PDM.Web",
+                App = "Irsa.PDM.WindowsService",
                 CreateDate = DateTime.Now,
                 Modulo = "Campanias",
                 Tipo = App.Info,

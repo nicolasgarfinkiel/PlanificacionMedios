@@ -14,12 +14,10 @@ namespace Irsa.PDM.Admin
     {
         public static string FcMediosTarifarioUrl = ConfigurationManager.AppSettings["fcMediosTarifarioUrl"];
         public  PDMContext PdmContext;
-        public string UsuarioLogged { get; set; }
-        protected readonly LogAdmin LogAdmin;
+        public string UsuarioLogged { get; set; }       
 
         public BaseAdmin()
-        {
-            LogAdmin = new LogAdmin();
+        {          
             PdmContext = new PDMContext();
 
             try

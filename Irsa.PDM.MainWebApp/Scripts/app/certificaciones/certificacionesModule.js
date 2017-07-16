@@ -1,5 +1,6 @@
 ﻿angular.module('irsa.pdm.certificaciones', [
-    'irsa.pdm.certificaciones.ctrl.list',    
+    'irsa.pdm.certificaciones.ctrl.list',
+    'irsa.pdm.service.campanias',
     'irsa.pdm.service.certificaciones',
     'irsa.pdm.navigation.base',    
     'irsa.pdm.service.base',

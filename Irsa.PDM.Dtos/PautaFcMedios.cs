@@ -10,7 +10,8 @@ namespace Irsa.PDM.Dtos
         public string cod_aviso { get; set; }
         public string cod_medio { get; set; }
         public string cod_plaza { get; set; }
-        public string campania { get; set; }
+        public int cod_campania { get; set; }
+        public string des_campania { get; set; }
         public int cod_proveedor { get; set; }
         public string des_proveedor { get; set; }
         public DateTime fecha_aviso { get; set; }

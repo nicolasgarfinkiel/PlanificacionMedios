@@ -68,7 +68,7 @@ namespace Irsa.PDM.Admin
                 var actualVehiculos = PdmContext.Vehiculos.ToList();
 
                 var client = new JsonServiceClient(FcMediosTarifarioUrl);
-                var pautas = GetPautasMock(); //client.Get<IList<PautaFcMedios>>(GetPautas).ToList(); 
+                var pautas = client.Get<IList<PautaFcMedios>>(GetPautas).ToList(); //GetPautasMock();  
                 var campanias = pautas.Select(e => new {e.cod_campania, e.des_campania}).Distinct().ToList();
 
                 LogSyncCampaniasDetail(pautas);
@@ -434,7 +434,7 @@ namespace Irsa.PDM.Admin
             {
                 Accion = "CampaniasAdmin.SyncCampanias",
                 App = "Irsa.PDM.WindowsService",
-                CreateDate = DateTime.Now,
+                CreateDate = DateTime.Now,                
                 Modulo = "Campanias",
                 Tipo = App.Warning,
                 UsuarioAccion = UsuarioLogged,
@@ -535,7 +535,7 @@ namespace Irsa.PDM.Admin
                 Modulo = "Campanias",
                 Tipo = App.Info,
                 UsuarioAccion = UsuarioLogged,
-                Descripcion =  string.Format("Se modificó el estado de la campaña ID {0} a {1}. Motivo {2}", campania.Id, est, motivo)             
+                Descripcion =  string.Format("Se modificó el estado de la campaña ID {0} a {1}. Motivo {2}", campania.Id, est, motivo ?? "Aprobada")             
             };
 
             LogAdmin.Create(log);

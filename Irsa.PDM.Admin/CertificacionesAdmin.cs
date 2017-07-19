@@ -84,35 +84,45 @@ namespace Irsa.PDM.Admin
                 {                  
                     var campania = campanias.SingleOrDefault(e => c.cod_campania == e.Codigo );
 
-                    if (PdmContext.Certificaciones.Any(e => string.Equals(e.PautaCodigo, c.nro_pauta_aprobada) &&
-                                                            string.Equals(e.PautaEjecutadaCodigo, c.nro_pauta_ejecutada) &&
-                                                            e.CodigoPrograma == c.cod_programa))
-                        return;
+                    var certificacion = PdmContext.Certificaciones.FirstOrDefault(e => 
+                                        string.Equals(e.PautaCodigo, c.nro_pauta_aprobada) &&
+                                        string.Equals(e.PautaEjecutadaCodigo, c.nro_pauta_ejecutada) &&
+                                        e.Campania.Codigo == c.cod_campania &&
+                                        e.CodigoPrograma == c.cod_programa);
 
-                    var certificacion = new Entities.Certificacion
+                    if (certificacion != null && certificacion.Estado == EstadoCertificacion.Aceptada) return;
+
+                    if (certificacion == null)
                     {
-                        Campania = campania,
-                        CodigoAviso = c.cod_aviso,
-                        CodigoPrograma = c.cod_programa,
-                        CostoUnitario = c.costo_unitario,
-                        CreateDate = DateTime.Now,
-                        CreatedBy = App.ImportUser,
-                        Descuento1 = c.descuento_1,
-                        Descuento2 = c.descuento_2,
-                        Descuento3 = c.descuento_3,
-                        Descuento4 = c.descuento_4,
-                        Descuento5 = c.descuento_5,
-                        DuracionTema = c.duracion_tema,
-                        Enabled = true,
-                        Espacio = c.espacio,
-                        FechaAviso = c.fecha_aviso,
-                        PautaCodigo = c.nro_pauta_aprobada,
-                        PautaEjecutadaCodigo = c.nro_pauta_ejecutada,
-                        Proveedor = c.des_proveedor,
-                        Tema = c.des_tema                    
-                    };
+                        certificacion = new Entities.Certificacion
+                        {
+                            Campania = campania,
+                            CodigoAviso = c.cod_aviso,
+                            CodigoPrograma = c.cod_programa,
+                            CostoUnitario = c.costo_unitario,
+                            CreateDate = DateTime.Now,
+                            CreatedBy = App.ImportUser,
+                            Descuento1 = c.descuento_1,
+                            Descuento2 = c.descuento_2,
+                            Descuento3 = c.descuento_3,
+                            Descuento4 = c.descuento_4,
+                            Descuento5 = c.descuento_5,
+                            DuracionTema = c.duracion_tema,
+                            Enabled = true,
+                            Espacio = c.espacio,
+                            FechaAviso = c.fecha_aviso,
+                            PautaCodigo = c.nro_pauta_aprobada,
+                            PautaEjecutadaCodigo = c.nro_pauta_ejecutada,
+                            Proveedor = c.des_proveedor,
+                            Tema = c.des_tema
+                        };
+                    }
 
                     var estado = EstadoCertificacion.Aceptada;
+                    var pautaItem = PdmContext.PautasItem.FirstOrDefault(i =>
+                                    i.CodigoPrograma == c.cod_programa &&
+                                    i.Pauta.Codigo == c.nro_pauta_aprobada &&
+                                    i.Pauta.Campania.Id == campania.Id);
 
                     if (campania == null)
                     {
@@ -122,10 +132,7 @@ namespace Irsa.PDM.Admin
                     {
                         estado = EstadoCertificacion.CampaniaCerrada;
                     }
-                    else if (!PdmContext.PautasItem.Any(i =>
-                        i.CodigoPrograma == c.cod_programa &&
-                        i.Pauta.Codigo == c.nro_pauta_aprobada &&
-                        i.Pauta.Campania.Id == campania.Id))
+                    else if (pautaItem == null)
                     {
                         estado = EstadoCertificacion.ProgramaNoPautado;
                     }    
@@ -135,13 +142,33 @@ namespace Irsa.PDM.Admin
                     }                                   
 
                     certificacion.Estado = estado;
-                    PdmContext.Certificaciones.Add(certificacion);
+
+                    if (certificacion.Id == 0)
+                    {                                           
+                        PdmContext.Certificaciones.Add(certificacion);    
+                    }
+                    
+                    if (pautaItem == null) return;
+                    
+                    var codProgramas = pautaItem.Pauta.Items.Select(e => e.CodigoPrograma).ToList();
+
+                    if (codProgramas.All(cp => PdmContext.Certificaciones.Any(e => e.CodigoPrograma == cp && e.Estado == EstadoCertificacion.Aceptada)))
+                    {
+                        pautaItem.Pauta.Estado = EstadoPauta.Cerrada;
+                        pautaItem.Pauta.FechaCierre = DateTime.Now;
+                    }
+
+                    if (pautaItem.Pauta.Campania.Pautas.All(e => e.Estado == EstadoPauta.Cerrada))
+                    {
+                        pautaItem.Pauta.Campania.Estado = EstadoCampania.Cerrada;
+                        pautaItem.Pauta.Campania.FechaCierre = DateTime.Now;
+                    }                                                                         
                 });
 
-                PdmContext.Configuration.AutoDetectChangesEnabled = false;
+                //PdmContext.Configuration.AutoDetectChangesEnabled = false;
                 PdmContext.SaveChanges();
-                PdmContext.Configuration.AutoDetectChangesEnabled = true;
-                PdmContext = new PDMContext();
+                //PdmContext.Configuration.AutoDetectChangesEnabled = true;
+                //PdmContext = new PDMContext();
             }
             catch (Exception ex)
             {

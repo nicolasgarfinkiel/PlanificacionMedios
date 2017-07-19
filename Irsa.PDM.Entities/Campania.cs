@@ -9,6 +9,8 @@ namespace Irsa.PDM.Entities
         public int Codigo { get; set; }
         public string Nombre { get; set; }
         public EstadoCampania Estado { get; set; }
-        public virtual IList<Pauta> Pautas { get; set; }        
+        public virtual IList<Pauta> Pautas { get; set; }
+
+        public DateTime? FechaCierre { get; set; }
     }
 }

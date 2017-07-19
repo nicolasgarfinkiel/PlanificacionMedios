@@ -12,7 +12,9 @@ namespace Irsa.PDM.Admin
 
         public override Log ToEntity(Dtos.Log dto)
         {
-            return Mapper.Map<Dtos.Log, Entities.Log>(dto);
+            var result =  Mapper.Map<Dtos.Log, Entities.Log>(dto);
+            result.Enabled = true;
+            return result;
         }
 
         public override void Validate(Dtos.Log dto)

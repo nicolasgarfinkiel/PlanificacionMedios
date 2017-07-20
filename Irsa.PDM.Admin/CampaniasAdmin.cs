@@ -66,9 +66,7 @@ namespace Irsa.PDM.Admin
                 var actualMedios = PdmContext.Medios.ToList();
                 var actualPlazas = PdmContext.Plazas.ToList();
                 var actualVehiculos = PdmContext.Vehiculos.ToList();
-
-                var client = new JsonServiceClient(FcMediosTarifarioUrl);
-                var pautas = client.Get<IList<PautaFcMedios>>(GetPautas).ToList(); //GetPautasMock();  
+                var pautas = FCMediosclient.Get<IList<PautaFcMedios>>(GetPautas).ToList(); //GetPautasMock();  
                 var campanias = pautas.Select(e => new {e.cod_campania, e.des_campania}).Distinct().ToList();
 
                 LogSyncCampaniasDetail(pautas);

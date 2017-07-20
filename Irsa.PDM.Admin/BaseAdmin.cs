@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Web;
 using AutoMapper;
 using Irsa.PDM.Dtos.Common;
 using Irsa.PDM.Repositories;
+using ServiceStack.ServiceClient.Web;
 
 namespace Irsa.PDM.Admin
 {
@@ -14,11 +16,16 @@ namespace Irsa.PDM.Admin
     {
         public static string FcMediosTarifarioUrl = ConfigurationManager.AppSettings["fcMediosTarifarioUrl"];
         public  PDMContext PdmContext;
-        public string UsuarioLogged { get; set; }       
+        public string UsuarioLogged { get; set; }
+        public JsonServiceClient FCMediosclient;
+        
 
         public BaseAdmin()
         {          
             PdmContext = new PDMContext();
+            FCMediosclient = new JsonServiceClient(FcMediosTarifarioUrl);
+            //FCMediosclient.Credentials = NetWorkCredential;
+            //FCMediosclient.Proxy = WebProxy;
 
             try
             {
@@ -107,6 +114,27 @@ namespace Irsa.PDM.Admin
         public abstract void Validate(TD dto);
         public abstract IQueryable GetQuery(TF filter);
 
+        #endregion
+
+        #region Credenciales
+        public NetworkCredential NetWorkCredential
+        {
+            get
+            {
+                return new NetworkCredential("procmailer", "prc01mail#07snd", "IRSACORP");
+            }
+        }
+
+        public WebProxy WebProxy
+        {
+            get
+            {
+                WebProxy proxy = new WebProxy("http://10.100.250.2:8080");
+                proxy.Credentials = NetWorkCredential;
+
+                return proxy;
+            }
+        }
         #endregion
     }
 }

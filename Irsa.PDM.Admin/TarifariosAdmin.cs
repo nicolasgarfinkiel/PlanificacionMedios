@@ -191,9 +191,8 @@ namespace Irsa.PDM.Admin
             }
 
             serviceSync.LastBaseTablesSync = DateTime.Now;
-
-            var client = new JsonServiceClient(FcMediosTarifarioUrl);
-            var tarifas = client.Get<IList<TarifaFcMedios>>(GetTarifasAction);
+            
+            var tarifas = FCMediosclient.Get<IList<TarifaFcMedios>>(GetTarifasAction);
 
             #region Base
 
@@ -304,9 +303,8 @@ namespace Irsa.PDM.Admin
         }
 
         private void InitTarifario(Tarifario entity)
-        {
-            var client = new JsonServiceClient(FcMediosTarifarioUrl);
-            var tarifas = client.Get<IList<TarifaFcMedios>>(GetTarifasAction)
+        {            
+            var tarifas = FCMediosclient.Get<IList<TarifaFcMedios>>(GetTarifasAction)
                           .Where(e => e.cod_vehiculo == entity.Vehiculo.Codigo).ToList();
 
             var actualMedios = PdmContext.Medios.ToList();

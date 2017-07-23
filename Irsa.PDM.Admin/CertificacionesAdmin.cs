@@ -146,22 +146,22 @@ namespace Irsa.PDM.Admin
                     {                                           
                         PdmContext.Certificaciones.Add(certificacion);    
                     }
-                    
-                    //if (pautaItem == null) return;
-                    
-                    //var codProgramas = pautaItem.Pauta.Items.Select(e => e.CodigoPrograma).ToList();
 
-                    //if (codProgramas.All(cp => PdmContext.Certificaciones.Any(e => e.CodigoPrograma == cp && e.Estado == EstadoCertificacion.Aceptada)))
-                    //{
-                    //    pautaItem.Pauta.Estado = EstadoPauta.Cerrada;
-                    //    pautaItem.Pauta.FechaCierre = DateTime.Now;
-                    //}
+                    if (pautaItem == null) return;
 
-                    //if (pautaItem.Pauta.Campania.Pautas.All(e => e.Estado == EstadoPauta.Cerrada))
-                    //{
-                    //    pautaItem.Pauta.Campania.Estado = EstadoCampania.Cerrada;
-                    //    pautaItem.Pauta.Campania.FechaCierre = DateTime.Now;
-                    //}                                                                         
+                    var codProgramas = pautaItem.Pauta.Items.Select(e => e.CodigoPrograma).ToList();
+
+                    if (codProgramas.All(cp => PdmContext.Certificaciones.Any(e => e.CodigoPrograma == cp && e.Estado == EstadoCertificacion.Aceptada)))
+                    {
+                        pautaItem.Pauta.Estado = EstadoPauta.Cerrada;
+                        pautaItem.Pauta.FechaCierre = DateTime.Now;
+                    }
+
+                    if (pautaItem.Pauta.Campania.Pautas.All(e => e.Estado == EstadoPauta.Cerrada))
+                    {
+                        pautaItem.Pauta.Campania.Estado = EstadoCampania.Cerrada;
+                        pautaItem.Pauta.Campania.FechaCierre = DateTime.Now;
+                    }                                                                         
                 });
 
                 //PdmContext.Configuration.AutoDetectChangesEnabled = false;

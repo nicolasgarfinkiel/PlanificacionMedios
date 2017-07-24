@@ -53,6 +53,8 @@
                    vehiculos: [],
                    diasAux: [],
                    dias: [],
+                   estadosAux: [],
+                   estados: [],
                    currentPage: 1,
                    pageSize: 10,
                    tarifarioId: $routeParams.id
@@ -214,13 +216,7 @@
                        }
 
                        $scope.currentTarifa = tarifa;
-                       $scope.currentTarifa.editable = !$scope.currentTarifa.editable;
-
-                       //if ($scope.currentTarifa.medio) {
-                       //    $scope.currentTarifa.medio = $scope.getById('medios', $scope.currentTarifa.medio.id);
-                       //    $scope.currentTarifa.plaza = $scope.getById('plazas', $scope.currentTarifa.plaza.id);
-                       //    $scope.currentTarifa.vehiculo = $scope.getById('vehiculos', $scope.currentTarifa.vehiculo.id);
-                       //}
+                       $scope.currentTarifa.editable = !$scope.currentTarifa.editable;                      
                    });
                };
 
@@ -248,16 +244,8 @@
                    }
                };
 
-               $scope.isValidTarifa = function (tarifa) {
-                   //tarifa.invalidMedio = !tarifa.medio;
-                   //tarifa.invalidPlaza = !tarifa.plaza;
-                   //tarifa.invalidVehiculo = !tarifa.vehiculo;
-                   //tarifa.invalidDias = !tarifa.lunes && !tarifa.martes && !tarifa.miercoles && !tarifa.jueves && !tarifa.viernes && !tarifa.sabado && !tarifa.domingo;
-                   //tarifa.invalidHoraDesde = tarifa.horaDesde === null || tarifa.horaDesde === '' || typeof tarifa.horaDesde == 'undefined';
-                   //tarifa.invalidHoraHasta = tarifa.horaHasta === null || tarifa.horaHasta === '' || typeof tarifa.horaHasta == 'undefined';
-                   //tarifa.invalidDescripcion = !tarifa.descripcion;
+               $scope.isValidTarifa = function (tarifa) {                  
                    tarifa.invalidTarifa = !tarifa.importe || isNaN(tarifa.importe);
-
 
                    return !(tarifa.invalidTarifa);
                };

@@ -8,6 +8,7 @@ using Irsa.PDM.Dtos.Filters;
 using Irsa.PDM.Entities;
 using Irsa.PDM.Repositories;
 using Newtonsoft.Json;
+using ServiceStack.Common.Extensions;
 using ServiceStack.ServiceClient.Web;
 using Tarifario = Irsa.PDM.Entities.Tarifario;
 
@@ -70,7 +71,7 @@ namespace Irsa.PDM.Admin
 
             try
             {
-                new TarifasAdmin().SetValues(new FilterTarifas { TarifarioId = id }, null, null, true);
+             //   new TarifasAdmin().SetValues(new FilterTarifas { TarifarioId = id }, null, null, true);
                 entity = PdmContext.Tarifarios.Single(c => c.Id == id);
 
                 entity.Estado = EstadoTarifario.Eliminado;
@@ -163,9 +164,53 @@ namespace Irsa.PDM.Admin
 
         #endregion
 
+        public void Aprobar(int tarifarioId)
+        {
+            var entity = default(Entities.Tarifario);
+
+            try
+            {                
+                entity = PdmContext.Tarifarios.Single(c => c.Id == tarifarioId);
+
+                entity.Estado = EstadoTarifario.Aprobado;
+                entity.UpdatedBy = UsuarioLogged;
+                entity.UpdateDate = DateTime.Now;   
+
+                entity.Tarifas.ForEach(t =>
+                {
+                    t.Estado = EstadoTarifa.Aprobada;
+                    t.UpdatedBy = UsuarioLogged;
+                    t.UpdateDate = DateTime.Now;   
+                });
+
+                var tarifasFcMedios = entity.Tarifas
+                    .Select(t => new TarifaFcMediosUpdate
+                    {
+                        cod_programa = t.CodigoPrograma,
+                        bruto = t.Importe,
+                        descuento_1 = 0,
+                        descuento_2 = 0,
+                        descuento_3 = 0,
+                        descuento_4 = 0,
+                        descuento_5 = 0,
+                        fecha_tarifa = entity.FechaDesde.ToString("yyyy-MM-dd 00:00:00"),
+                    }).ToList();
+
+                new TarifasAdmin().SyncTarifas(tarifasFcMedios);
+
+                PdmContext.SaveChanges();
+                LogAprobarInfo(entity);
+            }
+            catch (Exception ex)
+            {
+                LogAprobarError(entity, ex);
+                throw;
+            }                        
+        }        
+
         public DateTime GetFechaDesde(int vehiculolId)
         {
-            var lastTarifario = PdmContext.Tarifarios.Where(e => e.Vehiculo.Id == vehiculolId).OrderByDescending(e => e.Id).FirstOrDefault();
+            var lastTarifario = PdmContext.Tarifarios.Where(e => e.Vehiculo.Id == vehiculolId && e.Estado != EstadoTarifario.Eliminado).OrderByDescending(e => e.Id).FirstOrDefault();
 
             return lastTarifario == null ? DateTime.Now : lastTarifario.FechaHasta.AddDays(1);
         }
@@ -343,8 +388,13 @@ namespace Irsa.PDM.Admin
                     CreateDate = DateTime.Now,
                     CreatedBy = App.ImportUser,
                     Enabled = true,
+                    Estado = t.bruto > 0 ? EstadoTarifa.PendienteAprobacion : EstadoTarifa.SinTarifaAsociada
                 });
             });
+
+            entity.Estado = toAdd.All(tt => tt.Estado == EstadoTarifa.PendienteAprobacion)
+                 ? EstadoTarifario.PendienteAprobacion
+                 : EstadoTarifario.Editable;
 
             PdmContext.Configuration.AutoDetectChangesEnabled = false;
             toAdd.ForEach(e => PdmContext.Tarifas.Add(e));
@@ -425,8 +475,44 @@ namespace Irsa.PDM.Admin
 
             LogAdmin.Create(log);
         }
+        
+        private void LogAprobarInfo(Tarifario entity)
+        {
+            var log = new Dtos.Log
+            {
+                Accion = "TarifarioAdmin.AprobarTarifario",
+                App = "Irsa.PDM.Web",
+                CreateDate = DateTime.Now,
+                Modulo = "Tarifarios",
+                Tipo = App.Info,
+                UsuarioAccion = UsuarioLogged,
+                Descripcion = string.Format("Tarifario aprobado. ID: {0}", entity.Id)
+            };
+
+            LogAdmin.Create(log);           
+        }
+
+        private void LogAprobarError(Tarifario entity, Exception ex)
+        {
+            var log = new Dtos.Log
+            {
+                Accion = "TarifarioAdmin.AprobarTarifario",
+                App = "Irsa.PDM.Web",
+                CreateDate = DateTime.Now,
+                Modulo = "Tarifarios",
+                Tipo = App.Error,
+                UsuarioAccion = UsuarioLogged,
+                Descripcion = string.Format("Tarifario. ID: {0}", entity.Id),
+                StackTrace = GetExceptionDetail(ex)
+            };
+
+            LogAdmin.Create(log);
+        }
+
       
         #endregion
+
+      
     }
 }
 

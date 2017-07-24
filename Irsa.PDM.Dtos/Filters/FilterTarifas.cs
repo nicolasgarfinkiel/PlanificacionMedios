@@ -12,6 +12,7 @@ namespace Irsa.PDM.Dtos.Filters
         public int? HoraDesde { get; set; }
         public int? HoraHasta { get; set; }
         public IList<string> Dias { get; set; }
+        public IList<string> Estados { get; set; }
         public string OrdenDeCompra { get; set; }
 
         public bool Lunes

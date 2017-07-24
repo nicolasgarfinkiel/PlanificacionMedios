@@ -11,6 +11,13 @@
                            data: { vehiculolId: vehiculolId }
                        });
                    },
+                   aprobar: function (tarifarioId) {
+                       return $http({
+                           method: 'POST',
+                           url: '/Tarifarios/aprobar',
+                           data: { tarifarioId: tarifarioId }
+                       });
+                   }
                }, baseService);
                result.controller = 'Tarifarios';
 

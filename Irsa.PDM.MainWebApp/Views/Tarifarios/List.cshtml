@@ -46,6 +46,32 @@
     </div>
 </div>
 
+<div class="modal fade pdm" id="modalConfirm" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-sm" style="width: 500px;">
+        <div class="modal-content">
+            <div class="color-line"></div>
+            <div class="modal-header">
+                <h4 class="modal-title">Confirmación de operación</h4>
+            </div>
+            <div class="modal-body">
+
+                <form class="form-horizontal ng-pristine ng-valid">
+                    <h4 style="margin-bottom: 28px;">Desea continuar con la operación?</h4>
+                </form>
+
+                <div class="alert alert-danger" ng-if="resultModal.hasErrors">
+                    <i class="fa fa-bolt"></i>
+                    <div ng-repeat="message in resultModal.messages">{{message}}</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" ng-click="confirmOperacion()">Aceptar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="modal fade pdm" id="proveedoresModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog" >
         <div class="modal-content">
@@ -110,7 +136,6 @@
         </div>
     </div>
 </div>
-
 
 <div class="modal fade pdm" id="tarifarioModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog" >

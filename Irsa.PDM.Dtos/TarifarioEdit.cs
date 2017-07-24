@@ -9,5 +9,6 @@ namespace Irsa.PDM.Dtos
         public DateTime FechaDesde { get; set; }
         public DateTime FechaHasta { get; set; }
         public IList<Tarifa> Tarifas { get; set; }
+        public bool Editable { get; set; }
     }
 }

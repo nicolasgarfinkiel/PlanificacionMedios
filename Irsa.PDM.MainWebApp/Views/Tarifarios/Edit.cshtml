@@ -26,7 +26,7 @@
                 <table class="col-sm-12 table-bordered table-striped table-condensed cf">
                     <thead class="cf">
                         <tr>
-                            <th style="width: 10%">
+                            <th style="width: 9%">
                                 Medio
                                 <div class="btn-group" style="float: right;">
                                     <button data-toggle="dropdown" class="btn btn-default btn-xs dropdown-toggle" ng-click="setAux('medios')"><span class="fa fa-level-down"></span></button>
@@ -42,7 +42,7 @@
                                     </ul>
                                 </div>
                             </th>
-                            <th style="width: 12%">
+                            <th style="width: 10%">
                                 Plaza
                                 <div class="btn-group" style="float: right;">
                                     <button data-toggle="dropdown" class="btn btn-default btn-xs dropdown-toggle" ng-click="setAux('plazas')"><span class="fa fa-level-down"></span></button>
@@ -58,7 +58,7 @@
                                     </ul>
                                 </div>
                             </th>                          
-                            <th style="width: 25%">
+                            <th style="width: 21%">
                                 Días
                                 <div class="btn-group" style="float: right;">
                                     <button data-toggle="dropdown" class="btn btn-default btn-xs dropdown-toggle" ng-click="setAux('dias')"><span class="fa fa-level-down"></span></button>
@@ -74,7 +74,7 @@
                                     </ul>
                                 </div>
                             </th>
-                            <th style="width: 8%">
+                            <th style="width: 7%">
                                 Hs.D
                                 <div class="btn-group" style="float: right;">
                                     <button data-toggle="dropdown" class="btn btn-default btn-xs dropdown-toggle" ng-click="setAuxHoras('horaDesde')"><span class="fa fa-level-down"></span></button>
@@ -92,7 +92,7 @@
                                     </ul>
                                 </div>
                             </th>
-                            <th style="width: 8%">
+                            <th style="width: 7%">
                                 Hs.H
                                 <div class="btn-group" style="float: right;">
                                     <button data-toggle="dropdown" class="btn btn-default btn-xs dropdown-toggle" ng-click="setAuxHoras('horaHasta')"><span class="fa fa-level-down"></span></button>
@@ -113,9 +113,25 @@
                             <th>
                                 Descripción
                             </th>
+                            <th style="width: 10%">
+                                Estado
+                                <div class="btn-group" style="float: right;">
+                                    <button data-toggle="dropdown" class="btn btn-default btn-xs dropdown-toggle" ng-click="setAux('estados')"><span class="fa fa-level-down"></span></button>
+                                    <ul class="dropdown-menu filter" role="menu" style="width: 200px;">
+                                        <li ng-repeat="estado in data.estados">
+                                            <input type="checkbox" ng-checked="filter.estadosAux.indexOf(estado) != -1" ng-click="toggleCheck('estados', estado)" /> {{estado}}
+                                        </li>
+                                        <li class="divider"></li>
+                                        <li class="text-right">
+                                            <button class="btn btn-primary btn-xs" ng-click="applyFilter('estados')">Aplicar</button>
+                                            <button class="btn btn-default btn-xs" ng-click="clearFilter('estados', $event)">Limpiar</button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </th>         
                             <th style="width: 8%">
                                 Importe
-                                <div class="btn-group" style="float: right;" ng-show="entity.estado == 'Editable'">
+                                <div class="btn-group" style="float: right;" ng-show="entity.editable">
                                     <button data-toggle="dropdown" class="btn btn-default btn-xs dropdown-toggle" ng-click="importe = null; invalidImporte = false;"><span class="fa fa-edit"></span></button>
                                     <ul class="dropdown-menu filter" role="menu">
                                         <li ng-class="{error: invalidImporte}">
@@ -131,7 +147,7 @@
                             </th>
                             <th style="width: 7%">
                                 O.C.
-                                <div class="btn-group" style="float: right;" ng-show="entity.estado == 'Editable'">
+                                <div class="btn-group" style="float: right;" ng-show="entity.editable">
                                     <button data-toggle="dropdown" class="btn btn-default btn-xs dropdown-toggle" ng-click="oc = null; invalidOc = false;"><span class="fa fa-edit"></span></button>
                                     <ul class="dropdown-menu filter " role="menu" style=" left: -71px;">
                                         <li ng-class="{error: invalidOc}">
@@ -176,16 +192,19 @@
                             <td data-title="Descripción">
                                 <span>{{tarifa.descripcion}}</span>                                
                             </td>
+                            <td data-title="Estado">
+                                <span>{{tarifa.estado}}</span>
+                            </td>
                             <td data-title="Importe" ng-class="{error: tarifa.invalidTarifa}">
-                                <span ng-if="entity.estado != 'Editable'">{{tarifa.importe | currency}}</span>
-                                <input type="text" ng-model="tarifa.importe" ng-if="entity.estado == 'Editable'" ng-keypress="tarifa.edited = true" fcsa-number="{ prepend: '$' }" />
+                                <span ng-if="!entity.editable">{{tarifa.importe | currency}}</span>
+                                <input type="text" ng-model="tarifa.importe" ng-if="entity.editable" ng-keypress="tarifa.edited = true" fcsa-number="{ prepend: '$' }" />
                             </td>
                             <td data-title="OC" >
-                                <span ng-if="entity.estado != 'Editable'">{{tarifa.ordenDeCompra}}</span>
-                                <input type="text" ng-model="tarifa.ordenDeCompra" int ng-if="entity.estado == 'Editable'" ng-keypress="tarifa.edited = true" />
+                                <span ng-if="!entity.editable">{{tarifa.ordenDeCompra}}</span>
+                                <input type="text" ng-model="tarifa.ordenDeCompra" int ng-if="entity.editable" ng-keypress="tarifa.edited = true" />
                             </td>
                             <td>
-                                <button class="btn btn-primary btn-xs" type="button" ng-click="setEditable(tarifa)" ng-if="entity.estado == 'Editable' && tarifa.edited"><i class="fa fa-save"></i></button>
+                                <button class="btn btn-primary btn-xs" type="button" ng-click="setEditable(tarifa)" ng-if="entity.editable && tarifa.edited"><i class="fa fa-save"></i></button>
                             </td>
                         </tr>
                     </tbody>
@@ -215,8 +234,7 @@
             </div>
         </form>
     </div>
-    <div class="panel-footer text-right">
-        @*<button type="button" class="btn btn-primary" ng-click="save()">Guardar</button>*@
+    <div class="panel-footer text-right">        
     </div>
 </div>
 

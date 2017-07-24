@@ -25,9 +25,10 @@
                        { field: 'fechaDesde', displayName: 'Fecha desde' },
                        { field: 'fechaHasta', displayName: 'Fecha hasta' },
                        { field: 'estado', displayName: 'Estado' },
-                       { field: 'cuit', displayName: 'Editar', width: 70, cellTemplate: '<div class="ng-grid-icon-container"><a ng-if="row.entity.estado == \'Editable\'" href="javascript:void(0)" class="btn btn-rounded btn-xs btn-icon btn-default" ng-click="setEdit(row.entity)"><i class="fa fa-pencil"></i></a></div>' },
-                       { field: 'cuit', displayName: 'Eliminar', width: 70, cellTemplate: '<div class="ng-grid-icon-container"><a ng-if="row.entity.estado == \'Editable\'" href="javascript:void(0)" class="btn btn-rounded btn-xs btn-icon btn-default" ng-click="remove(row.entity)"><i class="fa fa-remove"></i></a></div>' },
-                       { field: 'cuit', displayName: 'Admin', width: 70, cellTemplate: '<div class="ng-grid-icon-container">' +'<a title="Administrar" href="javascript:void(0)" class="btn btn-rounded btn-xs btn-icon btn-default" ng-click="navigationService.goToEdit(row.entity.id)" ><i ng-class="{\'fa fa-share-square-o\': row.entity.estado == \'Editable\', \'fa fa-search\': row.entity.estado != \'Editable\' }"></i></a></div>'}
+                       { field: 'cuit', displayName: 'Editar', width: 70, cellTemplate: '<div class="ng-grid-icon-container"><a ng-if="row.entity.editable" href="javascript:void(0)" class="btn btn-rounded btn-xs btn-icon btn-default" ng-click="setEdit(row.entity)"><i class="fa fa-pencil"></i></a></div>' },
+                       { field: 'cuit', displayName: 'Eliminar', width: 70, cellTemplate: '<div class="ng-grid-icon-container"><a ng-if="row.entity.editable" href="javascript:void(0)" class="btn btn-rounded btn-xs btn-icon btn-default" ng-click="confirmBaja(row.entity)"><i class="fa fa-remove"></i></a></div>' },
+                       { field: 'cuit', displayName: 'Admin', width: 70, cellTemplate: '<div class="ng-grid-icon-container">' + '<a title="Administrar" href="javascript:void(0)" class="btn btn-rounded btn-xs btn-icon btn-default" ng-click="navigationService.goToEdit(row.entity.id)" ><i ng-class="{\'fa fa-share-square-o\': row.entity.editable, \'fa fa-search\': !row.entity.editable }"></i></a></div>' },
+                       { field: 'cuit', displayName: 'Aprobar', width: 70, cellTemplate: '<div class="ng-grid-icon-container"><a ng-if="row.entity.estado == \'PendienteAprobacion\'" href="javascript:void(0)" class="btn btn-rounded btn-xs btn-icon btn-default" ng-click="confirmAprobacion(row.entity)"><i class="fa fa-thumbs-o-up"></i></a></div>' }
                    ]
                });
                
@@ -57,18 +58,52 @@
                    $timeout(function () { $scope.loading = false; }, 200);
                };
 
-               $scope.remove = function (entity) {
-                   if (!confirm('Desea llevar a cabo la operación?')) return;
+               $scope.confirmBaja = function (entity) {
+                   $scope.operacion = 'Baja';
+                   $scope.currentEntity = entity;
+                   $('#modalConfirm').modal('show');
+               };
+
+               $scope.confirmAprobacion = function (entity) {
+                   $scope.operacion = 'Aprobacion';
+                   $scope.currentEntity = entity;
+                   $('#modalConfirm').modal('show');
+               };
+
+               $scope.confirmOperacion = function () {
+                   if ($scope.operacion == 'Baja') {
+                       $scope.baja();
+                   } else {
+                       $scope.aprobar();
+                   }                   
+               };
+
+               $scope.baja = function () {                   
                    $scope.result.hasErrors = false;
-                                      
-                   tarifariosService.deleteEntity(entity.id).then(function (response) {
+
+                   tarifariosService.deleteEntity($scope.currentEntity.id).then(function (response) {
                        if (!response.data.result.hasErrors) {
-                           $scope.search();                           
+                           $scope.search();
+                           $('#modalConfirm').modal('hide');
                            return;
                        }
 
                        $scope.result = response.data.result;
                    }, function () { throw 'Error on deleteEntity'; });
+               };
+
+               $scope.aprobar = function () {
+                   $scope.result.hasErrors = false;
+
+                   tarifariosService.aprobar($scope.currentEntity.id).then(function (response) {
+                       if (!response.data.result.hasErrors) {
+                           $scope.search();
+                           $('#modalConfirm').modal('hide');
+                           return;
+                       }
+
+                       $scope.result = response.data.result;
+                   }, function () { throw 'Error on aprobar'; });
                };
 
                $scope.save = function () {

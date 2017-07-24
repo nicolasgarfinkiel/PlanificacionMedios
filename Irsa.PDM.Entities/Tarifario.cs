@@ -10,5 +10,10 @@ namespace Irsa.PDM.Entities
         public virtual Vehiculo Vehiculo { get; set; }
         public virtual IList<Tarifa> Tarifas { get; set; }
         public EstadoTarifario Estado { get; set; }
+
+        public bool Editable
+        {
+            get { return Estado == EstadoTarifario.Editable || Estado == EstadoTarifario.PendienteAprobacion; }
+        }
     }
 }

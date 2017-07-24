@@ -41,6 +41,7 @@
   <ItemGroup>
     <Compile Include="Certificacion.cs" />
     <Compile Include="EstadoCertificacion.cs" />
+    <Compile Include="EstadoTarifa.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="Proveedor.cs" />
     <Compile Include="EstadoCampania.cs" />

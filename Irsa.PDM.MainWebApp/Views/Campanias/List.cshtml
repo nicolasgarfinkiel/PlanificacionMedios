@@ -3,16 +3,29 @@
         Listado de campañas
     </div>
     <div class="panel-body">
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="input-group m-b">
-                    <input type="text" class="input-sm form-control" placeholder="Buscar" ng-model="filter.multiColumnSearchText" ng-debounce="1200">
-                    <span class="input-group-addon">
-                        <i class="fa fa-search"></i>
-                    </span>
+        <div class="row" style="margin-bottom: 10px;">
+            <div class="col-md-2 col-sm-12">
+                <div class="input-group input-append">
+                    <input type="text" ng-model="filter.fechaDesde" data-date-format="dd/mm/yyyy" bs-datepicker class="form-control" placeholder="Fecha desde" />
+                    <span class="input-group-addon" data-toggle="datepicker"><i class=" fa fa-calendar"></i></span>
                 </div>
-            </div>            
-        </div>
+            </div>
+            <div class="col-md-2 col-sm-12">
+                <div class="input-group input-append">
+                    <input type="text" ng-model="filter.fechaHasta" data-date-format="dd/mm/yyyy" bs-datepicker class="form-control" placeholder="Fecha hasta" />
+                    <span class="input-group-addon" data-toggle="datepicker"><i class=" fa fa-calendar"></i></span>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-12">
+                <select class="form-control" ng-model="filter.estado" ng-options="estado for estado in data.estados" >
+                    <option value="">Estado</option>
+                </select>
+            </div>
+            <div class="col-md-4 text-right">
+                <a href="javascript:void(0)" class="btn btn-default" ng-click="clearFilter()">Limpiar</a>
+                <a href="javascript:void(0)" class="btn btn-info " ng-click="search()"><i class="fa fa-search"></i> Buscar</a>                
+            </div>
+        </div>       
         <div class="alert alert-danger" ng-if="result.hasErrors">
             <i class="fa fa-bolt"></i>
             <div ng-repeat="message in result.messages">{{message}}</div>

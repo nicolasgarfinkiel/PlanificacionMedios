@@ -11,7 +11,7 @@ using Irsa.PDM.Infrastructure.ActionResults;
 namespace Irsa.PDM.MainWebApp.Controllers
 {
     //[Authorize(Roles = "Administracion")]
-    public class CampaniasController : BaseController<CampaniasAdmin, int, Entities.Campania, Dtos.Campania, FilterBase>
+    public class CampaniasController : BaseController<CampaniasAdmin, int, Entities.Campania, Dtos.Campania, FilterCampanias>
     {
         
         public CampaniasController()
@@ -33,6 +33,7 @@ namespace Irsa.PDM.MainWebApp.Controllers
 
             return new
             {               
+                Estados = _admin.GetEstadosCampania()
             };
         }
 

@@ -6,6 +6,7 @@ using System.Linq;
 using AutoMapper;
 using Irsa.PDM.Dtos;
 using Irsa.PDM.Dtos.Common;
+using Irsa.PDM.Dtos.Filters;
 using Irsa.PDM.Entities;
 using Irsa.PDM.Repositories;
 using Newtonsoft.Json;
@@ -17,7 +18,7 @@ using Pauta = Irsa.PDM.Entities.Pauta;
 
 namespace Irsa.PDM.Admin
 {
-    public class CampaniasAdmin : BaseAdmin<int, Entities.Campania, Dtos.Campania, FilterBase>
+    public class CampaniasAdmin : BaseAdmin<int, Entities.Campania, Dtos.Campania, FilterCampanias>
     {                
         private const string GetPautas = "/client?method=get-list&action=pautas_a_aprobar";
         private const string PostPautasAction = "/client?method=create&action=pautas_aprobadas";
@@ -40,14 +41,25 @@ namespace Irsa.PDM.Admin
         {                      
         }
 
-        public override IQueryable GetQuery(FilterBase filter)
+        public override IQueryable GetQuery(FilterCampanias filter)
         {
             var result = PdmContext.Campanias.OrderBy(e => e.Nombre).AsQueryable();
 
-            if (filter.MultiColumnSearchText != null)
+            if (filter.FechaDesde.HasValue)
             {
-                var multiColumnSearchText = filter.MultiColumnSearchText.ToLower();
-                result = result.Where(e => e.Nombre != null && e.Nombre.ToLower().Contains(multiColumnSearchText)).AsQueryable();
+                result = result.Where(e => e.CreateDate >= filter.FechaDesde.Value).AsQueryable();
+            }
+
+            if (filter.FechaHasta.HasValue)
+            {
+                var fh = filter.FechaHasta.Value.AddDays(1).AddMilliseconds(-1);
+                result = result.Where(e => e.CreateDate <= fh).AsQueryable();
+            }
+
+            if (!string.IsNullOrEmpty(filter.Estado))
+            {
+                var estado = (EstadoCampania) Enum.Parse(typeof (EstadoCampania), filter.Estado);
+                result = result.Where(e => e.Estado == estado).AsQueryable();
             }
 
             return result;
@@ -296,6 +308,11 @@ namespace Irsa.PDM.Admin
         }
    
         #endregion
+        
+        public IList<string> GetEstadosCampania()
+        {
+            return Enum.GetNames(typeof(EstadoCampania)).OrderBy(t => t).ToList();
+        }
 
         public PagedListResponse<Dtos.PautaItem> GetItemsByFilter(Dtos.Filters.FilterPautaItems filter)
         {            
@@ -591,5 +608,7 @@ namespace Irsa.PDM.Admin
         }        
 
         #endregion
+
+        
     }
 }

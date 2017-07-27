@@ -77,8 +77,8 @@
                                             <td data-title="Tarifa asociada" style="text-align: center;">
                                                 <span>
                                                     <i title="Tarifa NO asociada" class="fa fa-exclamation-circle" style="color: red;" ng-if="!item.tarifa"></i>
-                                                    <i title="Diferencia en tarifa" class="fa fa-search" style="color: orange;" ng-if="item.tarifa && item.diferenciaEnMontoTarifas" ng-click="openTarifaModal(item.tarifa)"></i>
-                                                    <i title="Tarifa asociada" class="fa fa-search" style="color: greenyellow;" ng-if="item.tarifa && !item.diferenciaEnMontoTarifas" ng-click="openTarifaModal(item.tarifa)"></i>
+                                                    <i title="Diferencia en tarifa" class="fa fa-search" style="color: orange; cursor: pointer;" ng-if="item.tarifa && item.diferenciaEnMontoTarifas" ng-click="openTarifaModal(item.tarifa)" ></i>
+                                                    <i title="Tarifa asociada" class="fa fa-search" style="color: greenyellow; cursor: pointer;" ng-if="item.tarifa && !item.diferenciaEnMontoTarifas" ng-click="openTarifaModal(item.tarifa)"></i>
                                                 </span>
                                             </td>
                                         </tr>

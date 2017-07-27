@@ -22,4 +22,9 @@
                });
 
 
+               $scope.clearFilter = function () {
+                   $scope.filter = {};
+                   $scope.search();
+               };
+
            }]);

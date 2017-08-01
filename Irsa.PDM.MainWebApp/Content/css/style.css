@@ -4573,4 +4573,9 @@ div.toast.toast-info {
     .pdm-pager {
         font-size: 10px !important;
     }
+
+    .dashboard-title {
+        font-size: 13px !important;
+        font-weight: bold;
+    }
 }

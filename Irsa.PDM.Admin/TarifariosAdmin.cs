@@ -159,6 +159,12 @@ namespace Irsa.PDM.Admin
                 result = result.Where(r => r.Vehiculo.Id == filter.Vehiculo.Id).AsQueryable();
             }
 
+            if (filter.Estados != null && filter.Estados.Any())
+            {
+                var estados = filter.Estados.Select(e => (EstadoTarifario)Enum.Parse(typeof(EstadoTarifario), e)).ToList();
+                result = result.Where(r => estados.Contains(r.Estado)).AsQueryable();
+            }
+
             return result;
         }
 

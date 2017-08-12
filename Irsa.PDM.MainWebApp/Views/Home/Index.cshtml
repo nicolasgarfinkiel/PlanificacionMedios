@@ -1,4 +1,5 @@
-﻿<div class="row">
+﻿@model Irsa.PDM.Dtos.Dashboard
+<div class="row">
     <div class="col-lg-12 text-center m-t-md">
         <h2 class="dashboard-title">
             Resumen de eventos y operaciones pendientes
@@ -8,107 +9,139 @@
 <br/>
 <br />
 <br />
-<div class="row">  
-    <div class="col-lg-6">
-        <div class="hpanel">
-            <div class="panel-heading">
-                <div class="panel-tools">
-                    <a class="showhide"><i class="fa fa-chevron-up"></i></a>
-                    <a class="closebox"><i class="fa fa-times"></i></a>
-                </div>
-                Tarifas editables
-            </div>
-            <div class="panel-body list">
-                <div id="no-more-tables">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-
-                                <th>Id</th>
-                                <th>Fecha desde</th>
-                                <th>Fecha hasta</th>
-                                <th>Vehículo</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td data-title="Id">
-                                    1
-                                </td>
-                                <td data-title="Fecha desde">
-                                    14/05/2017
-                                </td>
-                                <td data-title="Fecha hasta">
-                                    14/07/2017
-                                </td>
-                                <td data-title="Vehículo">
-                                    Canal 11
-                                </td>
-                                <td data-title="Ver">
-                                    <a href="">
-                                        <i class="fa fa-external-link text-success"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-lg-6">
-        <div class="hpanel">
-            <div class="panel-heading">
-                <div class="panel-tools">
-                    <a class="showhide"><i class="fa fa-chevron-up"></i></a>
-                    <a class="closebox"><i class="fa fa-times"></i></a>
-                </div>
-                Tarifas pendiente de aprobación
-            </div>
-            <div class="panel-body list">
-                <div id="no-more-tables">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-
-                                <th>Id</th>
-                                <th>Fecha desde</th>
-                                <th>Fecha hasta</th>
-                                <th>Vehículo</th>
-                                <th>Ver</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td data-title="Id">
-                                    1
-                                </td>
-                                <td data-title="Fecha desde">
-                                    14/05/2017
-                                </td>
-                                <td data-title="Fecha hasta">
-                                    14/07/2017
-                                </td>
-                                <td data-title="Vehículo">
-                                    Canal 11
-                                </td>
-                                <td data-title="Ver">
-                                    <a href="">
-                                        <i class="fa fa-external-link text-success"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-  
-</div>
-
 <div class="row">
+    @if (Model.TarifariosEditables.Any())
+    {
+        <div class="col-lg-6">
+            <div class="hpanel">
+                <div class="panel-heading">
+                    <div class="panel-tools">
+                        <a class="showhide"><i class="fa fa-chevron-up"></i></a>
+                        <a class="closebox"><i class="fa fa-times"></i></a>
+                    </div>
+                    Tarifarios editables
+                </div>
+                <div class="panel-body list">
+                    <div id="no-more-tables">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+
+                                    <th>Id</th>
+                                    <th>Fecha desde</th>
+                                    <th>Fecha hasta</th>
+                                    <th>Vehículo</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var tarifario in Model.TarifariosEditables.Take(5))
+                                {
+                                    <tr>
+                                        <td data-title="Id">
+                                            @tarifario.Id
+                                        </td>
+                                        <td data-title="Fecha desde">
+                                            @tarifario.FechaDesde.ToString("dd/MM/yyyy")
+                                        </td>
+                                        <td data-title="Fecha hasta">
+                                            @tarifario.FechaHasta.ToString("dd/MM/yyyy")
+                                        </td>
+                                        <td data-title="Vehículo">
+                                           @tarifario.Id
+                                        </td>
+                                        <td data-title="Ver">                                            
+                                            <a href="@Url.Action("Index", "Tarifarios")#/edit/@tarifario.Id">
+                                                <i class="fa fa-external-link text-success"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                                @if (Model.TarifariosEditables.Count > 5)
+                                {
+                                    <tr>
+                                        <td colspan="5">
+                                            <a href="@Url.Action("Index", "Tarifarios")">
+                                                Ver más...
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    
+    @if (Model.TarifariosPendientesAprobacion.Any())
+    {
+        <div class="col-lg-6">
+            <div class="hpanel">
+                <div class="panel-heading">
+                    <div class="panel-tools">
+                        <a class="showhide"><i class="fa fa-chevron-up"></i></a>
+                        <a class="closebox"><i class="fa fa-times"></i></a>
+                    </div>
+                    Tarifarios pendiente de aprobación
+                </div>
+                <div class="panel-body list">
+                    <div id="no-more-tables">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+
+                                    <th>Id</th>
+                                    <th>Fecha desde</th>
+                                    <th>Fecha hasta</th>
+                                    <th>Vehículo</th>
+                                    <th>Ver</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var tarifario in Model.TarifariosPendientesAprobacion.Take(5))
+                                {
+                                    <tr>
+                                        <td data-title="Id">
+                                            @tarifario.Id
+                                        </td>
+                                        <td data-title="Fecha desde">
+                                            @tarifario.FechaDesde.ToString("dd/MM/yyyy")
+                                        </td>
+                                        <td data-title="Fecha hasta">
+                                            @tarifario.FechaHasta.ToString("dd/MM/yyyy")
+                                        </td>
+                                        <td data-title="Vehículo">
+                                            @tarifario.Id
+                                        </td>
+                                        <td data-title="Ver">
+                                            <a href="@Url.Action("Index", "Tarifarios")#/edit/@tarifario.Id">
+                                                <i class="fa fa-external-link text-success"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                                @if (Model.TarifariosPendientesAprobacion.Count > 5)
+                                {
+                                    <tr>
+                                        <td colspan="5">
+                                            <a href="@Url.Action("Index", "Tarifarios")">
+                                                Ver más...
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    
+@if (Model.CampaniasConInconsistencias.Any())
+{
     <div class="col-lg-6">
         <div class="hpanel">
             <div class="panel-heading">
@@ -132,31 +165,48 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td data-title="Id">
-                                    1
-                                </td>
-                                <td data-title="Fecha alta">
-                                    14/05/2017
-                                </td>
-                                <td data-title="Nombre">
-                                    Demo 1
-                                </td>
-                                <td data-title="Estado">
-                                    Inconsistencias en tarifas
-                                </td>
-                                <td data-title="Ver">
-                                    <a href="">
-                                        <i class="fa fa-external-link text-success"></i>
-                                    </a>
-                                </td>
-                            </tr>
+                            @foreach (var campania in Model.CampaniasConInconsistencias.Take(5))
+                            {
+                                <tr>
+                                    <td data-title="Id">
+                                        @campania.Id
+                                    </td>
+                                    <td data-title="Fecha alta">
+                                        @campania.CreateDate.ToString("dd/MM/yyyy")
+                                    </td>                                   
+                                    <td data-title="Nombre">
+                                        @campania.Nombre
+                                    </td>
+                                    <td data-title="Estado">
+                                        @campania.Estado
+                                    </td>                                    
+                                    <td data-title="Ver">
+                                        <a href="@Url.Action("Index", "Campanias")#/edit/@campania.Id">
+                                            <i class="fa fa-external-link text-success"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                            @if (Model.CampaniasConInconsistencias.Count > 5)
+                            {
+                                <tr>
+                                    <td colspan="5">
+                                        <a href="@Url.Action("Index", "Campanias")">
+                                            Ver más...
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
     </div>
+}
+    
+@if (Model.CampaniasPendientesAprobacion.Any())
+{
     <div class="col-lg-6">
         <div class="hpanel">
             <div class="panel-heading">
@@ -180,97 +230,119 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td data-title="Id">
-                                    1
-                                </td>
-                                <td data-title="Fecha alta">
-                                    14/05/2017
-                                </td>
-                                <td data-title="Nombre">
-                                    Demo 1
-                                </td>
-                                <td data-title="Estado">
-                                    Inconsistencias en tarifas
-                                </td>
-                                <td data-title="Ver">
-                                    <a href="">
-                                        <i class="fa fa-external-link text-success"></i>
-                                    </a>
-                                </td>
-                            </tr>
+                            @foreach (var campania in Model.CampaniasPendientesAprobacion.Take(5))
+                            {
+                                <tr>
+                                    <td data-title="Id">
+                                        @campania.Id
+                                    </td>
+                                    <td data-title="Fecha alta">
+                                        @campania.CreateDate.ToString("dd/MM/yyyy")
+                                    </td>
+                                    <td data-title="Nombre">
+                                        @campania.Nombre
+                                    </td>
+                                    <td data-title="Estado">
+                                        @campania.Estado
+                                    </td>
+                                    <td data-title="Ver">
+                                        <a href="@Url.Action("Index", "Campanias")#/edit/@campania.Id">
+                                            <i class="fa fa-external-link text-success"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                            @if (Model.CampaniasPendientesAprobacion.Count > 5)
+                            {
+                                <tr>
+                                    <td colspan="5">
+                                        <a href="@Url.Action("Index", "Campanias")">
+                                            Ver más...
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
     </div>
+}
 </div>
 
-<div class="row">
-    <div class="col-lg-12">
-        <div class="hpanel">
-            <div class="panel-heading">
-                <div class="panel-tools">
-                    <a class="showhide"><i class="fa fa-chevron-up"></i></a>
-                    <a class="closebox"><i class="fa fa-times"></i></a>
+@if (Model.UltimasCertificaciones.Any())
+{
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="hpanel">
+                <div class="panel-heading">
+                    <div class="panel-tools">
+                        <a class="showhide"><i class="fa fa-chevron-up"></i></a>
+                        <a class="closebox"><i class="fa fa-times"></i></a>
+                    </div>
+                    Últimas certificaciones recibidas
                 </div>
-                Últimas certificaciones recibidas
-            </div>
-            <div class="panel-body list">
-                <div id="no-more-tables">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-
-                                <th>Campaña</th>
-                                <th>Pauta</th>
-                                <th>Ejecutada</th>
-                                <th>Cod.Programa</th>
-                                <th>Proveedor</th>
-                                <th>Espacio</th>
-                                <th>Costo unitario</th>
-                                <th>Información adicional</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td data-title="Campaña">
-                                   Demo
-                                </td>
-                                <td data-title="Pauta">
-                                    10001
-                                </td>
-                                <td data-title="Ejecutada">
-                                    100225
-                                </td>
-                                <td data-title="Cod.Programa">
-                                    125
-                                </td>
-                                <td data-title="Proveedor">
-                                    Mitre
-                                </td>
-                                <td data-title="Espacio">
-                                    9hs a 18hs
-                                </td>
-                                <td data-title="Costo unitario">
-                                    $ 18.50
-                                </td>
-                                <td data-title="Información adicional">
-                                    Programa no pautado
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="8">
-                                    <a href="">
-                                        Ver más...
-                                    </a>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="panel-body list">
+                    <div id="no-more-tables">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Campaña</th>
+                                    <th>Pauta</th>
+                                    <th>Ejecutada</th>
+                                    <th>Cod.Programa</th>
+                                    <th>Proveedor</th>
+                                    <th>Espacio</th>
+                                    <th>Costo unitario</th>
+                                    <th>Información adicional</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var certificacion in Model.UltimasCertificaciones.Take(5))
+                                {
+                                    <tr>
+                                        <td data-title="Campaña">
+                                            @certificacion.CampaniaNombre
+                                        </td>
+                                        <td data-title="Pauta">
+                                            @certificacion.PautaCodigo
+                                        </td>
+                                        <td data-title="Ejecutada">
+                                            @certificacion.PautaEjecutadaCodigo
+                                        </td>
+                                        <td data-title="Cod.Programa">
+                                            @certificacion.CodigoPrograma
+                                        </td>
+                                        <td data-title="Proveedor">
+                                            @certificacion.Proveedor
+                                        </td>
+                                        <td data-title="Espacio">
+                                            @certificacion.Espacio
+                                        </td>
+                                        <td data-title="Costo unitario">
+                                            @certificacion.CostoUnitario.ToString("C")
+                                        </td>
+                                        <td data-title="Información adicional">
+                                            @certificacion.Estado
+                                        </td>
+                                    </tr>
+                                }
+                                @if (Model.UltimasCertificaciones.Count > 5)
+                                {
+                                    <tr>
+                                        <td colspan="8">
+                                            <a href="@Url.Action("Index", "Certificaciones")">
+                                                Ver más...
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>  
-</div>
+        </div>  
+    </div>
+}

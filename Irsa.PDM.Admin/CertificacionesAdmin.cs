@@ -36,9 +36,7 @@ namespace Irsa.PDM.Admin
         public override IQueryable GetQuery(FilterBase filter)
         {
             var result = PdmContext.Certificaciones
-                        .OrderBy(e => e.Campania.Codigo)
-                        .ThenBy(e => e.PautaCodigo)
-                        .ThenBy(e => e.PautaEjecutadaCodigo)
+                        .OrderByDescending(e => e.CreateDate)                        
                         .AsQueryable();
 
             if (filter.MultiColumnSearchText != null)

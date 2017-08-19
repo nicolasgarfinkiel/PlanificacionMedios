@@ -40,8 +40,11 @@
                                             <th style="width: 15%;">
                                                 Código programa
                                             </th>
-                                            <th style="width: 25%;">
+                                            <th>
                                                 Proveedor
+                                            </th>
+                                            <th>
+                                                Producto
                                             </th>
                                             <th style="width: 25%;">
                                                 Espacio
@@ -51,6 +54,9 @@
                                             </th>
                                             <th style="width: 10%;">
                                                 Costo unitario
+                                            </th>
+                                            <th style="width: 10%;">
+                                                Total
                                             </th>
                                             <th style="width: 20%;">
                                                 Detalle Tarifa asociada
@@ -65,6 +71,9 @@
                                             <td data-title="Proveedor">
                                                 <span>{{item.proveedor}}</span>
                                             </td>
+                                            <td data-title="Producto">
+                                                <span>{{item.producto}}</span>
+                                            </td>
                                             <td data-title="Espacio">
                                                 <span>{{item.espacio}}</span>
                                             </td>
@@ -73,6 +82,9 @@
                                             </td>
                                             <td data-title="Costo unitario">
                                                 <span>{{item.costoUnitario | currency}}</span>
+                                            </td>
+                                            <td data-title="Total">
+                                                <span>{{item.costoTotal | currency}}</span>
                                             </td>
                                             <td data-title="Tarifa asociada" style="text-align: center;">
                                                 <span>

@@ -293,8 +293,10 @@
                                     <th>Ejecutada</th>
                                     <th>Cod.Programa</th>
                                     <th>Proveedor</th>
+                                    <th>Producto</th>
                                     <th>Espacio</th>
                                     <th>Costo unitario</th>
+                                    <th>Total</th>
                                     <th>Información adicional</th>
                                 </tr>
                             </thead>
@@ -317,11 +319,17 @@
                                         <td data-title="Proveedor">
                                             @certificacion.Proveedor
                                         </td>
+                                        <td data-title="Producto">
+                                            @certificacion.Producto
+                                        </td>
                                         <td data-title="Espacio">
                                             @certificacion.Espacio
                                         </td>
                                         <td data-title="Costo unitario">
                                             @certificacion.CostoUnitario.ToString("C")
+                                        </td>
+                                        <td data-title="Total">
+                                            @certificacion.CostoTotal.ToString("C")
                                         </td>
                                         <td data-title="Información adicional">
                                             @certificacion.Estado

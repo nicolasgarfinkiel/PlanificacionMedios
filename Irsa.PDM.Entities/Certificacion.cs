@@ -9,6 +9,7 @@ namespace Irsa.PDM.Entities
         public int CodigoPrograma { get; set; }
         public string CodigoAviso { get; set; }              
         public string Proveedor { get; set; }
+        public string Producto { get; set; }
         public DateTime? FechaAviso { get; set; }
         public string Espacio { get; set; }
         public string Tema { get; set; }
@@ -21,6 +22,11 @@ namespace Irsa.PDM.Entities
         public double Descuento5 { get; set; }
         public virtual Campania Campania { get; set; }
         public EstadoCertificacion Estado { get; set; }
+
+        public double CostoTotal
+        {
+            get { return DuracionTema * CostoUnitario * 60; }
+        }
     }
 }
 

@@ -171,6 +171,7 @@ namespace Irsa.PDM.Admin
                             item.Tema = itemWs.des_tema;
                             item.Proveedor = itemWs.des_proveedor;
                             item.DuracionTema = itemWs.duracion_tema;
+                            item.Producto = itemWs.des_producto;                            
                             item.Espacio = itemWs.espacio;
                             item.FechaAviso = itemWs.fecha_aviso;
                         });

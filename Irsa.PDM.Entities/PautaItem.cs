@@ -9,6 +9,7 @@ namespace Irsa.PDM.Entities
         public virtual Pauta Pauta { get; set; }
         public virtual Tarifa Tarifa { get; set; }
         public string Proveedor { get; set; }
+        public string Producto { get; set; }
         public DateTime? FechaAviso { get; set; }
         public string Espacio { get; set; }
         public string Tema { get; set; }
@@ -19,7 +20,11 @@ namespace Irsa.PDM.Entities
         public double Descuento3 { get; set; }
         public double Descuento4 { get; set; }
         public double Descuento5 { get; set; }
-
         public bool DiferenciaEnMontoTarifas { get; set; }
+
+        public double CostoTotal
+        {
+            get { return DuracionTema*CostoUnitario*60; }
+        }
     }
 }

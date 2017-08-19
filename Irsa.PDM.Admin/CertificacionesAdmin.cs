@@ -111,7 +111,8 @@ namespace Irsa.PDM.Admin
                             PautaCodigo = c.nro_pauta_aprobada,
                             PautaEjecutadaCodigo = c.nro_pauta_ejecutada,
                             Proveedor = c.des_proveedor,
-                            Tema = c.des_tema
+                            Tema = c.des_tema,
+                            Producto = c.des_producto
                         };
                     }
 

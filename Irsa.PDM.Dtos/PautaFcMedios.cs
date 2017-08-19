@@ -14,6 +14,7 @@ namespace Irsa.PDM.Dtos
         public string des_campania { get; set; }
         public int cod_proveedor { get; set; }
         public string des_proveedor { get; set; }
+        public string des_producto { get; set; }
         public DateTime fecha_aviso { get; set; }
         public string espacio { get; set; }
         public string des_tema { get; set; }

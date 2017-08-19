@@ -23,8 +23,8 @@
             <table class="col-sm-12 table-bordered table-striped table-condensed cf">
                 <thead class="cf">
                     <tr>
-                        <th style="width: 6%">
-                            Cod.Campaña                          
+                        <th style="width: 4%">
+                            Cod.Camp.                          
                         </th>
                         <th style="width: 8%">
                             Nombre
@@ -35,12 +35,15 @@
                         <th style="width: 5%">
                             Ejecutada
                         </th>
-                        <th style="width: 6%">
-                            Cod.Programa
+                        <th style="width: 4%">
+                            Cod.Prog.
                         </th>                   
                         <th>
                             Proveedor
                         </th>                   
+                        <th>
+                            Producto
+                        </th>   
                         <th>
                             Espacio
                         </th>                   
@@ -50,10 +53,13 @@
                         <th style="width: 6%">
                             Fecha
                         </th>                   
-                        <th style="width: 8%">
+                        <th style="width: 5%">
                             Costo Unit.
                         </th>                   
-                        <th style="width: 12%">
+                        <th style="width: 5%">
+                            Total
+                        </th>   
+                        <th style="width: 10%">
                             Estado
                         </th>                   
                     </tr>
@@ -84,6 +90,9 @@
                         <td data-title="Proveedor">
                             <span>{{certificacion.proveedor}}</span>
                         </td>    
+                        <td data-title="Producto">
+                            <span>{{certificacion.producto}}</span>
+                        </td>    
                         <td data-title="Espacio">
                             <span>{{certificacion.espacio}}</span>
                         </td>                   
@@ -95,6 +104,9 @@
                         </td>
                         <td data-title="Costo Unitario">
                             <span>{{certificacion.costoUnitario | currency}}</span>
+                        </td>
+                        <td data-title="Total">
+                            <span>{{certificacion.costoTotal | currency}}</span>
                         </td>
                         <td data-title="Estado">
                             <span>{{certificacion.estado}}</span>

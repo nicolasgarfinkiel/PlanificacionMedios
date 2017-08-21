@@ -11,15 +11,17 @@ using Irsa.PDM.Entities;
 using Irsa.PDM.Repositories;
 using Newtonsoft.Json;
 using OfficeOpenXml;
+using OfficeOpenXml.Style;
 using ServiceStack.Common.Extensions;
 using ServiceStack.ServiceClient.Web;
 using ServiceStack.Text;
 using Pauta = Irsa.PDM.Entities.Pauta;
+using System.Drawing;
 
 namespace Irsa.PDM.Admin
 {
     public class CampaniasAdmin : BaseAdmin<int, Entities.Campania, Dtos.Campania, FilterCampanias>
-    {                
+    {
         private const string GetPautas = "/client?method=get-list&action=pautas_a_aprobar";
         private const string PostPautasAction = "/client?method=create&action=pautas_aprobadas";
         private const string SuccessMessage = "Se actualizaron satisfactoriamente las pautas aprobadas.";
@@ -27,18 +29,18 @@ namespace Irsa.PDM.Admin
 
         public CampaniasAdmin()
         {
-            LogAdmin = new LogAdmin();   
+            LogAdmin = new LogAdmin();
         }
 
         #region Base
-      
+
         public override Entities.Campania ToEntity(Dtos.Campania dto)
         {
             return null;
         }
 
         public override void Validate(Dtos.Campania dto)
-        {                      
+        {
         }
 
         public override IQueryable GetQuery(FilterCampanias filter)
@@ -58,14 +60,20 @@ namespace Irsa.PDM.Admin
 
             if (!string.IsNullOrEmpty(filter.Estado))
             {
-                var estado = (EstadoCampania) Enum.Parse(typeof (EstadoCampania), filter.Estado);
+                var estado = (EstadoCampania)Enum.Parse(typeof(EstadoCampania), filter.Estado);
                 result = result.Where(e => e.Estado == estado).AsQueryable();
+            }
+
+            if (!string.IsNullOrEmpty(filter.MultiColumnSearchText))
+            {
+                var nombre = filter.MultiColumnSearchText.ToLower();
+                result = result.Where(e => e.Nombre.ToLower().StartsWith(nombre)).AsQueryable();
             }
 
             return result;
         }
 
-        #endregion      
+        #endregion
 
         #region Sync
 
@@ -74,12 +82,12 @@ namespace Irsa.PDM.Admin
             LogSyncCampaniasInit();
 
             try
-            {               
+            {
                 var actualMedios = PdmContext.Medios.ToList();
                 var actualPlazas = PdmContext.Plazas.ToList();
                 var actualVehiculos = PdmContext.Vehiculos.ToList();
                 var pautas = FCMediosclient.Get<IList<PautaFcMedios>>(GetPautas).ToList(); //GetPautasMock();  
-                var campanias = pautas.Select(e => new {e.cod_campania, e.des_campania}).Distinct().ToList();
+                var campanias = pautas.Select(e => new { e.cod_campania, e.des_campania }).Distinct().ToList();
 
                 LogSyncCampaniasDetail(pautas);
 
@@ -107,14 +115,14 @@ namespace Irsa.PDM.Admin
                     }
                     else if (campania.Estado == EstadoCampania.Cerrada)
                     {
-                        SyncEstadoPautas(pautasWs.Select(p => new Entities.Pauta {Codigo = p}).ToList(), 0, Resource.RechazoCampaniaCerrada);
+                        SyncEstadoPautas(pautasWs.Select(p => new Entities.Pauta { Codigo = p }).ToList(), 0, Resource.RechazoCampaniaCerrada);
                         LogSyncCampaniasRechazoCampaniaCerrada(campania, pautasWs);
                         return;
                     }
 
                     #endregion
 
-                    #region Pautas              
+                    #region Pautas
 
                     pautasWs.ForEach(pcodigo =>
                     {
@@ -171,7 +179,7 @@ namespace Irsa.PDM.Admin
                             item.Tema = itemWs.des_tema;
                             item.Proveedor = itemWs.des_proveedor;
                             item.DuracionTema = itemWs.duracion_tema;
-                            item.Producto = itemWs.des_producto;                            
+                            item.Producto = itemWs.des_producto;
                             item.Espacio = itemWs.espacio;
                             item.FechaAviso = itemWs.fecha_aviso;
                         });
@@ -204,7 +212,7 @@ namespace Irsa.PDM.Admin
                                 : string.Format(Resource.DiferenciaEnMontoTarifas, string.Join(",", diferenteMonto));
 
                             LogSyncCampaniasRechazoInconsistencias(p, motivo);
-                         //   SyncEstadoPautas(new List<Pauta> {p}, 0, motivo);
+                            //   SyncEstadoPautas(new List<Pauta> {p}, 0, motivo);
 
                             sinTarifa.ForEach(st =>
                             {
@@ -246,9 +254,9 @@ namespace Irsa.PDM.Admin
                     #endregion
                 });
 
-            //    PdmContext.Configuration.AutoDetectChangesEnabled = false;
+                //    PdmContext.Configuration.AutoDetectChangesEnabled = false;
                 PdmContext.SaveChanges();
-              //  PdmContext.Configuration.AutoDetectChangesEnabled = true;
+                //  PdmContext.Configuration.AutoDetectChangesEnabled = true;
                 //PdmContext = new PDMContext();
             }
             catch (Exception ex)
@@ -307,16 +315,36 @@ namespace Irsa.PDM.Admin
                 },
             };
         }
-   
+
         #endregion
-        
+
         public IList<string> GetEstadosCampania()
         {
             return Enum.GetNames(typeof(EstadoCampania)).OrderBy(t => t).ToList();
         }
 
+        public PagedListResponse<Dtos.PautaDetail> GetPautasByFilter(Dtos.Filters.FilterPautaItems filter)
+        {
+            var query = PdmContext
+                      .Pautas.Include(e => e.Campania)
+                      .Where(e => e.Estado == EstadoPauta.Aprobada || e.Estado == EstadoPauta.Cerrada || e.Estado == EstadoPauta.Pendiente)
+                      .OrderBy(t => t.Campania.Nombre)
+                      .AsQueryable();
+
+            if (filter.CampaniaCodigo > 0)
+            {
+                query = query.Where(e => e.Campania.Codigo == filter.CampaniaCodigo).AsQueryable();
+            }
+
+            return new PagedListResponse<Dtos.PautaDetail>
+            {
+                Count = query.Count(),
+                Data = Mapper.Map<IList<Entities.Pauta>, IList<Dtos.PautaDetail>>(query.Skip(filter.PageSize * (filter.CurrentPage - 1)).Take(filter.PageSize).ToList())
+            };
+        }
+
         public PagedListResponse<Dtos.PautaItem> GetItemsByFilter(Dtos.Filters.FilterPautaItems filter)
-        {            
+        {
             var pautaId = filter.PautaId.HasValue ? filter.PautaId.Value : PdmContext.Pautas.Single(e => string.Equals(e.Codigo, filter.PautaCodigo)).Id;
 
             var query = PdmContext
@@ -329,12 +357,12 @@ namespace Irsa.PDM.Admin
             {
                 Count = query.Count(),
                 Data = Mapper.Map<IList<Entities.PautaItem>, IList<Dtos.PautaItem>>(query.Skip(filter.PageSize * (filter.CurrentPage - 1)).Take(filter.PageSize).ToList())
-            };           
-        }      
+            };
+        }
 
         public void ChangeEstadoCampania(int id, string est, string motivo)
         {
-            var campania = default (Entities.Campania);
+            var campania = default(Entities.Campania);
 
             try
             {
@@ -361,9 +389,9 @@ namespace Irsa.PDM.Admin
             {
                 LogChangeEstadoCampaniaError(campania, est, motivo, ex);
                 throw;
-            }                 
+            }
         }
-       
+
         public string ChangeEstadoPauta(int pautaId, string est, string motivo)
         {
             var pauta = PdmContext.Pautas.Single(e => e.Id == pautaId);
@@ -391,10 +419,10 @@ namespace Irsa.PDM.Admin
             {
                 LogChangeEstadoPautaError(pauta, est, motivo, ex);
                 throw;
-            }            
+            }
 
             return pauta.Campania.Estado.ToString();
-        }      
+        }
 
         private void SyncEstadoPautas(IList<Entities.Pauta> pautas, int estado, string motivo)
         {
@@ -414,9 +442,9 @@ namespace Irsa.PDM.Admin
             }
         }
 
-        public ExcelPackage GetExcelVisualDePauta(int campaniaId)
+        public ExcelPackage GetExcelVisualDePauta(int pautaId)
         {
-            var campania = PdmContext.Campanias.Single(e => e.Id == campaniaId);
+            var pauta = PdmContext.Pautas.Single(e => e.Id == pautaId);
 
             var template = new FileInfo(String.Format(@"{0}\Reports\Rpt_VisualDePauta.xlsx", AppDomain.CurrentDomain.BaseDirectory));
             var pck = new ExcelPackage(template, true);
@@ -428,16 +456,123 @@ namespace Irsa.PDM.Admin
             return pck;
         }
 
-        public ExcelPackage GetExcelPauta(int pautaId)
+        public ExcelPackage GetExcelReporteDePauta(int pautaId)
         {
             var pauta = PdmContext.Pautas.Single(e => e.Id == pautaId);
 
             var template = new FileInfo(String.Format(@"{0}\Reports\Rpt_Pauta.xlsx", AppDomain.CurrentDomain.BaseDirectory));
             var pck = new ExcelPackage(template, true);
             var ws = pck.Workbook.Worksheets[1];
-            var row = 2;
+            var fechaDesde = pauta.Items.Select(e => e.FechaAviso).Min().Value;
+            var fechaHasta = pauta.Items.Select(e => e.FechaAviso).Max().Value;
 
+            #region Header
 
+            ws.Cells[5, 4].Value = DateTime.Now.ToString("dd/MM/yyyy");
+            ws.Cells[7, 2].Value = pauta.Codigo;
+            ws.Cells[7, 4].Value = pauta.Campania.Nombre;
+            ws.Cells[8, 4].Value = string.Format("{0} a {1}", fechaDesde.ToString("dd/MM/yyyy"), fechaHasta.ToString("dd/MM/yyyy"));
+            ws.Cells[10, 2].Value = pauta.Items[0].Producto;
+
+            #endregion
+
+            #region Columns
+
+            var esDow = new Dictionary<DayOfWeek, string>()
+            {
+                {DayOfWeek.Monday, "Lun"},
+                {DayOfWeek.Tuesday, "Mar"},
+                {DayOfWeek.Wednesday, "Mie"},
+                {DayOfWeek.Thursday, "Jue"},
+                {DayOfWeek.Friday, "Vie"},
+                {DayOfWeek.Saturday, "Sab"},
+                {DayOfWeek.Sunday, "Dom"}                
+            };
+
+            var col = 8;
+            var days = (fechaHasta - fechaDesde).Days;
+            var bkColor = System.Drawing.ColorTranslator.FromHtml("#D9E1F2");
+
+            for (var i = 0; i <= days; i++)
+            {
+                col++;
+                var day = fechaDesde.AddDays(i).Day;
+                var dow = fechaDesde.AddDays(i).DayOfWeek;
+
+                ws.Cells[12, col].Value = esDow[dow];
+                ws.Cells[13, col].Value = day;
+
+                ws.Cells[13, col].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                ws.Cells[13, col].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                ws.Cells[13, col].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                ws.Cells[13, col].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+
+                ws.Cells[12, col].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                ws.Cells[12, col].Style.Fill.BackgroundColor.SetColor(bkColor);
+                ws.Cells[13, col].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                ws.Cells[13, col].Style.Fill.BackgroundColor.SetColor(bkColor);
+
+                if (dow == DayOfWeek.Sunday)
+                {
+                    ws.Cells[12, col].Style.Font.Color.SetColor(Color.DarkRed);
+                    ws.Cells[13, col].Style.Font.Color.SetColor(Color.DarkRed);
+                }
+            }
+
+            col++;
+            ws.Column(col).Width = 12;
+            ws.Cells[13, col].Value = "Cantidades";
+
+            ws.Cells[13, col].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+            ws.Cells[13, col].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+            ws.Cells[13, col].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+            ws.Cells[13, col].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+            ws.Cells[12, col].Style.Fill.PatternType = ExcelFillStyle.Solid;
+            ws.Cells[12, col].Style.Fill.BackgroundColor.SetColor(bkColor);
+            ws.Cells[13, col].Style.Fill.PatternType = ExcelFillStyle.Solid;
+            ws.Cells[13, col].Style.Fill.BackgroundColor.SetColor(bkColor);
+            col++;
+            ws.Cells[13, col].Value = "Total";
+            ws.Cells[13, col].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+            ws.Cells[13, col].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+            ws.Cells[13, col].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+            ws.Cells[13, col].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+            ws.Cells[12, col].Style.Fill.PatternType = ExcelFillStyle.Solid;
+            ws.Cells[12, col].Style.Fill.BackgroundColor.SetColor(bkColor);
+            ws.Cells[13, col].Style.Fill.PatternType = ExcelFillStyle.Solid;
+            ws.Cells[13, col].Style.Fill.BackgroundColor.SetColor(bkColor);
+
+            #endregion
+
+            #region Data
+
+            var row = 13;
+
+            var group = pauta.Items.GroupBy(e => e.Tarifa, e => e)
+                       .Select(e => new { Tarifa = e.Key, Items = e.ToList() })
+                       .OrderBy(e => e.Tarifa.Vehiculo.Nombre).ToList();
+
+            group.ForEach(e =>
+            {
+                row++;
+                ws.Cells[row, 1].Value = e.Tarifa.Vehiculo.Nombre;
+                ws.Cells[row, 4].Value = e.Tarifa.HoraDesde;
+                ws.Cells[row, 5].Value = e.Tarifa.HoraHasta;
+                ws.Cells[row, 6].Value = e.Tarifa.Importe;
+                ws.Cells[row, 7].Value = e.Items[0].Tema;
+                ws.Cells[row, 8].Value = e.Items[0].DuracionTema;
+
+                e.Items.ForEach(i =>
+                {
+                    var col2 = (i.FechaAviso.Value - fechaDesde).Days + 9;
+                    ws.Cells[row, col2].Value = 1;
+                });
+
+                ws.Cells[row, (8 + days + 2)].Value = e.Items.Count;
+                ws.Cells[row, (8 + days + 3)].Value = e.Items.Count * e.Items[0].DuracionTema;
+            });
+
+            #endregion
 
             return pck;
         }
@@ -450,7 +585,7 @@ namespace Irsa.PDM.Admin
             {
                 Accion = "CampaniasAdmin.SyncCampanias",
                 App = "Irsa.PDM.WindowsService",
-                CreateDate = DateTime.Now,                
+                CreateDate = DateTime.Now,
                 Modulo = "Campanias",
                 Tipo = App.Warning,
                 UsuarioAccion = UsuarioLogged,
@@ -474,7 +609,7 @@ namespace Irsa.PDM.Admin
             };
 
             LogAdmin.Create(log);
-        }       
+        }
 
         private void LogSyncCampaniasDetail(IList<PautaFcMedios> pautas)
         {
@@ -539,7 +674,7 @@ namespace Irsa.PDM.Admin
             };
 
             LogAdmin.Create(log);
-        }     
+        }
 
         private void LogChangeEstadoCampaniaInfo(Entities.Campania campania, string est, string motivo)
         {
@@ -551,7 +686,7 @@ namespace Irsa.PDM.Admin
                 Modulo = "Campanias",
                 Tipo = App.Info,
                 UsuarioAccion = UsuarioLogged,
-                Descripcion =  string.Format("Se modificó el estado de la campaña ID {0} a {1}. Motivo {2}", campania.Id, est, motivo ?? "Aprobada")             
+                Descripcion = string.Format("Se modificó el estado de la campaña ID {0} a {1}. Motivo {2}", campania.Id, est, motivo ?? "Aprobada")
             };
 
             LogAdmin.Create(log);
@@ -606,10 +741,9 @@ namespace Irsa.PDM.Admin
             };
 
             LogAdmin.Create(log);
-        }        
+        }
 
         #endregion
 
-        
     }
 }

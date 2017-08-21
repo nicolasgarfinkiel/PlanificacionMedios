@@ -24,6 +24,13 @@
                            url: '/Campanias/GetItemsByFilter',
                            data: { filter: filter }
                        });
+                   },
+                   getPautasByFilter: function (filter) {
+                       return $http({
+                           method: 'POST',
+                           url: '/Campanias/GetPautasByFilter',
+                           data: { filter: filter }
+                       });
                    }
                }, baseService);
                result.controller = 'Campanias';

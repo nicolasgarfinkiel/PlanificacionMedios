@@ -200,11 +200,13 @@ namespace Irsa.PDM.Admin
                 ws.Cells[row, 4].Value = item.PautaEjecutadaCodigo;
                 ws.Cells[row, 5].Value = item.CodigoPrograma;
                 ws.Cells[row, 6].Value = item.Proveedor;
-                ws.Cells[row, 7].Value = item.Espacio;
-                ws.Cells[row, 8].Value = item.CodigoAviso;
-                ws.Cells[row, 9].Value =  item.FechaAviso.HasValue ? item.FechaAviso.Value.ToString("dd/MM/yyyy") : string.Empty;
-                ws.Cells[row, 10].Value = item.CostoUnitario;
-                ws.Cells[row, 11].Value = item.Estado;
+                ws.Cells[row, 7].Value = item.Producto;
+                ws.Cells[row, 8].Value = item.Espacio;
+                ws.Cells[row, 9].Value = item.CodigoAviso;
+                ws.Cells[row, 10].Value =  item.FechaAviso.HasValue ? item.FechaAviso.Value.ToString("dd/MM/yyyy") : string.Empty;
+                ws.Cells[row, 11].Value = item.CostoUnitario;
+                ws.Cells[row, 12].Value = item.CostoTotal;
+                ws.Cells[row, 13].Value = item.Estado;
             }
 
             return pck;

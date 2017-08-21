@@ -138,6 +138,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\ReportesController.cs" />
     <Compile Include="Controllers\CertificacionesController.cs" />
     <Compile Include="Controllers\CampaniasController.cs" />
     <Compile Include="Controllers\ProveedoresController.cs" />
@@ -202,6 +203,7 @@
     <Content Include="Scripts\app\proveedores\proveedoresEditCtrl.js" />
     <Content Include="Scripts\app\proveedores\proveedoresListCtrl.js" />
     <Content Include="Scripts\app\proveedores\proveedoresModule.js" />
+    <Content Include="Scripts\app\reportes\reportesModule.js" />
     <Content Include="Scripts\app\shared\certificacionesService.js" />
     <Content Include="Scripts\app\shared\campaniasService.js" />
     <Content Include="Scripts\app\shared\proveedoresService.js" />
@@ -350,6 +352,7 @@
     <Content Include="Reports\Rpt_Certificaciones.xlsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Views\Reportes\Index.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

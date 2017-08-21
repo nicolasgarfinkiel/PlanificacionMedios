@@ -42,7 +42,25 @@ namespace Irsa.PDM.MainWebApp.Controllers
             return new
             {                
             };
-        }   
+        }
+
+        [HttpPost]
+        public ActionResult GetPautasByFilter(FilterPautaItems filter)
+        {
+            var response = new PagedListResponse<PautaDetail>();
+
+            try
+            {
+                response = _admin.GetPautasByFilter(filter);
+            }
+            catch (Exception ex)
+            {
+                response.Result.HasErrors = true;
+                response.Result.Messages.Add(ex.Message);
+            }
+
+            return this.JsonNet(response);
+        }
   
         [HttpPost]
         public ActionResult GetItemsByFilter(FilterPautaItems filter)

@@ -9,13 +9,14 @@
       <mvcSiteMapNode title="Medios"                            controller="Medios"                 action="Index"                                           roles=""/>
       <mvcSiteMapNode title="Plazas"                            controller="Plazas"                 action="Index"                                           roles=""/>
       <mvcSiteMapNode title="Vehículos"                         controller="Vehiculos"              action="Index"                                           roles=""/>
-      <mvcSiteMapNode title="Proveedores"                       controller="Proveedores"              action="Index"                                           roles=""/>
-      <mvcSiteMapNode title="Tarifarios"                        controller="Tarifarios"              action="Index"                                           roles=""/>
+      <mvcSiteMapNode title="Proveedores"                       controller="Proveedores"            action="Index"                                           roles=""/>
+      <mvcSiteMapNode title="Tarifarios"                        controller="Tarifarios"             action="Index"                                           roles=""/>
     </mvcSiteMapNode>
 
     <mvcSiteMapNode   title="Campañas"                          controller="Home"                   action="index"             Class="fa fa-bookmark-o"      roles="" >
-      <mvcSiteMapNode title="Listado"                           controller="Campanias"                 action="Index"                                           roles=""/>
-      <mvcSiteMapNode title="Certificaciones"                   controller="Certificaciones"                 action="Index"                                           roles=""/>
+      <mvcSiteMapNode title="Listado"                           controller="Campanias"              action="Index"                                           roles=""/>
+      <mvcSiteMapNode title="Certificaciones"                   controller="Certificaciones"        action="Index"                                           roles=""/>
+      <mvcSiteMapNode title="Reportes"                          controller="Reportes"               action="Index"                                           roles=""/>
     </mvcSiteMapNode>
    
   </mvcSiteMapNode>

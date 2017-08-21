@@ -1,0 +1,53 @@
+﻿@using Irsa.PDM.Infrastructure
+
+@{
+    ViewBag.ngApp = "irsa.pdm.reportes";
+}
+
+<div ng-controller="reportesCtrl">
+    <div class="hpanel hblue">
+        <div class="panel-heading hbuilt">
+            Reportes
+        </div>
+        <div class="panel-body">
+            <div class="row" style="margin-bottom: 10px;">
+                <div class="col-md-10 col-sm-12">
+                    <ui-select ng-model="filter.campania" theme="select2" style="width: 100%;" append-to-body="true">
+                        <ui-select-match placeholder="Campaña"><b>Códgo: </b>{{$select.selected.codigo}} <b>Nombre: </b>{{$select.selected.nombre}} <b>Estado: </b>{{$select.selected.estado}}</ui-select-match>
+                        <ui-select-choices refresh-on-active="true" refresh="getSelectSource($select)" refresh-delay="300" repeat="item in selectList | filter: $select.search">
+                            <div><b>Códgo: </b>{{item.codigo}} <b>Nombre: </b>{{item.nombre}} <b>Estado: </b>{{item.estado}}</div>
+                            <div ng-if="$index == $select.items.length-1 && currentPage < pageCount">
+                                <button class="btn btn-xs btn-info"
+                                        style="width: 100%; margin-top: 20px;"
+                                        ng-click="getSelectSource($select, $event);">
+                                    Siguiente
+                                </button>
+                            </div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+                <div class="col-md-2 text-right">                   
+                    <a href="javascript:void(0)" class="btn btn-info " ng-click="clearAndFind()"><i class="fa fa-search"></i> Buscar</a>                    
+                </div>    
+                @*<div class="col-md-2 col-sm-12">
+                    <form method="POST" action="/Campanias/GetExcelVisualDePauta">
+                        <input type="hidden" name="campaniaId" value="1" />
+                    </form>
+                </div>*@
+            </div>
+           
+            <div class="alert alert-danger" ng-if="result.hasErrors">
+                <i class="fa fa-bolt"></i>
+                <div ng-repeat="message in result.messages">{{message}}</div>
+            </div>
+
+
+            <div class="gridStyleLarge" ng-grid="gridPautas"></div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    @Html.IncludeVersionedJs("Scripts/app/reportes/reportesModule.js")
+    @Html.IncludeVersionedJs("Scripts/app/shared/campaniasService.js")
+}

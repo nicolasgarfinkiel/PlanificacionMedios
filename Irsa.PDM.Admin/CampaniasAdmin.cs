@@ -78,15 +78,18 @@ namespace Irsa.PDM.Admin
         #region Sync
 
         public void SyncCampanias()
-        {
+        {            
             LogSyncCampaniasInit();
 
             try
-            {
+            {               
+                var pautas = FCMediosclient.Get<IList<PautaFcMedios>>(GetPautas).ToList(); //GetPautasMock();  
+                SyncTablasBasicas(pautas);
+
                 var actualMedios = PdmContext.Medios.ToList();
                 var actualPlazas = PdmContext.Plazas.ToList();
                 var actualVehiculos = PdmContext.Vehiculos.ToList();
-                var pautas = FCMediosclient.Get<IList<PautaFcMedios>>(GetPautas).ToList(); //GetPautasMock();  
+
                 var campanias = pautas.Select(e => new { e.cod_campania, e.des_campania }).Distinct().ToList();
 
                 LogSyncCampaniasDetail(pautas);
@@ -253,11 +256,8 @@ namespace Irsa.PDM.Admin
 
                     #endregion
                 });
-
-                //    PdmContext.Configuration.AutoDetectChangesEnabled = false;
-                PdmContext.SaveChanges();
-                //  PdmContext.Configuration.AutoDetectChangesEnabled = true;
-                //PdmContext = new PDMContext();
+              
+                PdmContext.SaveChanges();               
             }
             catch (Exception ex)
             {
@@ -267,6 +267,116 @@ namespace Irsa.PDM.Admin
             }
 
             LogSyncCampaniasEnd();
+        }
+
+        public void SyncTablasBasicas(IList<PautaFcMedios> pautas)
+        {           
+            #region Base
+
+            var actualMedios = PdmContext.Medios.ToList();
+            var actualPlazas = PdmContext.Plazas.ToList();
+            var actualVehiculos = PdmContext.Vehiculos.ToList();
+
+            var serviceMedios = pautas.Select(e => new { Codigo = e.cod_medio, Descripcion = e.des_medio }).Distinct().ToList();
+            var servicePlazas = pautas.Select(e => new { Codigo = e.cod_plaza, Descripcion = e.des_plaza }).Distinct().ToList();
+            var serviceVehiculos = pautas.Select(e => new { Codigo = e.cod_vehiculo, Descripcion = e.des_vehiculo }).Distinct().ToList();
+
+            #region Medios
+
+            serviceMedios.ForEach(t =>
+            {
+                var medio = actualMedios.FirstOrDefault(e => e.Codigo == t.Codigo);
+
+                if (medio == null)
+                {
+                    medio = new Entities.Medio
+                    {
+                        Codigo = t.Codigo,
+                        Descripcion = t.Descripcion,
+                        Nombre = t.Descripcion,
+                        CreateDate = DateTime.Now,
+                        CreatedBy = App.ImportUser,
+                        Enabled = true
+                    };
+
+                    PdmContext.Medios.Add(medio);
+                }
+                else
+                {
+                    medio.Descripcion = t.Descripcion;
+                    medio.UpdateDate = DateTime.Now;
+                    medio.UpdatedBy = App.ImportUser;
+                }
+            });
+
+            #endregion
+
+            #region Plazas
+
+            servicePlazas.ForEach(t =>
+            {
+                var plaza = actualPlazas.FirstOrDefault(e => e.Codigo == t.Codigo);
+
+                if (plaza == null)
+                {
+                    plaza = new Entities.Plaza
+                    {
+                        Codigo = t.Codigo,
+                        Descripcion = t.Descripcion,
+                        CreateDate = DateTime.Now,
+                        CreatedBy = App.ImportUser,
+                        Enabled = true
+                    };
+
+                    PdmContext.Plazas.Add(plaza);
+                }
+                else
+                {
+                    plaza.Descripcion = t.Descripcion;
+                    plaza.UpdateDate = DateTime.Now;
+                    plaza.UpdatedBy = App.ImportUser;
+                }
+            });
+
+            #endregion
+
+            #region Vehiculos
+
+            serviceVehiculos.ForEach(t =>
+            {
+                var vehiculo = actualVehiculos.FirstOrDefault(e => e.Codigo == t.Codigo);
+
+                if (vehiculo == null)
+                {
+                    vehiculo = new Entities.Vehiculo
+                    {
+                        Codigo = t.Codigo,
+                        Descripcion = t.Descripcion,
+                        CreateDate = DateTime.Now,
+                        CreatedBy = App.ImportUser,
+                        Enabled = true,
+                        Nombre = t.Descripcion
+                    };
+
+                    PdmContext.Vehiculos.Add(vehiculo);
+                }
+                else
+                {
+                    vehiculo.Nombre = t.Descripcion;
+                    vehiculo.Descripcion = t.Descripcion;
+                    vehiculo.UpdateDate = DateTime.Now;
+                    vehiculo.UpdatedBy = App.ImportUser;
+                }
+            });
+
+            #endregion
+
+            #endregion
+
+            PdmContext.Configuration.AutoDetectChangesEnabled = false;
+            PdmContext.SaveChanges();
+            PdmContext.Configuration.AutoDetectChangesEnabled = true;
+            PdmContext = new PDMContext();
         }
 
         private IList<PautaFcMedios> GetPautasMock()

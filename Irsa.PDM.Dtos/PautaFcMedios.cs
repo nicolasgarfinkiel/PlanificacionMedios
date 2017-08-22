@@ -7,9 +7,12 @@ namespace Irsa.PDM.Dtos
         public string nro_pauta { get; set; }
         public int cod_programa { get; set; }
         public int cod_vehiculo { get; set; }
+        public string des_vehiculo { get; set; }
         public string cod_aviso { get; set; }
         public string cod_medio { get; set; }
+        public string des_medio { get; set; }
         public string cod_plaza { get; set; }
+        public string des_plaza { get; set; }
         public int cod_campania { get; set; }
         public string des_campania { get; set; }
         public int cod_proveedor { get; set; }

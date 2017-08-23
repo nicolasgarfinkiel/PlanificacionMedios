@@ -10,6 +10,7 @@
                $scope.dias = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo'];
                $scope.tarifaInit = { idTarifario: $routeParams.id, lunes: true, martes: true, miercoles: true, jueves: true, viernes: true, sabado: true, domingo: true };
                $scope.tarifas = [];
+               $scope.resultModal = { hasErrors: false, messages: [] };
 
                //#region base
 
@@ -314,5 +315,24 @@
                        $scope.filter.currentPage = 1;
                        $scope.findTarifas();
                    });
+               };
+
+               $scope.confirmAprobacion = function () {
+                   $scope.resultModal = { hasErrors: false, messages: [] };
+                   $('#modalConfirm').modal('show');
+               };
+
+               $scope.aprobar = function () {
+                   $scope.result.hasErrors = false;
+
+                   tarifariosService.aprobar($scope.entity.id).then(function (response) {
+                       if (!response.data.result.hasErrors) {
+                           window.location.reload();
+                           $('#modalConfirm').modal('hide');
+                           return;
+                       }
+
+                       $scope.result = response.data.result;
+                   }, function () { throw 'Error on aprobar'; });
                };
            }]);

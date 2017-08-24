@@ -170,7 +170,7 @@ namespace Irsa.PDM.Admin
 
                             item.Tarifa = PdmContext.Tarifas.FirstOrDefault(e =>
                                 e.CodigoPrograma == itemWs.cod_programa &&
-                                e.Tarifario.Estado == EstadoTarifario.Editable);
+                                e.Tarifario.Estado == EstadoTarifario.Aprobado);
 
                             item.DiferenciaEnMontoTarifas = item.Tarifa != null && item.Tarifa.Importe != itemWs.costo_unitario;
                             item.CostoUnitario = itemWs.costo_unitario;
@@ -224,7 +224,7 @@ namespace Irsa.PDM.Admin
                                 var plaza = actualPlazas.Single(e => e.Codigo == tfc.cod_plaza);
                                 var vehiculo = actualVehiculos.Single(e => e.Codigo == tfc.cod_vehiculo);
                                 var tarifario = PdmContext.Tarifarios.SingleOrDefault(tarif =>
-                                            tarif.Estado == EstadoTarifario.Editable &&
+                                            tarif.Estado == EstadoTarifario.Aprobado &&
                                             tarif.Vehiculo.Codigo == vehiculo.Codigo);
 
                                 if (tarifario == null)

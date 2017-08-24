@@ -188,6 +188,7 @@
                            };
 
                            toastr.info(response.data.data);
+                           window.location.reload();
 
                            return;
                        }

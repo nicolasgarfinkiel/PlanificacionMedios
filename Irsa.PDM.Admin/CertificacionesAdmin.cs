@@ -205,8 +205,9 @@ namespace Irsa.PDM.Admin
                 ws.Cells[row, 9].Value = item.CodigoAviso;
                 ws.Cells[row, 10].Value =  item.FechaAviso.HasValue ? item.FechaAviso.Value.ToString("dd/MM/yyyy") : string.Empty;
                 ws.Cells[row, 11].Value = item.CostoUnitario;
-                ws.Cells[row, 12].Value = item.CostoTotal;
-                ws.Cells[row, 13].Value = item.Estado;
+                ws.Cells[row, 12].Value = item.DuracionTema;
+                ws.Cells[row, 13].Value = item.CostoTotal;
+                ws.Cells[row, 14].Value = item.Estado;
             }
 
             return pck;

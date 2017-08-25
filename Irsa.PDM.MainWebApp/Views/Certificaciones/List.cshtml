@@ -26,8 +26,8 @@
                         <th style="width: 4%">
                             Cod.Camp.                          
                         </th>
-                        <th style="width: 8%">
-                            Nombre
+                        <th style="width: 6%">
+                            Campaña
                         </th>
                         <th style="width: 5%">
                             Pauta                          
@@ -57,6 +57,9 @@
                             Costo Unit.
                         </th>                   
                         <th style="width: 5%">
+                            Cantidad
+                        </th>  
+                        <th style="width: 5%">
                             Total
                         </th>   
                         <th style="width: 10%">
@@ -70,7 +73,7 @@
                             <span>{{certificacion.campaniaCodigo}}</span>
 
                         </td>
-                        <td data-title="Nombre">
+                        <td data-title="Campaña">
                             <span>{{certificacion.campaniaNombre}}</span>
                         </td>
                         <td data-title="Pauta">
@@ -104,6 +107,9 @@
                         </td>
                         <td data-title="Costo Unitario">
                             <span>{{certificacion.costoUnitario | currency}}</span>
+                        </td>
+                        <td data-title="Cantidad">
+                            <span>{{certificacion.duracionTema}}</span>
                         </td>
                         <td data-title="Total">
                             <span>{{certificacion.costoTotal | currency}}</span>

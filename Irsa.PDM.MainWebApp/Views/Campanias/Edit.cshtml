@@ -14,7 +14,7 @@
 
 <div class="hpanel hblue">
     <div class="panel-body">
-        <form class="form-horizontal">
+        <div class="form-horizontal">
             
             <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                 <div class="panel panel-default" ng-repeat="pauta in entity.pautas">
@@ -24,10 +24,18 @@
                                 Pauta nro <b>{{pauta.codigo}}</b>. Estado: <b>{{pauta.estado}}</b>
                                 <i class="fa fa-exclamation-circle" style="color: red;" ng-if="pauta.estado == 'ProgramasNoTarifados' || pauta.estado == 'DiferenciaEnMontoTarifas'"></i>
                             </a> 
-                            <span style="float: right; position: relative; top: -3px;">
+                            <div style="float: right; position: relative; top: -3px;     display: inline-flex;">
                                 <button class="btn btn-primary btn-xs" ng-show="pauta.estado == 'Pendiente'" ng-click="changeEstadoPauta(pauta, 'Aprobada')">Aprobar</button>
                                 <button class="btn btn-danger btn-xs" ng-show="pauta.estado == 'Pendiente' || pauta.estado == 'ProgramasNoTarifados' || pauta.estado == 'DiferenciaEnMontoTarifas'" ng-click="confirmRechazoPauta(pauta)">Rechazar</button>
-                            </span>                                                
+                                <form method="POST" action="/Reportes/GetExcelReporteDePauta" ng-if="pauta.estado == 'Pendiente' || pauta.estado == 'Aprobada' || pauta.estado == 'Cerrada'">
+                                    <input type="hidden" name="pautaId" value="{{pauta.id}}" />
+                                    <button type="submit" style="border: 0; background: 0; font-size: 17px; margin-left: 10px;"><i class="fa fa-file-excel-o text-success"></i> <span style="font-size: 11px; font-weight: normal;">Reporte de pauta</span></button>
+                                </form>
+                                <form method="POST" action="/Reportes/GetExcelVisualDePauta" ng-if="pauta.estado == 'Pendiente' || pauta.estado == 'Aprobada' || pauta.estado == 'Cerrada'">
+                                    <input type="hidden" name="pautaId" value="{{pauta.id}}" />
+                                    <button type="submit" style="border: 0; background: 0; font-size: 17px; margin-left: 10px;"><i class="fa fa-file-excel-o text-success"></i> <span style="font-size: 11px; font-weight: normal;">Visual de pauta</span></button>
+                                </form>
+                            </div>                                                
                         </h4>
                     </div>
                     <div id="collapse{{pauta.id}}" class="panel-collapse collapse in"  role="tabpanel" aria-labelledby="heading{{pauta.id}}">
@@ -56,6 +64,9 @@
                                                 Costo unitario
                                             </th>
                                             <th style="width: 10%;">
+                                                Cantidad
+                                            </th>
+                                            <th style="width: 10%;">
                                                 Total
                                             </th>
                                             <th style="width: 10%;">
@@ -82,6 +93,9 @@
                                             </td>
                                             <td data-title="Costo unitario">
                                                 <span>{{item.costoUnitario | currency}}</span>
+                                            </td>
+                                            <td data-title="Cantidad">
+                                                <span>{{item.duracionTema}}</span>
                                             </td>
                                             <td data-title="Total">
                                                 <span>{{item.costoTotal | currency}}</span>
@@ -125,7 +139,7 @@
                 <i class="fa fa-bolt"></i>
                 <div ng-repeat="message in result.messages">{{message}}</div>
             </div>
-        </form>
+        </div>
     </div>
     <div class="panel-footer text-right">
         @*<button type="button" class="btn btn-primary" ng-click="save()">Guardar</button>*@

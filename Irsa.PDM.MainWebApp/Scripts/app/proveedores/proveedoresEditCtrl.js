@@ -52,7 +52,11 @@
 
                    if (!$scope.entity.nombre) {
                        $scope.result.messages.push('Ingrese el nombre');
-                   }                  
+                   }
+
+                   if (!$scope.entity.numeroProveedorSap) {
+                       $scope.result.messages.push('Ingrese el número de proveedor SAP');
+                   }
 
                    if (!$scope.entity.vehiculos.length) {
                        $scope.result.messages.push('Seleccione uno o más vehículos');

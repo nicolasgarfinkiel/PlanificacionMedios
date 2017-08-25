@@ -21,7 +21,7 @@ namespace Irsa.PDM.Dtos
         public DateTime fecha_aviso { get; set; }
         public string espacio { get; set; }
         public string des_tema { get; set; }
-        public int duracion_tema { get; set; }
+        public double duracion_tema { get; set; }
         public int hora_inicio { get; set; }
         public int hora_fin { get; set; }
         public double costo_unitario { get; set; }

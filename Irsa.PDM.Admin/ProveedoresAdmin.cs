@@ -22,13 +22,15 @@ namespace Irsa.PDM.Admin
                     CreatedBy = UsuarioLogged,                                        
                     Enabled = true,                    
                     Nombre =  dto.Nombre,
+                    NumeroProveedorSap = dto.NumeroProveedorSap,
                     Vehiculos = new List<Vehiculo>()
                 };
             }
             else
             {
                 entity = PdmContext.Proveedores.Single(c => c.Id == dto.Id.Value);
-                entity.Nombre = dto.Nombre;                
+                entity.Nombre = dto.Nombre;
+                entity.NumeroProveedorSap = dto.NumeroProveedorSap;                
                 entity.UpdateDate = DateTime.Now;
                 entity.UpdatedBy = UsuarioLogged;                
             }

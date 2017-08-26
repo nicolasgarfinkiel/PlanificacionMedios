@@ -3,22 +3,27 @@
 @{
     ViewBag.ngApp = "irsa.pdm.tarifarios";
 }
-<div>    
+<div>
     <script type="text/ng-template" id="tarifarios/list">
         @RenderPage(Url.Content("~/Views/Tarifarios/List.cshtml"))
-    </script>  
+    </script>
     <script type="text/ng-template" id="tarifarios/edit">
         @RenderPage(Url.Content("~/Views/Tarifarios/Edit.cshtml"))
-    </script>  
+    </script>
     <div ng-view></div>
 </div>
 
 @section scripts{
-    @Html.IncludeVersionedJs("Scripts/app/tarifarios/tarifariosModule.js")    
-    @Html.IncludeVersionedJs("Scripts/app/tarifarios/tarifariosListCtrl.js")        
-    @Html.IncludeVersionedJs("Scripts/app/tarifarios/tarifariosEditCtrl.js")        
+    @Html.IncludeVersionedJs("Scripts/app/tarifarios/tarifariosModule.js")
+    @Html.IncludeVersionedJs("Scripts/app/tarifarios/tarifariosListCtrl.js")
+    @Html.IncludeVersionedJs("Scripts/app/tarifarios/tarifariosEditCtrl.js")
     @Html.IncludeVersionedJs("Scripts/app/shared/tarifariosService.js")
     @Html.IncludeVersionedJs("Scripts/app/shared/tarifasService.js")
     @Html.IncludeVersionedJs("Scripts/app/shared/vehiculosService.js")
-    @Html.IncludeVersionedJs("Scripts/app/shared/proveedoresService.js")    
+    @Html.IncludeVersionedJs("Scripts/app/shared/proveedoresService.js")
+    @Html.IncludeVersionedJs("Scripts/app/shared/singleFileService.js")
+
+    @Html.IncludeVersionedJs("Scripts/jquery.ui.widget.js")
+    @Html.IncludeVersionedJs("Scripts/jquery.iframe-transport.js")
+    @Html.IncludeVersionedJs("Scripts/jquery.fileupload.js")
 }

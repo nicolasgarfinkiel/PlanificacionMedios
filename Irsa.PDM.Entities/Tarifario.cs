@@ -10,6 +10,8 @@ namespace Irsa.PDM.Entities
         public virtual Vehiculo Vehiculo { get; set; }
         public virtual IList<Tarifa> Tarifas { get; set; }
         public EstadoTarifario Estado { get; set; }
+        public string NumeroProveedorSap { get; set; }
+        public string Documento { get; set; }  
 
         public bool Editable
         {

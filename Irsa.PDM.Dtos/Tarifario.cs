@@ -10,5 +10,7 @@ namespace Irsa.PDM.Dtos
         public DateTime FechaHasta { get; set; }
         public string Estado { get; set; }
         public bool Editable { get; set; }
+        public string NumeroProveedorSap { get; set; }
+        public string Documento { get; set; }  
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using AutoMapper;
@@ -16,7 +17,7 @@ namespace Irsa.PDM.Admin
 {
     public class TarifariosAdmin : BaseAdmin<int, Entities.Tarifario, Dtos.Tarifario, FilterTarifarios>
     {        
-        private const string GetTarifasAction = "/client?method=get-list&action=programas_a_tarifar";   
+        private const string GetTarifasAction = "/client?method=get-list&action=programas_a_tarifar";        
         private readonly LogAdmin LogAdmin;
 
         public TarifariosAdmin()
@@ -36,6 +37,7 @@ namespace Irsa.PDM.Admin
             
             try
             {
+                SaveFile(entity.Id);
                 InitTarifario(entity);
             }
             catch (Exception ex)
@@ -63,6 +65,15 @@ namespace Irsa.PDM.Admin
             LogCreateInfo(dto);
 
             return dto;
+        }
+
+        public override Dtos.Tarifario Update(Dtos.Tarifario dto)
+        {
+            Validate(dto);
+            var entity = ToEntity(dto);
+            PdmContext.SaveChanges();
+            SaveFile(entity.Id);
+            return Mapper.Map<Entities.Tarifario, Dtos.Tarifario>(entity);
         }      
 
         public override void Delete(int id)
@@ -70,8 +81,7 @@ namespace Irsa.PDM.Admin
             var entity = default(Entities.Tarifario);
 
             try
-            {
-             //   new TarifasAdmin().SetValues(new FilterTarifas { TarifarioId = id }, null, null, true);
+            {          
                 entity = PdmContext.Tarifarios.Single(c => c.Id == id);
 
                 entity.Estado = EstadoTarifario.Eliminado;
@@ -87,6 +97,22 @@ namespace Irsa.PDM.Admin
                 throw;
             }            
         }
+
+        private void SaveFile(int entityId)
+        {
+            if (PDMSession.Current.File == null) return;
+
+            var path = String.Format(@"{0}\Documents\Tarifarios\{1}", AppDomain.CurrentDomain.BaseDirectory, entityId);
+            var file = string.Format(@"{0}\{1}", path, PDMSession.Current.File.FileName);
+
+            if (Directory.Exists(path))
+            {
+                Directory.Delete(path, true);   
+            }
+
+            Directory.CreateDirectory(path);            
+            PDMSession.Current.File.SaveAs(file);
+        }      
         
         public override Tarifario ToEntity(Dtos.Tarifario dto)
         {
@@ -103,7 +129,9 @@ namespace Irsa.PDM.Admin
                     Estado = EstadoTarifario.Editable,
                     FechaDesde = dto.FechaDesde,
                     FechaHasta = dto.FechaHasta,
-                    Vehiculo = vehiculo
+                    Vehiculo = vehiculo,
+                    NumeroProveedorSap = dto.NumeroProveedorSap,
+                    Documento = dto.Documento
                 };
             }
             else
@@ -115,6 +143,8 @@ namespace Irsa.PDM.Admin
                 entity.FechaDesde = dto.FechaDesde;
                 entity.FechaHasta = dto.FechaHasta;
                 entity.Vehiculo = vehiculo;
+                entity.NumeroProveedorSap = dto.NumeroProveedorSap;
+                entity.Documento = dto.Documento;
             }
 
             return entity;
@@ -517,7 +547,6 @@ namespace Irsa.PDM.Admin
 
       
         #endregion
-
       
     }
 }

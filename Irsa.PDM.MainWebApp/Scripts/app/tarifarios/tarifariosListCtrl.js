@@ -8,7 +8,8 @@
            'vehiculosService',
            'baseNavigationService',
            'listBootstraperService',
-           function ($scope, $timeout, tarifariosService, tarifasService, proveedoresService, vehiculosService, baseNavigationService, listBootstraperService) {
+           'singleFileService',
+           function ($scope, $timeout, tarifariosService, tarifasService, proveedoresService, vehiculosService, baseNavigationService, listBootstraperService, singleFileService) {
                $scope.navigationService = baseNavigationService;
 
                //#region Base
@@ -25,6 +26,7 @@
                        { field: 'fechaDesde', displayName: 'Fecha desde' },
                        { field: 'fechaHasta', displayName: 'Fecha hasta' },
                        { field: 'estado', displayName: 'Estado' },
+                       { field: 'estado', displayName: 'Documento', width: 120, cellTemplate: '<div class="ng-grid-icon-container"><a ng-if="row.entity.documento" href="/documents/Tarifarios/{{row.entity.id}}/{{row.entity.documento}}" target="_blank" class="btn btn-rounded btn-xs btn-icon btn-default" ><i style="font-size: 11pt;" class="fa fa-file-pdf-o text-success"></i></a></div>' },
                        { field: 'cuit', displayName: 'Editar', width: 70, cellTemplate: '<div class="ng-grid-icon-container"><a ng-if="row.entity.editable" href="javascript:void(0)" class="btn btn-rounded btn-xs btn-icon btn-default" ng-click="setEdit(row.entity)"><i class="fa fa-pencil"></i></a></div>' },
                        { field: 'cuit', displayName: 'Eliminar', width: 70, cellTemplate: '<div class="ng-grid-icon-container"><a ng-if="row.entity.editable" href="javascript:void(0)" class="btn btn-rounded btn-xs btn-icon btn-default" ng-click="confirmBaja(row.entity)"><i class="fa fa-remove"></i></a></div>' },
                        { field: 'cuit', displayName: 'Admin', width: 70, cellTemplate: '<div class="ng-grid-icon-container">' + '<a title="Administrar" href="javascript:void(0)" class="btn btn-rounded btn-xs btn-icon btn-default" ng-click="navigationService.goToEdit(row.entity.id)" ><i ng-class="{\'fa fa-share-square-o\': row.entity.editable, \'fa fa-search\': !row.entity.editable }"></i></a></div>' },
@@ -146,7 +148,11 @@
 
                    if (!$scope.entity.fechaHasta) {
                        $scope.resultModal.messages.push('Ingrese la fecha hasta');
-                   }                                      
+                   }
+
+                   if (!$scope.entity.numeroProveedorSap) {
+                       $scope.resultModal.messages.push('Ingrese el número de proveedor SAP');
+                   }
 
                    $scope.resultModal.hasErrors = $scope.resultModal.messages.length;
                    return !$scope.resultModal.hasErrors;
@@ -167,6 +173,14 @@
                        $scope.resultModal = response.data.result;
                    }, function () { throw 'Error on getFechaDesde'; });
                };
+
+               $scope.$watch('entity.vehiculo', function (newValue) {
+                   if (!newValue || $scope.loading) return;
+
+                   $scope.getFechaDesde();
+               });
+
+               //#region TarifaProveedor
 
                $scope.openProveedoresModal = function () {
                    $scope.resultModal = { hasErrors: false, messages: [] };
@@ -218,11 +232,39 @@
                    
                };
 
-               $scope.$watch('entity.vehiculo', function (newValue) {
-                   if (!newValue || $scope.loading) return;
+               //#endregion
 
-                   $scope.getFechaDesde();
+               //#region Documento               
+
+               $scope.onErrorFileCallBack = function (message) {
+                   $scope.$apply(function () {
+                       $scope.resultModal.hasErrors = true;
+                       $scope.resultModal.messages = [message || 'Se produjo un error al intentar subir el archivo'];
+                   });
+               };
+
+               $scope.onSuccessFileCallBack = function (file) {
+                   $scope.$apply(function () {
+                       $scope.resultModal.hasErrors = false;
+                       $scope.entity.documento = file.name;
+                       $("#progressBar").width('0%');
+                   });
+               };
+
+               $scope.uploadProgressCallBack = function (percent) {                   
+                   $("#progressBar").width(percent + '%');
+               };
+
+               singleFileService.setUploader({
+                   returnDetailedFile: true,
+                   onError: $scope.onErrorFileCallBack,
+                   onSuccess: $scope.onSuccessFileCallBack,
+                   controlId: 'fileupload',
+                   urlFile: 'Tarifarios/UploadFile',
+                   uploadProgressCallBack: $scope.uploadProgressCallBack
                });
+
+               //#endregion
 
                //#region Select UI Vehiculos
 

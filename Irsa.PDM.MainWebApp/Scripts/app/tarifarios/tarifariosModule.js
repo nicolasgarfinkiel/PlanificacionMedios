@@ -5,6 +5,7 @@
     'irsa.pdm.service.tarifas',
     'irsa.pdm.service.vehiculos',
     'irsa.pdm.service.proveedores',
+    'irsa.pdm.service.singleFile',
     'irsa.pdm.navigation.base',    
     'irsa.pdm.service.base',
     'irsa.pdm.service.bootstraper.list',

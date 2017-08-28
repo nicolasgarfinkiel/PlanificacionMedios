@@ -47,15 +47,34 @@
                    $scope.resultModal.hasErrors = false;
                    $scope.operation = 'Alta';
                    $scope.entity = {};
-                   $('#tarifarioModal').modal('show');
-                 //  $scope.getFechaDesde();                   
+
+                   singleFileService.setUploader({
+                       returnDetailedFile: true,
+                       onError: $scope.onErrorFileCallBack,
+                       onSuccess: $scope.onSuccessFileCallBack,
+                       controlId: 'fileupload',
+                       urlFile: 'Tarifarios/UploadFile',
+                       uploadProgressCallBack: $scope.uploadProgressCallBack
+                   });
+
+                   $('#tarifarioModal').modal('show');                 
                };
 
                $scope.setEdit = function (entity) {
                    $scope.loading = true;
                    $scope.resultModal.hasErrors = false;
                    $scope.operation = 'Edición';
-                   $scope.entity = angular.copy(entity);                  
+                   $scope.entity = angular.copy(entity);
+
+                   singleFileService.setUploader({
+                       returnDetailedFile: true,
+                       onError: $scope.onErrorFileCallBack,
+                       onSuccess: $scope.onSuccessFileCallBack,
+                       controlId: 'fileupload',
+                       urlFile: 'Tarifarios/UploadFile',
+                       uploadProgressCallBack: $scope.uploadProgressCallBack
+                   });
+
                    $('#tarifarioModal').modal('show');
                    $timeout(function () { $scope.loading = false; }, 200);
                };
@@ -185,31 +204,48 @@
                $scope.openProveedoresModal = function () {
                    $scope.resultModal = { hasErrors: false, messages: [] };
                    $scope.tarifaProveedor = {};
+
+                   singleFileService.setUploader({
+                       returnDetailedFile: true,
+                       onError: $scope.onErrorFileCallBack,
+                       onSuccess: $scope.onSuccessFileCallBack,
+                       controlId: 'fileuploadProveedor',
+                       urlFile: 'Tarifarios/UploadFile',
+                       uploadProgressCallBack: $scope.uploadProgressCallBack
+                   });
+
                    $('#proveedoresModal').modal('show');
                };
 
                $scope.setTarifasProveedor = function() {
                    if (!$scope.isValidTarifaProveedor()) return;
 
-                   tarifasService.setValuesByProveedor($scope.tarifaProveedor).then(function (response) {
+                   tarifariosService.createTarifariosProveedor($scope.tarifaProveedor).then(function (response) {
                        if (!response.data.result.hasErrors) {
-                           $('#proveedoresModal').modal('hide');
-
-                           toastr.options = {
-                               "debug": false,
-                               "newestOnTop": false,                               
-                               "closeButton": true,                               
-                           };
-
-                           toastr.info(response.data.data);
+                           $('#proveedoresModal').modal('hide');                                                    
                            window.location.reload();
 
                            return;
                        }
 
                        $scope.resultModal = response.data.result;
-                   }, function () { throw 'Error on getFechaDesde'; });
-                   
+                   }, function () { throw 'Error on getFechaDesde'; });                   
+               };              
+
+               $scope.getFechaDesdeProveedor = function () {
+                   if (!$scope.tarifaProveedor || !$scope.tarifaProveedor.proveedor) return;
+
+                   $scope.resultModal = { hasErrors: false, messages: [] };
+                   $scope.tarifaProveedor.fechaDesde = null;
+
+                   tarifariosService.getFechaDesdeProveedor($scope.tarifaProveedor.proveedor.id).then(function (response) {
+                       if (!response.data.result.hasErrors) {
+                           $scope.tarifaProveedor.fechaDesde = response.data.data;
+                           return;
+                       }
+
+                       $scope.resultModal = response.data.result;
+                   }, function () { throw 'Error on getFechaDesdeProveedor'; });
                };
 
                $scope.isValidTarifaProveedor = function () {
@@ -217,6 +253,14 @@
 
                    if (!$scope.tarifaProveedor.proveedor) {
                        $scope.resultModal.messages.push('Seleccione un proveedor');
+                   }
+
+                   if (!$scope.tarifaProveedor.fechaDesde) {
+                       $scope.resultModal.messages.push('Error al completar la fecha desde');
+                   }
+
+                   if (!$scope.tarifaProveedor.fechaHasta) {
+                       $scope.resultModal.messages.push('Ingrese la fecha hasta');
                    }
 
                    if (!$scope.tarifaProveedor.importe) {
@@ -229,12 +273,17 @@
 
                    $scope.resultModal.hasErrors = $scope.resultModal.messages.length;
                    return !$scope.resultModal.hasErrors;
-                   
                };
+
+               $scope.$watch('tarifaProveedor.proveedor', function (newValue) {
+                   if (!newValue || $scope.loading) return;
+
+                   $scope.getFechaDesdeProveedor();
+               });
 
                //#endregion
 
-               //#region Documento               
+               //#region Documento
 
                $scope.onErrorFileCallBack = function (message) {
                    $scope.$apply(function () {
@@ -246,23 +295,22 @@
                $scope.onSuccessFileCallBack = function (file) {
                    $scope.$apply(function () {
                        $scope.resultModal.hasErrors = false;
-                       $scope.entity.documento = file.name;
+
+                       if ($scope.entity) {
+                           $scope.entity.documento = file.name;
+                       }
+
+                       if ($scope.tarifaProveedor) {
+                           $scope.tarifaProveedor.documento = file.name;
+                       }
+                       
                        $("#progressBar").width('0%');
                    });
                };
 
                $scope.uploadProgressCallBack = function (percent) {                   
                    $("#progressBar").width(percent + '%');
-               };
-
-               singleFileService.setUploader({
-                   returnDetailedFile: true,
-                   onError: $scope.onErrorFileCallBack,
-                   onSuccess: $scope.onSuccessFileCallBack,
-                   controlId: 'fileupload',
-                   urlFile: 'Tarifarios/UploadFile',
-                   uploadProgressCallBack: $scope.uploadProgressCallBack
-               });
+               };              
 
                //#endregion
 

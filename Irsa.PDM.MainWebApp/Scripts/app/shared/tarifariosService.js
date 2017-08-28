@@ -11,11 +11,25 @@
                            data: { vehiculolId: vehiculolId }
                        });
                    },
+                   getFechaDesdeProveedor: function (proveedorId) {
+                       return $http({
+                           method: 'POST',
+                           url: '/Tarifarios/getFechaDesdeProveedor',
+                           data: { proveedorId: proveedorId }
+                       });
+                   },
                    aprobar: function (tarifarioId) {
                        return $http({
                            method: 'POST',
                            url: '/Tarifarios/aprobar',
                            data: { tarifarioId: tarifarioId }
+                       });
+                   },
+                   createTarifariosProveedor: function (tarifarioProveedor) {
+                       return $http({
+                           method: 'POST',
+                           url: '/Tarifarios/createTarifariosProveedor',
+                           data: { tarifarioProveedor: tarifarioProveedor }
                        });
                    }
                }, baseService);

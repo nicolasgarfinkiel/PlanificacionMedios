@@ -75,6 +75,43 @@ namespace Irsa.PDM.MainWebApp.Controllers
         }
 
         [HttpPost]
+        public ActionResult GetFechaDesdeProveedor(int proveedorId)
+        {
+            var response = new Response<DateTime> { Result = new Result() { HasErrors = false, Messages = new List<string>() } };
+
+            try
+            {
+                response.Data = _admin.GetFechaDesdeProveedor(proveedorId);
+            }
+            catch (Exception ex)
+            {
+                response.Result.HasErrors = true;
+                response.Result.Messages.Add(ex.Message);
+            }
+
+            return this.JsonNet(response);
+        }
+
+         [HttpPost]
+        public ActionResult CreateTarifariosProveedor(TarifarioProveedor tarifarioProveedor)
+        {
+            var response = new Response<int> { Result = new Result() { HasErrors = false, Messages = new List<string>() } };
+
+            try
+            {
+                _admin.CreateTarifariosProveedor(tarifarioProveedor);
+            }
+            catch (Exception ex)
+            {
+                response.Result.HasErrors = true;
+                response.Result.Messages.Add(ex.Message);
+            }
+
+            return this.JsonNet(response);
+        }
+        
+
+        [HttpPost]
         public ActionResult Aprobar(int tarifarioId)
         {
             var response = new Response<int> { Result = new Result() { HasErrors = false, Messages = new List<string>() } };

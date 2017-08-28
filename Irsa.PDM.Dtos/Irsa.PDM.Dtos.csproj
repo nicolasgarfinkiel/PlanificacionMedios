@@ -58,6 +58,7 @@
     <Compile Include="Tarifa.cs" />
     <Compile Include="TarifaFcMediosUpdate.cs" />
     <Compile Include="TarifaFcMedios.cs" />
+    <Compile Include="TarifarioProveedor.cs" />
     <Compile Include="Tarifario.cs" />
     <Compile Include="TarifarioEdit.cs" />
     <Compile Include="Vehiculo.cs" />

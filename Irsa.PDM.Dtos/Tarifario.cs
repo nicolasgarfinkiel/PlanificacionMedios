@@ -12,5 +12,7 @@ namespace Irsa.PDM.Dtos
         public bool Editable { get; set; }
         public string NumeroProveedorSap { get; set; }
         public string Documento { get; set; }  
+        public double? Importe { get; set; }  
+        public string OrdenDeCompra { get; set; }          
     }
 }

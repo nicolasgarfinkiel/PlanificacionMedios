@@ -36,9 +36,9 @@ namespace Irsa.PDM.Admin
             PdmContext.SaveChanges();
             
             try
-            {
+            {             
+                InitTarifario(entity, dto.Importe, dto.OrdenDeCompra);
                 SaveFile(entity.Id);
-                InitTarifario(entity);
             }
             catch (Exception ex)
             {
@@ -251,6 +251,45 @@ namespace Irsa.PDM.Admin
             return lastTarifario == null ? DateTime.Now : lastTarifario.FechaHasta.AddDays(1);
         }
 
+        #region Proveedor
+
+        public DateTime GetFechaDesdeProveedor(int proveedorId)
+        {            
+            var proveedor = PdmContext.Proveedores.Single(e => e.Id == proveedorId);
+            var vehioculosId = proveedor.Vehiculos.Select(e => e.Id).ToList();
+            var lastTarifario = PdmContext.Tarifarios.Where(e => vehioculosId.Contains(e.Vehiculo.Id)  && e.Estado != EstadoTarifario.Eliminado).OrderByDescending(e => e.FechaHasta).FirstOrDefault();
+
+            return lastTarifario == null ? DateTime.Now : lastTarifario.FechaHasta.AddDays(1);
+        }
+
+        public void CreateTarifariosProveedor(TarifarioProveedor tarifarioProveedor)
+        {
+            if (tarifarioProveedor.FechaHasta <= tarifarioProveedor.FechaDesde)
+            {
+                throw new Exception("La fecha hasta debe ser mayor a la fecha desde");
+            }
+
+            tarifarioProveedor.Proveedor.Vehiculos.ForEach(e =>
+            {
+                var dto = new Dtos.Tarifario
+                {
+                    Documento = tarifarioProveedor.Documento,
+                    FechaDesde = tarifarioProveedor.FechaDesde,
+                    FechaHasta = tarifarioProveedor.FechaHasta,
+                    NumeroProveedorSap = tarifarioProveedor.Proveedor.NumeroProveedorSap,
+                    Vehiculo = e,
+                    Importe = tarifarioProveedor.Importe,
+                    OrdenDeCompra = tarifarioProveedor.Oc                    
+                };
+
+                Create(dto);                
+            });
+
+        }
+
+        #endregion
+
+
         #region Sync
 
         public void SyncTablasBasicas()
@@ -383,7 +422,7 @@ namespace Irsa.PDM.Admin
             PdmContext = new PDMContext();
         }
 
-        private void InitTarifario(Tarifario entity)
+        private void InitTarifario(Tarifario entity, double? importe = null, string oi = null)
         {            
             var tarifas = FCMediosclient.Get<IList<TarifaFcMedios>>(GetTarifasAction)
                           .Where(e => e.cod_vehiculo == entity.Vehiculo.Codigo).ToList();
@@ -408,7 +447,8 @@ namespace Irsa.PDM.Admin
                     Descripcion = t.espacio,
                     HoraDesde = t.hora_inicio,
                     HoraHasta = t.hora_fin,
-                    Importe = t.bruto,
+                    Importe = importe ?? t.bruto,
+                    OrdenDeCompra = oi,
                     ImporteOld = t.bruto,
                     Lunes = t.Lunes,
                     Martes = t.Martes,
@@ -547,7 +587,7 @@ namespace Irsa.PDM.Admin
 
       
         #endregion
-      
+        
     }
 }
 

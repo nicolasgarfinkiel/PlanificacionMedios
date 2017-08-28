@@ -10,14 +10,7 @@
                            url: '/Tarifas/SetValues',
                            data: {filter: filter, importe: importe, oc: oc}
                        });
-                   },
-                   setValuesByProveedor: function (tarifaProveedor) {
-                       return $http({
-                           method: 'POST',
-                           url: '/Tarifas/SetValuesByProveedor',
-                           data: { tarifaProveedor: tarifaProveedor }
-                       });
-                   }
+                   }                 
                }, baseService);
                result.controller = 'Tarifas';
 

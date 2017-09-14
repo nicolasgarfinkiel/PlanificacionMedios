@@ -600,8 +600,7 @@ namespace Irsa.PDM.Admin
             };
 
             var col = 8;
-            var days = (fechaHasta - fechaDesde).Days;
-            var bkColor = System.Drawing.ColorTranslator.FromHtml("#D9E1F2");
+            var days = (fechaHasta - fechaDesde).Days;           
 
             for (var i = 0; i <= days; i++)
             {
@@ -612,15 +611,9 @@ namespace Irsa.PDM.Admin
                 ws.Cells[12, col].Value = esDow[dow];
                 ws.Cells[13, col].Value = day;
 
-                ws.Cells[13, col].Style.Border.Top.Style = ExcelBorderStyle.Thin;
-                ws.Cells[13, col].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
-                ws.Cells[13, col].Style.Border.Left.Style = ExcelBorderStyle.Thin;
-                ws.Cells[13, col].Style.Border.Right.Style = ExcelBorderStyle.Thin;
-
-                ws.Cells[12, col].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                ws.Cells[12, col].Style.Fill.BackgroundColor.SetColor(bkColor);
-                ws.Cells[13, col].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                ws.Cells[13, col].Style.Fill.BackgroundColor.SetColor(bkColor);
+                ws.Cells[13, col].ApplyCellBorder();                
+                ws.Cells[12, col].ApplyCellBK();
+                ws.Cells[13, col].ApplyCellBK();                                
 
                 if (dow == DayOfWeek.Sunday)
                 {
@@ -631,26 +624,86 @@ namespace Irsa.PDM.Admin
 
             col++;
             ws.Column(col).Width = 12;
-            ws.Cells[13, col].Value = "Cantidades";
+            ws.Cells[13, col].Value = "Tot.Unit.";
+            ws.Cells[13, col].ApplyCellBorder();
+            ws.Cells[12, col].ApplyCellBK();
+            ws.Cells[13, col].ApplyCellBK();     
 
-            ws.Cells[13, col].Style.Border.Top.Style = ExcelBorderStyle.Thin;
-            ws.Cells[13, col].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
-            ws.Cells[13, col].Style.Border.Left.Style = ExcelBorderStyle.Thin;
-            ws.Cells[13, col].Style.Border.Right.Style = ExcelBorderStyle.Thin;
-            ws.Cells[12, col].Style.Fill.PatternType = ExcelFillStyle.Solid;
-            ws.Cells[12, col].Style.Fill.BackgroundColor.SetColor(bkColor);
-            ws.Cells[13, col].Style.Fill.PatternType = ExcelFillStyle.Solid;
-            ws.Cells[13, col].Style.Fill.BackgroundColor.SetColor(bkColor);
             col++;
             ws.Cells[13, col].Value = "Total";
-            ws.Cells[13, col].Style.Border.Top.Style = ExcelBorderStyle.Thin;
-            ws.Cells[13, col].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
-            ws.Cells[13, col].Style.Border.Left.Style = ExcelBorderStyle.Thin;
-            ws.Cells[13, col].Style.Border.Right.Style = ExcelBorderStyle.Thin;
-            ws.Cells[12, col].Style.Fill.PatternType = ExcelFillStyle.Solid;
-            ws.Cells[12, col].Style.Fill.BackgroundColor.SetColor(bkColor);
-            ws.Cells[13, col].Style.Fill.PatternType = ExcelFillStyle.Solid;
-            ws.Cells[13, col].Style.Fill.BackgroundColor.SetColor(bkColor);
+            ws.Cells[13, col].ApplyCellBorder();
+            ws.Cells[12, col].ApplyCellBK();
+            ws.Cells[13, col].ApplyCellBK();
+
+            col++;
+            ws.Cells[12, col].Value = "Descuentos";
+            ws.Cells[12, col, 12, col + 3].Merge = true;
+            ws.Cells[13, col].Value = "1";
+            ws.Cells[13, col].ApplyCellBorder();
+            ws.Cells[12, col].ApplyCellBK();
+            ws.Cells[13, col].ApplyCellBK();
+
+            col++;                        
+            ws.Cells[13, col].Value = "2";
+            ws.Cells[13, col].ApplyCellBorder();
+            ws.Cells[12, col].ApplyCellBK();
+            ws.Cells[13, col].ApplyCellBK();
+
+            col++;
+            ws.Cells[13, col].Value = "3";
+            ws.Cells[13, col].ApplyCellBorder();
+            ws.Cells[12, col].ApplyCellBK();
+            ws.Cells[13, col].ApplyCellBK();
+
+            col++;
+            ws.Cells[13, col].Value = "4";
+            ws.Cells[13, col].ApplyCellBorder();
+            ws.Cells[12, col].ApplyCellBK();
+            ws.Cells[13, col].ApplyCellBK();
+
+            col++;
+            ws.Column(col).Width = 14;
+            ws.Cells[13, col].Value = "Inversión Neta";
+            ws.Cells[13, col].ApplyCellBorder();
+            ws.Cells[12, col].ApplyCellBK();
+            ws.Cells[13, col].ApplyCellBK();
+
+            col++;
+            ws.Cells[13, col].Value = "RTG 1";
+            ws.Cells[13, col].ApplyCellBorder();
+            ws.Cells[12, col].ApplyCellBK();
+            ws.Cells[13, col].ApplyCellBK();
+
+            col++;
+            ws.Cells[13, col].Value = "RTG 2";
+            ws.Cells[13, col].ApplyCellBorder();
+            ws.Cells[12, col].ApplyCellBK();
+            ws.Cells[13, col].ApplyCellBK();
+
+            col++;
+            ws.Cells[13, col].Value = "RTG 3";
+            ws.Cells[13, col].ApplyCellBorder();
+            ws.Cells[12, col].ApplyCellBK();
+            ws.Cells[13, col].ApplyCellBK();
+
+            col++;
+            ws.Cells[13, col].Value = "CPR 1";
+            ws.Cells[13, col].ApplyCellBorder();
+            ws.Cells[12, col].ApplyCellBK();
+            ws.Cells[13, col].ApplyCellBK();
+
+            col++;
+            ws.Cells[13, col].Value = "CPR 2";
+            ws.Cells[13, col].ApplyCellBorder();
+            ws.Cells[12, col].ApplyCellBK();
+            ws.Cells[13, col].ApplyCellBK();
+
+            col++;
+            ws.Cells[13, col].Value = "CPR 3";
+            ws.Cells[13, col].ApplyCellBorder();
+            ws.Cells[12, col].ApplyCellBK();
+            ws.Cells[13, col].ApplyCellBK();
+
 
             #endregion
 
@@ -855,5 +908,27 @@ namespace Irsa.PDM.Admin
 
         #endregion
 
+    }
+
+
+    public static class ExcelHelper
+    {
+        public static void ApplyCellBorder(this ExcelRange range)
+        {           
+            range.Style.Border.Top.Style = ExcelBorderStyle.Thin;
+            range.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+            range.Style.Border.Left.Style = ExcelBorderStyle.Thin;
+            range.Style.Border.Right.Style = ExcelBorderStyle.Thin;            
+        }
+
+        public static void ApplyCellBK(this ExcelRange range)
+        {
+            var bkColor = System.Drawing.ColorTranslator.FromHtml("#D9E1F2");
+            
+            range.Style.Fill.PatternType = ExcelFillStyle.Solid;
+            range.Style.Fill.BackgroundColor.SetColor(bkColor);
+            range.Style.Fill.PatternType = ExcelFillStyle.Solid;
+            range.Style.Fill.BackgroundColor.SetColor(bkColor);
+        }
     }
 }

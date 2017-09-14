@@ -8,6 +8,7 @@ namespace Irsa.PDM.Entities
         public string CodigoAviso { get; set; }
         public virtual Pauta Pauta { get; set; }
         public virtual Tarifa Tarifa { get; set; }
+        public int ProveedorCodigo { get; set; }
         public string Proveedor { get; set; }
         public string Producto { get; set; }
         public DateTime? FechaAviso { get; set; }
@@ -20,6 +21,13 @@ namespace Irsa.PDM.Entities
         public double Descuento3 { get; set; }
         public double Descuento4 { get; set; }
         public double Descuento5 { get; set; }
+        public double Rtg1 { get; set; }
+        public double Rtg2 { get; set; }
+        public double Rtg3 { get; set; }
+        public double Cpr1 { get; set; }
+        public double Cpr2 { get; set; }
+        public double Cpr3 { get; set; }
+
         public bool DiferenciaEnMontoTarifas { get; set; }
 
         public double CostoTotal

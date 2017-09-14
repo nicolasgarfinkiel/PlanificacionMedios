@@ -30,5 +30,12 @@ namespace Irsa.PDM.Dtos
         public double descuento_3 { get; set; }
         public double descuento_4 { get; set; }
         public double descuento_5 { get; set; }
+
+        public double rtg_1 { get; set; }
+        public double rtg_2 { get; set; }
+        public double rtg_3 { get; set; }
+        public double cpr_1 { get; set; }
+        public double cpr_2 { get; set; }
+        public double cpr_3 { get; set; }
     }
 }

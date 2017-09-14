@@ -179,8 +179,17 @@ namespace Irsa.PDM.Admin
                             item.Descuento3 = itemWs.descuento_3;
                             item.Descuento4 = itemWs.descuento_4;
                             item.Descuento5 = itemWs.descuento_5;
+
+                            item.Rtg1 = itemWs.rtg_1;
+                            item.Rtg2 = itemWs.rtg_2;
+                            item.Rtg3 = itemWs.rtg_3;
+                            item.Cpr1 = itemWs.cpr_1;
+                            item.Cpr2 = itemWs.cpr_2;
+                            item.Cpr3 = itemWs.cpr_3;
+
                             item.Tema = itemWs.des_tema;
                             item.Proveedor = itemWs.des_proveedor;
+                            item.ProveedorCodigo = itemWs.cod_proveedor;
                             item.DuracionTema = itemWs.duracion_tema;
                             item.Producto = itemWs.des_producto;
                             item.Espacio = itemWs.espacio;

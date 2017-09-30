@@ -57,7 +57,11 @@
                        return;
                    }
 
-                   campaniasService.changeEstadoCampania($scope.entity.id, estado, $scope.motivo).then(function (response) {
+                   if (estado == 'Aprobada' && !$scope.isValidAprobacion()) {                       
+                       return;
+                   }
+
+                   campaniasService.changeEstadoCampania($scope.entity, estado, $scope.motivo).then(function (response) {
                        $scope.resultModal = $scope.result = response.data.result;
 
                        if ($scope.resultModal.hasErrors) return;
@@ -71,7 +75,38 @@
                        $scope.entity.pautas = angular.copy($scope.entity.pautas);
                        $scope.motivo = null;
                        $('#rechazoModal').modal('hide');
+                       $('#aprobacionModal').modal('hide');
                    }, function () { throw 'Error on changeEstadoCampania'; });
+               };
+
+
+               $scope.confirmAprobacion = function () {
+                   $scope.resultModal = { hasErrors: false, messages: [] };
+
+                   $scope.campania = $scope.entity;
+                   $scope.campania.idSapDistribucion = null;
+                   $scope.campania.centro = null;
+                   $scope.campania.almacen = null;
+                   $scope.campania.orden = null;
+                   $scope.campania.centroDestino = null;
+                   $scope.campania.almacenDestino = null;
+
+                   $('#aprobacionModal').modal('show');
+               };
+
+               $scope.isValidAprobacion = function () {
+                   $scope.resultModal = { hasErrors: false, messages: [] };
+
+                   if (!$scope.campania.centro) {
+                       $scope.resultModal.messages.push('Ingrese el id centro');
+                   }
+
+                   if (!$scope.campania.almacen) {
+                       $scope.resultModal.messages.push('Ingrese el id almacen');
+                   }
+
+                   $scope.resultModal.hasErrors = $scope.resultModal.messages.length;
+                   return !$scope.resultModal.hasErrors;
                };
 
                $scope.changeEstadoPauta = function (pauta, estado) {

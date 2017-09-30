@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using AutoMapper;
 using Irsa.PDM.Dtos;
 using Irsa.PDM.Dtos.Filters;
@@ -10,7 +9,6 @@ using Irsa.PDM.Entities;
 using Irsa.PDM.Repositories;
 using Newtonsoft.Json;
 using ServiceStack.Common.Extensions;
-using ServiceStack.ServiceClient.Web;
 using Tarifario = Irsa.PDM.Entities.Tarifario;
 
 namespace Irsa.PDM.Admin
@@ -118,6 +116,7 @@ namespace Irsa.PDM.Admin
         {
             var entity = default(Tarifario);
             var vehiculo = PdmContext.Vehiculos.Single(e => e.Id == dto.Vehiculo.Id);
+            var tipoOeracion = (TipoOperacion) Enum.Parse(typeof (TipoOperacion), dto.TipoOperacion);
 
             if (!dto.Id.HasValue)
             {
@@ -131,7 +130,8 @@ namespace Irsa.PDM.Admin
                     FechaHasta = dto.FechaHasta,
                     Vehiculo = vehiculo,
                     NumeroProveedorSap = dto.NumeroProveedorSap,
-                    Documento = dto.Documento
+                    Documento = dto.Documento,
+                    TipoOperacion = tipoOeracion
                 };
             }
             else
@@ -145,6 +145,7 @@ namespace Irsa.PDM.Admin
                 entity.Vehiculo = vehiculo;
                 entity.NumeroProveedorSap = dto.NumeroProveedorSap;
                 entity.Documento = dto.Documento;
+                entity.TipoOperacion = tipoOeracion;
             }
 
             return entity;
@@ -279,7 +280,8 @@ namespace Irsa.PDM.Admin
                     NumeroProveedorSap = tarifarioProveedor.Proveedor.NumeroProveedorSap,
                     Vehiculo = e,
                     Importe = tarifarioProveedor.Importe,
-                    OrdenDeCompra = tarifarioProveedor.Oc                    
+                    OrdenDeCompra = tarifarioProveedor.Oc,
+                    TipoOperacion = tarifarioProveedor.TipoOperacion
                 };
 
                 Create(dto);                
@@ -288,7 +290,6 @@ namespace Irsa.PDM.Admin
         }
 
         #endregion
-
 
         #region Sync
 

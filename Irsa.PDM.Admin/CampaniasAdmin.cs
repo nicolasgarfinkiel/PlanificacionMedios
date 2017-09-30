@@ -479,14 +479,21 @@ namespace Irsa.PDM.Admin
             };
         }
 
-        public void ChangeEstadoCampania(int id, string est, string motivo)
+        public void ChangeEstadoCampania(Dtos.Campania campaniaDto, string est, string motivo)
         {
             var campania = default(Entities.Campania);
 
             try
             {
-                campania = PdmContext.Campanias.Single(e => e.Id == id);
+                campania = PdmContext.Campanias.Single(e => e.Id == campaniaDto.Id);
                 var estado = (EstadoCampania)Enum.Parse(typeof(EstadoCampania), est);
+
+                campania.Centro = campaniaDto.Centro;
+                campania.Almacen = campaniaDto.Almacen;
+                campania.Orden = campaniaDto.Orden;
+                campania.CentroDestino = campaniaDto.CentroDestino;
+                campania.AlmacenDestino = campaniaDto.AlmacenDestino;
+                campania.IdSapDistribucion = campaniaDto.IdSapDistribucion;       
 
                 campania.UpdateDate = DateTime.Now;
                 campania.UpdatedBy = UsuarioLogged;
@@ -917,6 +924,33 @@ namespace Irsa.PDM.Admin
 
         #endregion
 
+
+        public IList<object> GetDistribucionList()
+        {
+            return  new List<object>
+            {
+                new {IdSap = 1, Nombre = "AEROLINEAS"},
+                new {IdSap = 2, Nombre = "AHORA12"},
+                new {IdSap = 3, Nombre = "AMEX"},
+                new {IdSap = 4, Nombre = "CITI"},
+                new {IdSap = 5, Nombre = "CIUDAD"},
+                new {IdSap = 6, Nombre = "COMAFI"},
+                new {IdSap = 7, Nombre = "CREDICOOP"},
+                new {IdSap = 8, Nombre = "DINERS"},
+                new {IdSap = 9, Nombre = "GALICIA"},
+                new {IdSap = 10, Nombre = "HIPOTECARIO"},
+                new {IdSap = 11, Nombre = "ICBC"},
+                new {IdSap = 12, Nombre = "MACRO"},
+                new {IdSap = 13, Nombre = "MASTERCARD"},
+                new {IdSap = 14, Nombre = "NACIÓN"},
+                new {IdSap = 15, Nombre = "NARANJA"},
+                new {IdSap = 16, Nombre = "PATAGONIA"},
+                new {IdSap = 17, Nombre = "PROVINCIA"},
+                new {IdSap = 18, Nombre = "SANTANDER"},
+                new {IdSap = 19, Nombre = "SUPERVIELLE"},
+                new {IdSap = 20, Nombre = "TARSHOP"},
+            };
+        }
     }
 
 

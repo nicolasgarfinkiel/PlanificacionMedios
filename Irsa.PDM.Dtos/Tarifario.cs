@@ -13,6 +13,7 @@ namespace Irsa.PDM.Dtos
         public string NumeroProveedorSap { get; set; }
         public string Documento { get; set; }  
         public double? Importe { get; set; }  
-        public string OrdenDeCompra { get; set; }          
+        public string OrdenDeCompra { get; set; }
+        public string TipoOperacion { get; set; }
     }
 }

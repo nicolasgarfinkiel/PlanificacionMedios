@@ -52,6 +52,7 @@
     <Compile Include="EstadoTarifario.cs" />
     <Compile Include="Campania.cs" />
     <Compile Include="Tarifario.cs" />
+    <Compile Include="TipoOperacion.cs" />
     <Compile Include="Vehiculo.cs" />
     <Compile Include="Plaza.cs" />
     <Compile Include="Medio.cs" />

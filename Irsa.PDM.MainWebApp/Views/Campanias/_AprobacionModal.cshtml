@@ -1,0 +1,63 @@
+﻿<div class="modal fade pdm" id="aprobacionModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="color-line"></div>
+            <div class="modal-header">
+                <h4 class="modal-title">Aprobación de campaña nro. {{campania.id}}</h4>
+            </div>
+            <div class="modal-body">
+
+                <form class="form-horizontal ng-pristine ng-valid">
+                    <div class="form-group">
+                        <label class="col-lg-4 control-label">Distribución</label>
+                        <div class="col-lg-8">                            
+                                <select class="form-control" ng-model="campania.idSapDistribucion" ng-options="distribucion.idSap as distribucion.nombre  for distribucion in data.distribucionList">
+                                    <option value=""></option>
+                                </select>                            
+                        </div>
+                    </div>                
+                    <div class="form-group">
+                        <label class="col-lg-4 control-label">Centro</label>
+                        <div class="col-lg-8">                            
+                                <input type="text" class="form-control" ng-model="campania.centro" int>                            
+                        </div>
+                    </div>  
+                    <div class="form-group">
+                        <label class="col-lg-4 control-label">Almacen</label>
+                        <div class="col-lg-8">                            
+                                <input type="text" class="form-control" ng-model="campania.almacen" int>                            
+                        </div>
+                    </div>  
+                    <div class="form-group">
+                        <label class="col-lg-4 control-label">Orden</label>
+                        <div class="col-lg-8">                            
+                                <input type="text" class="form-control" ng-model="campania.orden" int>                            
+                        </div>
+                    </div>  
+                    <div class="form-group">
+                        <label class="col-lg-4 control-label">Centro destino</label>
+                        <div class="col-lg-8">                            
+                                <input type="text" class="form-control" ng-model="campania.centroDestino" int>                            
+                        </div>
+                    </div>  
+                    <div class="form-group">
+                        <label class="col-lg-4 control-label">Almacen destino</label>
+                        <div class="col-lg-8">                            
+                                <input type="text" class="form-control" ng-model="campania.almacenDestino" int>                            
+                        </div>
+                    </div>                                       
+                                   
+                </form>
+
+                <div class="alert alert-danger" ng-if="resultModal.hasErrors">
+                    <i class="fa fa-bolt"></i>
+                    <div ng-repeat="message in resultModal.messages">{{message}}</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" ng-click="changeEstadoCampania()">Aceptar</button>
+            </div>
+        </div>
+    </div>
+</div>

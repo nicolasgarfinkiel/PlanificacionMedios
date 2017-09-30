@@ -9,6 +9,7 @@ namespace Irsa.PDM.Dtos
         public DateTime FechaHasta { get; set; }
         public double Importe { get; set; }
         public string Oc { get; set; }
-        public string Documento { get; set; }  
+        public string Documento { get; set; }
+        public string TipoOperacion { get; set; }
     }
 }

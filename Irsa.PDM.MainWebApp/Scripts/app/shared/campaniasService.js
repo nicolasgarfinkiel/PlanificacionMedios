@@ -11,11 +11,11 @@
                            data: { pautaId: pautaId, estado: estado, motivo: motivo }
                        });
                    },
-                   changeEstadoCampania: function (id, estado, motivo) {
+                   changeEstadoCampania: function (campania, estado, motivo) {
                        return $http({
                            method: 'POST',
                            url: '/Campanias/ChangeEstadoCampania',
-                           data: { id: id, estado: estado, motivo: motivo }
+                           data: { campania: campania, estado: estado, motivo: motivo }
                        });
                    },
                    getItemsByFilter: function (filter) {

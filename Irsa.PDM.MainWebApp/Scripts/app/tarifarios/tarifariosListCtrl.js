@@ -161,6 +161,10 @@
                        $scope.resultModal.messages.push('Seleccione un vehículo');
                    }
 
+                   if (!$scope.entity.tipoOperacion) {
+                       $scope.resultModal.messages.push('Seleccione el tipo de operación');
+                   }
+
                    if (!$scope.entity.fechaDesde) {
                        $scope.resultModal.messages.push('Error al completar la fecha desde');
                    }
@@ -169,8 +173,9 @@
                        $scope.resultModal.messages.push('Ingrese la fecha hasta');
                    }
 
+
                    if (!$scope.entity.numeroProveedorSap) {
-                       $scope.resultModal.messages.push('Ingrese el número de proveedor SAP');
+                       $scope.resultModal.messages.push('Ingrese el número de medio SAP');
                    }
 
                    $scope.resultModal.hasErrors = $scope.resultModal.messages.length;
@@ -253,6 +258,10 @@
 
                    if (!$scope.tarifaProveedor.proveedor) {
                        $scope.resultModal.messages.push('Seleccione un proveedor');
+                   }
+
+                   if (!$scope.tarifaProveedor.tipoOperacion) {
+                       $scope.resultModal.messages.push('Seleccione el tipo de operación');
                    }
 
                    if (!$scope.tarifaProveedor.fechaDesde) {

@@ -6,7 +6,7 @@
         </h5>
         <small>Fecha creacion: {{entity.createDate}}. Estado: {{entity.estado}}</small>
         <span style="float: right; position: relative; top: -3px;">
-            <button class="btn btn-primary btn-xs" ng-show="entity.estado == 'Pendiente'" ng-click="changeEstadoCampania('Aprobada')">Aprobar</button>
+            <button class="btn btn-primary btn-xs" ng-show="entity.estado == 'Pendiente'" ng-click="confirmAprobacion()">Aprobar</button>
             <button class="btn btn-danger btn-xs" ng-show="entity.estado == 'Pendiente' || entity.estado == 'InconsistenciasEnPautas' " ng-click="confirmRechazoCampania()">Rechazar</button>
         </span>      
     </div>
@@ -146,7 +146,6 @@
     </div>
 </div>
 
-
 <div class="modal fade pdm" id="rechazoModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-sm" style="width: 500px;">
         <div class="modal-content">
@@ -251,5 +250,7 @@
         </div>
     </div>
 </div>
+
+@RenderPage(Url.Content("~/Views/Campanias/_AprobacionModal.cshtml"))
 
 

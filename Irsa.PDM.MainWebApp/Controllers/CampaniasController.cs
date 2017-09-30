@@ -33,14 +33,16 @@ namespace Irsa.PDM.MainWebApp.Controllers
 
             return new
             {               
-                Estados = _admin.GetEstadosCampania()
+                Estados = _admin.GetEstadosCampania(),
+                DistribucionList = _admin.GetDistribucionList()
             };
         }
 
         public override object GetDataEdit()
         {
             return new
-            {                
+            {
+                DistribucionList = _admin.GetDistribucionList()
             };
         }
 
@@ -99,13 +101,13 @@ namespace Irsa.PDM.MainWebApp.Controllers
         }     
 
         [HttpPost]
-        public ActionResult ChangeEstadoCampania(int id, string estado, string motivo)
+        public ActionResult ChangeEstadoCampania(Campania campania, string estado, string motivo)
         {
             var response = new Response<string> { Result = new Result() { HasErrors = false, Messages = new List<string>() } };
 
             try
             {
-                _admin.ChangeEstadoCampania(id, estado, motivo);
+                _admin.ChangeEstadoCampania(campania, estado, motivo);
             }
             catch (Exception ex)
             {

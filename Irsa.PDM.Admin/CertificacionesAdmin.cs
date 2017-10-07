@@ -71,7 +71,7 @@ namespace Irsa.PDM.Admin
             {                
                 var pautas = PdmContext.Pautas.Where(e => e.Estado == EstadoPauta.Aprobada ).Select(e => new {nro_pauta_aprobada = e.Codigo}).ToList();
                
-                var certificaciones = FCMediosclient.Post<IList<CertificacionFcMedios>>(GetCertificaciones, pautas).ToList();
+                var certificaciones = FCMediosClient.Post<IList<CertificacionFcMedios>>(GetCertificaciones, pautas).ToList();
                 var campaniasCodigos = certificaciones.Select(e => e.cod_campania).Distinct().ToList();            
                 var campanias = PdmContext.Campanias.Where(e => campaniasCodigos.Contains(e.Codigo)).ToList();
 

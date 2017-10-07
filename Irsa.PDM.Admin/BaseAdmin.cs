@@ -17,13 +17,13 @@ namespace Irsa.PDM.Admin
         public static string FcMediosTarifarioUrl = ConfigurationManager.AppSettings["fcMediosTarifarioUrl"];
         public  PDMContext PdmContext;
         public string UsuarioLogged { get; set; }
-        public JsonServiceClient FCMediosclient;
+        public JsonServiceClient FCMediosClient;
         
 
         public BaseAdmin()
         {          
             PdmContext = new PDMContext();
-            FCMediosclient = new JsonServiceClient(FcMediosTarifarioUrl);
+            FCMediosClient = new JsonServiceClient(FcMediosTarifarioUrl);
             //FCMediosclient.Credentials = NetWorkCredential;
             //FCMediosclient.Proxy = WebProxy;
 

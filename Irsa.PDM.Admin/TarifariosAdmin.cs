@@ -313,7 +313,7 @@ namespace Irsa.PDM.Admin
 
             serviceSync.LastBaseTablesSync = DateTime.Now;
             
-            var tarifas = FCMediosclient.Get<IList<TarifaFcMedios>>(GetTarifasAction);
+            var tarifas = FCMediosClient.Get<IList<TarifaFcMedios>>(GetTarifasAction);
 
             #region Base
 
@@ -425,7 +425,7 @@ namespace Irsa.PDM.Admin
 
         private void InitTarifario(Tarifario entity, double? importe = null, string oi = null)
         {            
-            var tarifas = FCMediosclient.Get<IList<TarifaFcMedios>>(GetTarifasAction)
+            var tarifas = FCMediosClient.Get<IList<TarifaFcMedios>>(GetTarifasAction)
                           .Where(e => e.cod_vehiculo == entity.Vehiculo.Codigo).ToList();
 
             var actualMedios = PdmContext.Medios.ToList();

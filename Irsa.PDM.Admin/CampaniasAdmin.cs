@@ -83,7 +83,7 @@ namespace Irsa.PDM.Admin
 
             try
             {               
-                var pautas = FCMediosclient.Get<IList<PautaFcMedios>>(GetPautas).ToList(); //GetPautasMock();  
+                var pautas = FCMediosClient.Get<IList<PautaFcMedios>>(GetPautas).ToList(); //GetPautasMock();  
                 SyncTablasBasicas(pautas);
 
                 var actualMedios = PdmContext.Medios.ToList();

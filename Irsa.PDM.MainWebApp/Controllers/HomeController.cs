@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Web.Mvc;
+using Cresud.CDP.Admin.ServicesAdmin;
 using Irsa.PDM.Admin;
 using Irsa.PDM.Dtos;
 using Irsa.PDM.Dtos.Common;
@@ -30,6 +31,8 @@ namespace Irsa.PDM.MainWebApp.Controllers
                 CampaniasPendientesAprobacion = _campaniasAdmin.GetByFilter(new FilterCampanias { CurrentPage = 1, PageSize = 6, Estado = "Pendiente" }).Data,
                 UltimasCertificaciones = _certificacionesAdmin.GetByFilter(new FilterBase{CurrentPage = 1, PageSize = 6}).Data,
             };
+
+            new SapAdmin().Test();
 
             return View(model);
         }

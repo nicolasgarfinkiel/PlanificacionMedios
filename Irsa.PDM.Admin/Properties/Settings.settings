@@ -1,0 +1,9 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Irsa.PDM.Admin.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="Irsa_PDM_Admin_SI_PDM_Consumos_In_Request_SI_PDM_Consumos_In_RequestService" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">http://srv-pi01-adm:50000/XISOAPAdapter/MessageServlet?channel=:PDM_D:CC_PDM_Consumos_SOAP_Sender</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

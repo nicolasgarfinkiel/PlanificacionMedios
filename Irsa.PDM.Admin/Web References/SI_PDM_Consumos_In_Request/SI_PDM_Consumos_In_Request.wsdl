@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:p1="http://irsa.com/pi/pdm/consumos" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" name="SI_PDM_Consumos_In_Request" targetNamespace="http://irsa.com/pi/pdm/consumos" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:documentation />
+  <wsp:UsingPolicy wsdl:required="true" />
+  <wsp:Policy wsu:Id="OP_SI_PDM_Consumos_In_Request" />
+  <wsdl:types>
+    <xsd:schema xmlns="http://irsa.com/pi/pdm/consumos" targetNamespace="http://irsa.com/pi/pdm/consumos" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+      <xsd:element name="MT_PDM_Consumos_In_Request" type="p1:DT_PDM_Consumos_In_Request" />
+      <xsd:complexType name="DT_PDM_Consumos_In_Request">
+        <xsd:annotation>
+          <xsd:appinfo source="http://sap.com/xi/VersionID">03df9fda9fc411e790ee00000067f002</xsd:appinfo>
+        </xsd:annotation>
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="ZMMIM_CONMED_F001">
+            <xsd:annotation>
+              <xsd:appinfo source="http://sap.com/xi/TextID">5251dbe09d7b11e7b2cf480fcf30740e</xsd:appinfo>
+            </xsd:annotation>
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element minOccurs="0" maxOccurs="unbounded" name="item">
+                  <xsd:annotation>
+                    <xsd:appinfo source="http://sap.com/xi/TextID">5251dbdf9d7b11e7abf7480fcf30740e</xsd:appinfo>
+                  </xsd:annotation>
+                  <xsd:complexType>
+                    <xsd:sequence>
+                      <xsd:element name="idConsume" type="xsd:string">
+                        <xsd:annotation>
+                          <xsd:appinfo source="http://sap.com/xi/TextID">5251dbd89d7b11e7c60b480fcf30740e</xsd:appinfo>
+                        </xsd:annotation>
+                      </xsd:element>
+                      <xsd:element name="bank" type="xsd:string">
+                        <xsd:annotation>
+                          <xsd:appinfo source="http://sap.com/xi/TextID">5251dbd99d7b11e7afbb480fcf30740e</xsd:appinfo>
+                        </xsd:annotation>
+                      </xsd:element>
+                      <xsd:element name="materialNumber" type="xsd:string">
+                        <xsd:annotation>
+                          <xsd:appinfo source="http://sap.com/xi/TextID">5251dbda9d7b11e7c4bd480fcf30740e</xsd:appinfo>
+                        </xsd:annotation>
+                      </xsd:element>
+                      <xsd:element name="quantity" type="xsd:string">
+                        <xsd:annotation>
+                          <xsd:appinfo source="http://sap.com/xi/TextID">5251dbdb9d7b11e7a64d480fcf30740e</xsd:appinfo>
+                        </xsd:annotation>
+                      </xsd:element>
+                      <xsd:element name="plant" type="xsd:string">
+                        <xsd:annotation>
+                          <xsd:appinfo source="http://sap.com/xi/TextID">5251dbdc9d7b11e7860a480fcf30740e</xsd:appinfo>
+                        </xsd:annotation>
+                      </xsd:element>
+                      <xsd:element name="storageLocation" type="xsd:string">
+                        <xsd:annotation>
+                          <xsd:appinfo source="http://sap.com/xi/TextID">5251dbdd9d7b11e7bfc4480fcf30740e</xsd:appinfo>
+                        </xsd:annotation>
+                      </xsd:element>
+                      <xsd:element minOccurs="0" name="documentHeaderText" type="xsd:string">
+                        <xsd:annotation>
+                          <xsd:appinfo source="http://sap.com/xi/TextID">5251dbde9d7b11e79ad7480fcf30740e</xsd:appinfo>
+                        </xsd:annotation>
+                      </xsd:element>
+                    </xsd:sequence>
+                  </xsd:complexType>
+                </xsd:element>
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="ZMMIM_CONMED_F002">
+            <xsd:annotation>
+              <xsd:appinfo source="http://sap.com/xi/TextID">5251dbea9d7b11e7b164480fcf30740e</xsd:appinfo>
+            </xsd:annotation>
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element minOccurs="0" maxOccurs="unbounded" name="item">
+                  <xsd:annotation>
+                    <xsd:appinfo source="http://sap.com/xi/TextID">5251dbe99d7b11e7c236480fcf30740e</xsd:appinfo>
+                  </xsd:annotation>
+                  <xsd:complexType>
+                    <xsd:sequence>
+                      <xsd:element name="idConsume" type="xsd:string">
+                        <xsd:annotation>
+                          <xsd:appinfo source="http://sap.com/xi/TextID">5251dbe19d7b11e78892480fcf30740e</xsd:appinfo>
+                        </xsd:annotation>
+                      </xsd:element>
+                      <xsd:element minOccurs="0" name="bank" type="xsd:string">
+                        <xsd:annotation>
+                          <xsd:appinfo source="http://sap.com/xi/TextID">5251dbe29d7b11e79f82480fcf30740e</xsd:appinfo>
+                        </xsd:annotation>
+                      </xsd:element>
+                      <xsd:element name="materialNumber" type="xsd:string">
+                        <xsd:annotation>
+                          <xsd:appinfo source="http://sap.com/xi/TextID">5251dbe39d7b11e7bb66480fcf30740e</xsd:appinfo>
+                        </xsd:annotation>
+                      </xsd:element>
+                      <xsd:element name="quantity" type="xsd:string">
+                        <xsd:annotation>
+                          <xsd:appinfo source="http://sap.com/xi/TextID">5251dbe49d7b11e78e66480fcf30740e</xsd:appinfo>
+                        </xsd:annotation>
+                      </xsd:element>
+                      <xsd:element name="plant" type="xsd:string">
+                        <xsd:annotation>
+                          <xsd:appinfo source="http://sap.com/xi/TextID">5251dbe59d7b11e7a5d4480fcf30740e</xsd:appinfo>
+                        </xsd:annotation>
+                      </xsd:element>
+                      <xsd:element name="storageLocation" type="xsd:string">
+                        <xsd:annotation>
+                          <xsd:appinfo source="http://sap.com/xi/TextID">5251dbe69d7b11e7b598480fcf30740e</xsd:appinfo>
+                        </xsd:annotation>
+                      </xsd:element>
+                      <xsd:element minOccurs="0" name="documentHeaderText" type="xsd:string">
+                        <xsd:annotation>
+                          <xsd:appinfo source="http://sap.com/xi/TextID">5251dbe79d7b11e7c90f480fcf30740e</xsd:appinfo>
+                        </xsd:annotation>
+                      </xsd:element>
+                      <xsd:element name="orderNumber" type="xsd:string">
+                        <xsd:annotation>
+                          <xsd:appinfo source="http://sap.com/xi/TextID">5251dbe89d7b11e7c84b480fcf30740e</xsd:appinfo>
+                        </xsd:annotation>
+                      </xsd:element>
+                    </xsd:sequence>
+                  </xsd:complexType>
+                </xsd:element>
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="ZMMIM_CONMED_F003">
+            <xsd:annotation>
+              <xsd:appinfo source="http://sap.com/xi/TextID">5251dbeb9d7b11e7b7fa480fcf30740e</xsd:appinfo>
+            </xsd:annotation>
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element minOccurs="0" maxOccurs="unbounded" name="item">
+                  <xsd:annotation>
+                    <xsd:appinfo source="http://sap.com/xi/TextID">66ed7dd99d7b11e7c678480fcf30740e</xsd:appinfo>
+                  </xsd:annotation>
+                  <xsd:complexType>
+                    <xsd:sequence>
+                      <xsd:element name="idConsume" type="xsd:string">
+                        <xsd:annotation>
+                          <xsd:appinfo source="http://sap.com/xi/TextID">66ed7dcc9d7b11e7cf12480fcf30740e</xsd:appinfo>
+                        </xsd:annotation>
+                      </xsd:element>
+                      <xsd:element minOccurs="0" name="bank" type="xsd:string">
+                        <xsd:annotation>
+                          <xsd:appinfo source="http://sap.com/xi/TextID">66ed7dcd9d7b11e78468480fcf30740e</xsd:appinfo>
+                        </xsd:annotation>
+                      </xsd:element>
+                      <xsd:element name="materialNumber" type="xsd:string">
+                        <xsd:annotation>
+                          <xsd:appinfo source="http://sap.com/xi/TextID">66ed7dce9d7b11e7afb3480fcf30740e</xsd:appinfo>
+                        </xsd:annotation>
+                      </xsd:element>
+                      <xsd:element name="quantity" type="xsd:string">
+                        <xsd:annotation>
+                          <xsd:appinfo source="http://sap.com/xi/TextID">66ed7dcf9d7b11e79a5c480fcf30740e</xsd:appinfo>
+                        </xsd:annotation>
+                      </xsd:element>
+                      <xsd:element name="plant_O" type="xsd:string">
+                        <xsd:annotation>
+                          <xsd:appinfo source="http://sap.com/xi/TextID">66ed7dd09d7b11e7c539480fcf30740e</xsd:appinfo>
+                        </xsd:annotation>
+                      </xsd:element>
+                      <xsd:element name="purchasingGroup" type="xsd:string">
+                        <xsd:annotation>
+                          <xsd:appinfo source="http://sap.com/xi/TextID">66ed7dd19d7b11e7c846480fcf30740e</xsd:appinfo>
+                        </xsd:annotation>
+                      </xsd:element>
+                      <xsd:element name="purchasingDocumentType" type="xsd:string">
+                        <xsd:annotation>
+                          <xsd:appinfo source="http://sap.com/xi/TextID">66ed7dd29d7b11e7811c480fcf30740e</xsd:appinfo>
+                        </xsd:annotation>
+                      </xsd:element>
+                      <xsd:element name="purchasingOrganization" type="xsd:string">
+                        <xsd:annotation>
+                          <xsd:appinfo source="http://sap.com/xi/TextID">66ed7dd39d7b11e7bcd2480fcf30740e</xsd:appinfo>
+                        </xsd:annotation>
+                      </xsd:element>
+                      <xsd:element name="storageLocation_O" type="xsd:string">
+                        <xsd:annotation>
+                          <xsd:appinfo source="http://sap.com/xi/TextID">66ed7dd49d7b11e7871d480fcf30740e</xsd:appinfo>
+                        </xsd:annotation>
+                      </xsd:element>
+                      <xsd:element minOccurs="0" name="documentHeaderText" type="xsd:string">
+                        <xsd:annotation>
+                          <xsd:appinfo source="http://sap.com/xi/TextID">66ed7dd59d7b11e7a965480fcf30740e</xsd:appinfo>
+                        </xsd:annotation>
+                      </xsd:element>
+                      <xsd:element name="orderNumber" type="xsd:string">
+                        <xsd:annotation>
+                          <xsd:appinfo source="http://sap.com/xi/TextID">66ed7dd69d7b11e7819b480fcf30740e</xsd:appinfo>
+                        </xsd:annotation>
+                      </xsd:element>
+                      <xsd:element name="plant_D" type="xsd:string">
+                        <xsd:annotation>
+                          <xsd:appinfo source="http://sap.com/xi/TextID">66ed7dd79d7b11e7802e480fcf30740e</xsd:appinfo>
+                        </xsd:annotation>
+                      </xsd:element>
+                      <xsd:element name="storageLocation_D" type="xsd:string">
+                        <xsd:annotation>
+                          <xsd:appinfo source="http://sap.com/xi/TextID">66ed7dd89d7b11e7ac6e480fcf30740e</xsd:appinfo>
+                        </xsd:annotation>
+                      </xsd:element>
+                    </xsd:sequence>
+                  </xsd:complexType>
+                </xsd:element>
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="MT_PDM_Consumos_In_Request">
+    <wsdl:documentation />
+    <wsdl:part name="MT_PDM_Consumos_In_Request" element="p1:MT_PDM_Consumos_In_Request" />
+  </wsdl:message>
+  <wsdl:portType name="SI_PDM_Consumos_In_Request">
+    <wsdl:documentation />
+    <wsdl:operation name="SI_PDM_Consumos_In_Request">
+      <wsdl:documentation />
+      <wsp:Policy>
+        <wsp:PolicyReference URI="#OP_SI_PDM_Consumos_In_Request" />
+      </wsp:Policy>
+      <wsdl:input message="p1:MT_PDM_Consumos_In_Request" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="SI_PDM_Consumos_In_RequestBinding" type="p1:SI_PDM_Consumos_In_Request">
+    <binding transport="http://schemas.xmlsoap.org/soap/http" xmlns="http://schemas.xmlsoap.org/wsdl/soap/" />
+    <wsdl:operation name="SI_PDM_Consumos_In_Request">
+      <operation soapAction="http://sap.com/xi/WebService/soap1.1" xmlns="http://schemas.xmlsoap.org/wsdl/soap/" />
+      <wsdl:input>
+        <body use="literal" xmlns="http://schemas.xmlsoap.org/wsdl/soap/" />
+      </wsdl:input>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="SI_PDM_Consumos_In_RequestService">
+    <wsdl:port name="SI_PDM_Consumos_In_RequestPort" binding="p1:SI_PDM_Consumos_In_RequestBinding">
+      <address location="http://srv-pi01-adm:50000/XISOAPAdapter/MessageServlet?channel=:PDM_D:CC_PDM_Consumos_SOAP_Sender" xmlns="http://schemas.xmlsoap.org/wsdl/soap/" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

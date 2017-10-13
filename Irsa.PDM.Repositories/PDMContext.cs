@@ -16,8 +16,7 @@ namespace Irsa.PDM.Repositories
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
-            
+            modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();            
         }
 
         public IDbSet<Medio> Medios { get; set; }
@@ -31,6 +30,7 @@ namespace Irsa.PDM.Repositories
         public IDbSet<PautaItem> PautasItem { get; set; }
         public IDbSet<Proveedor> Proveedores { get; set; }
         public IDbSet<Certificacion> Certificaciones { get; set; }
+        public IDbSet<AprobacionSap> AprobacionesSap { get; set; }
         public IDbSet<Log> Logs { get; set; }
 
     }

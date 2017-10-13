@@ -138,6 +138,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\AprobacionesController.cs" />
     <Compile Include="Controllers\ReportesController.cs" />
     <Compile Include="Controllers\CertificacionesController.cs" />
     <Compile Include="Controllers\CampaniasController.cs" />
@@ -195,6 +196,8 @@
     <Content Include="Scripts\angularJs\quill\quill.min.js" />
     <Content Include="Scripts\angularJs\select.min.js" />
     <Content Include="Scripts\angularJs\ui-utils.min.js" />
+    <Content Include="Scripts\app\aprobaciones\aprobacionesListCtrl.js" />
+    <Content Include="Scripts\app\aprobaciones\aprobacionesModule.js" />
     <Content Include="Scripts\app\certificaciones\certificacionesListCtrl.js" />
     <Content Include="Scripts\app\certificaciones\certificacionesModule.js" />
     <Content Include="Scripts\app\campanias\campaniasEditCtrl.js" />
@@ -204,6 +207,7 @@
     <Content Include="Scripts\app\proveedores\proveedoresListCtrl.js" />
     <Content Include="Scripts\app\proveedores\proveedoresModule.js" />
     <Content Include="Scripts\app\reportes\reportesModule.js" />
+    <Content Include="Scripts\app\shared\aprobacionesService.js" />
     <Content Include="Scripts\app\shared\certificacionesService.js" />
     <Content Include="Scripts\app\shared\campaniasService.js" />
     <Content Include="Scripts\app\shared\proveedoresService.js" />
@@ -356,7 +360,9 @@
     </Content>
     <Content Include="Views\Reportes\Index.cshtml" />
     <Content Include="Views\Campanias\_AprobacionModal.cshtml" />
-    <Content Include="Views\Certificaciones\Aprobaciones.cshtml" />
+    <Content Include="Views\Aprobaciones\Aprobaciones.cshtml" />
+    <Content Include="Views\Aprobaciones\Index.cshtml" />
+    <Content Include="Views\Aprobaciones\List.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

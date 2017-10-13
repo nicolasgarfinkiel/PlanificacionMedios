@@ -55,15 +55,6 @@ namespace Irsa.PDM.MainWebApp.Controllers
                 ExcelPackage = excelPackage,
                 FileName = string.Format("Certificaciones_{0}.xlsx", DateTime.Now.ToString("dd_MM_yyyy"))
             };
-        }
-
-        #region Aprobaciones
-
-        public ActionResult Aprobaciones()
-        {
-            return View();
-        }
-
-        #endregion
+        }      
     }
 }

@@ -1,0 +1,65 @@
+﻿<div class="hpanel hblue">
+    <div class="panel-heading hbuilt">
+        Aprobaciones de certificaciones
+    </div>
+    <div class="panel-body">
+        
+        <div class="row" style="margin-bottom: 10px;">
+            <div class="col-md-6 col-sm-12">
+                <ui-select ng-model="filter.campania" theme="select2" style="width: 100%;" append-to-body="true">
+                    <ui-select-match placeholder="Campaña">{{$select.selected.nombre}}</ui-select-match>
+                    <ui-select-choices refresh-on-active="true" refresh="getSelectSource($select)" refresh-delay="300" repeat="item in selectList | filter: $select.search">
+                        <div>{{item.nombre}}</div>
+                        <div ng-if="$index == $select.items.length-1 && currentPage < pageCount">
+                            <button class="btn btn-xs btn-info"
+                                    style="width: 100%; margin-top: 20px;"
+                                    ng-click="getSelectSource($select, $event);">
+                                Siguiente
+                            </button>
+                        </div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            <div class="col-md-6 col-sm-12">
+                <ui-select ng-model="filter.proveedor" theme="select2" style="width: 100%;" append-to-body="true">
+                    <ui-select-match placeholder="Proveedor">{{$select.selected.nombre}}</ui-select-match>
+                    <ui-select-choices refresh-on-active="true" refresh="getSelectSource($select)" refresh-delay="300" repeat="item in selectList | filter: $select.search">
+                        <div>{{item.nombre}}</div>
+                        <div ng-if="$index == $select.items.length-1 && currentPage < pageCount">
+                            <button class="btn btn-xs btn-info"
+                                    style="width: 100%; margin-top: 20px;"
+                                    ng-click="getSelectSource($select, $event);">
+                                Siguiente
+                            </button>
+                        </div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            
+            <div class="col-md-4 col-sm-12">
+                <div class="input-group input-append">
+                    <input type="text" ng-model="filter.fechaDesde" data-date-format="dd/mm/yyyy" bs-datepicker class="form-control" placeholder="Fecha desde" />
+                    <span class="input-group-addon" data-toggle="datepicker"><i class=" fa fa-calendar"></i></span>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-12">
+                <div class="input-group input-append">
+                    <input type="text" ng-model="filter.fechaHasta" data-date-format="dd/mm/yyyy" bs-datepicker class="form-control" placeholder="Fecha hasta" />
+                    <span class="input-group-addon" data-toggle="datepicker"><i class=" fa fa-calendar"></i></span>
+                </div>
+            </div>         
+            <div class="col-md-4 text-right">
+                <a href="javascript:void(0)" class="btn btn-default" ng-click="clearFilter()">Limpiar</a>
+                <a href="javascript:void(0)" class="btn btn-info " ng-click="search()"><i class="fa fa-search"></i> Buscar</a>
+            </div>
+        </div>
+        
+
+        <div class="alert alert-danger" ng-if="result.hasErrors">
+            <i class="fa fa-bolt"></i>
+            <div ng-repeat="message in result.messages">{{message}}</div>
+        </div>        
+
+        <div class="gridStyleLarge" ng-grid="gridOptions"></div>
+    </div>
+</div>

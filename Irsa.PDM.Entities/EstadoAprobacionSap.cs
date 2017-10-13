@@ -1,6 +1,6 @@
 ﻿namespace Irsa.PDM.Entities
 {
-    public enum EstadoConsumoSap
+    public enum EstadoAprobacionSap
     {
         Ingresado = 1,
         Enviado,

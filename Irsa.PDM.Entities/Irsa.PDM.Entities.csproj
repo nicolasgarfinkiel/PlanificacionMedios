@@ -40,7 +40,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Certificacion.cs" />
+    <Compile Include="ConsumoSap.cs" />
     <Compile Include="EstadoCertificacion.cs" />
+    <Compile Include="EstadoConsumoSap.cs" />
     <Compile Include="EstadoTarifa.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="Proveedor.cs" />

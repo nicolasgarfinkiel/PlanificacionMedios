@@ -50,13 +50,7 @@
                    $scope.find();
                };
 
-               $scope.$watch('filter.multiColumnSearchText', function (newValue, oldValue) {
-                   if (typeof newValue == 'undefined' || newValue == oldValue) return;
-                   $scope.filter.currentPage = 1;
-                   $scope.find();
-               });
-
-
+           
                $scope.find = function () {
                    certificacionesService.getByFilter($scope.filter).then(function (response) {
                        $scope.certificaciones = response.data.data;
@@ -64,6 +58,16 @@
                        $scope.filter.pageCount = Math.ceil($scope.filter.count / $scope.filter.pageSize);
                    });
                };
+
+               $scope.clearFilter = function () {
+                   $scope.filter = {
+                       currentPage: 1,
+                       pageSize: 10
+                   };
+
+                   $scope.find();
+               };
+               
 
                //#endregion
 
@@ -109,6 +113,7 @@
                //#region Init
 
                certificacionesService.getDataListInit().then(function (response) {
+                   $scope.data = response.data.data.data;
                    $scope.find();
                });
 

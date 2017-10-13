@@ -356,6 +356,7 @@
     </Content>
     <Content Include="Views\Reportes\Index.cshtml" />
     <Content Include="Views\Campanias\_AprobacionModal.cshtml" />
+    <Content Include="Views\Certificaciones\Aprobaciones.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

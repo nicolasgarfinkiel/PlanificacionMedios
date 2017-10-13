@@ -6,6 +6,7 @@
         CampaniaNoRegistrada,
         CampaniaCerrada,
         CampaniaNoAprobada,
-        ProgramaNoPautado
+        ProgramaNoPautado,
+        Aprobada
     }
 }

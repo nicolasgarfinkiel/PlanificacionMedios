@@ -21,6 +21,7 @@ namespace Irsa.PDM.Entities
         public double Descuento4 { get; set; }
         public double Descuento5 { get; set; }
         public virtual Campania Campania { get; set; }
+        public virtual ConsumoSap ConsumoSap { get; set; }
         public EstadoCertificacion Estado { get; set; }
 
         public double CostoTotal

@@ -12,7 +12,7 @@ using OfficeOpenXml.FormulaParsing.Excel.Functions.DateTime;
 namespace Irsa.PDM.MainWebApp.Controllers
 {
     //[Authorize(Roles = "Administracion")]
-    public class CertificacionesController : BaseController<CertificacionesAdmin, int, Entities.Certificacion, Dtos.Certificacion, FilterBase>
+    public class CertificacionesController : BaseController<CertificacionesAdmin, int, Entities.Certificacion, Dtos.Certificacion, FilterCertificaciones>
     {
 
         public CertificacionesController()
@@ -22,7 +22,7 @@ namespace Irsa.PDM.MainWebApp.Controllers
         public ActionResult Index()
         {
             return View();
-        }
+        }        
 
         public override object GetDataList()
         {
@@ -33,7 +33,8 @@ namespace Irsa.PDM.MainWebApp.Controllers
             }
 
             return new
-            {               
+            {
+                Estados = _admin.GetEstadosCertificaciones(),
             };
         }
 
@@ -45,7 +46,7 @@ namespace Irsa.PDM.MainWebApp.Controllers
         }   
          
         [HttpPost]
-        public ActionResult GetExcel(FilterBase filter)
+        public ActionResult GetExcel(FilterCertificaciones filter)
         {
             var excelPackage = _admin.GetExcel(filter);            
 
@@ -55,5 +56,14 @@ namespace Irsa.PDM.MainWebApp.Controllers
                 FileName = string.Format("Certificaciones_{0}.xlsx", DateTime.Now.ToString("dd_MM_yyyy"))
             };
         }
+
+        #region Aprobaciones
+
+        public ActionResult Aprobaciones()
+        {
+            return View();
+        }
+
+        #endregion
     }
 }

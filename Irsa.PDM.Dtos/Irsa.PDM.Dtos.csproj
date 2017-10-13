@@ -45,6 +45,7 @@
     <Compile Include="CertificacionFcMedios.cs" />
     <Compile Include="Campania.cs" />
     <Compile Include="Dashboard.cs" />
+    <Compile Include="Filters\FilterCertificaciones.cs" />
     <Compile Include="Filters\FilterTarifaProveedor.cs" />
     <Compile Include="Filters\FilterPautaItems.cs" />
     <Compile Include="Filters\FilterCampanias.cs" />

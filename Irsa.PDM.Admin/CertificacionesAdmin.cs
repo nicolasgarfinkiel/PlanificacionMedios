@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using Irsa.PDM.Dtos;
 using Irsa.PDM.Dtos.Common;
+using Irsa.PDM.Dtos.Filters;
 using Irsa.PDM.Entities;
 using Irsa.PDM.Repositories;
 using Newtonsoft.Json;
@@ -12,7 +13,7 @@ using ServiceStack.ServiceClient.Web;
 
 namespace Irsa.PDM.Admin
 {
-    public class CertificacionesAdmin : BaseAdmin<int, Entities.Certificacion, Dtos.Certificacion, FilterBase>
+    public class CertificacionesAdmin : BaseAdmin<int, Entities.Certificacion, Dtos.Certificacion, FilterCertificaciones>
     {        
         private const string GetCertificaciones = "/client?method=create&action=pautas_controladas";
         private readonly LogAdmin LogAdmin;
@@ -33,11 +34,17 @@ namespace Irsa.PDM.Admin
         {
         }
 
-        public override IQueryable GetQuery(FilterBase filter)
+        public override IQueryable GetQuery(FilterCertificaciones filter)
         {
             var result = PdmContext.Certificaciones
                         .OrderByDescending(e => e.CreateDate)                        
                         .AsQueryable();
+
+            if (!string.IsNullOrEmpty(filter.Estado))
+            {
+                var estado = (EstadoCertificacion)Enum.Parse(typeof(EstadoCertificacion), filter.Estado);
+                result = result.Where(e => e.Estado == estado).AsQueryable();
+            }
 
             if (filter.MultiColumnSearchText != null)
             {
@@ -179,40 +186,7 @@ namespace Irsa.PDM.Admin
         }       
 
         #endregion
-
-        public ExcelPackage GetExcel(FilterBase filter)
-        {
-            var template = new FileInfo(String.Format(@"{0}\Reports\Rpt_Certificaciones.xlsx", AppDomain.CurrentDomain.BaseDirectory));
-            var pck = new ExcelPackage(template, true);
-            var ws = pck.Workbook.Worksheets[1];
-            var row = 8;
-
-            filter.CurrentPage = 1;
-            filter.PageSize = 99999999;
-            var data = GetByFilter(filter).Data;
-
-            foreach (var item in data)
-            {
-                row++;
-                ws.Cells[row, 1].Value = item.CampaniaCodigo;
-                ws.Cells[row, 2].Value = item.CampaniaNombre;
-                ws.Cells[row, 3].Value = item.PautaCodigo;
-                ws.Cells[row, 4].Value = item.PautaEjecutadaCodigo;
-                ws.Cells[row, 5].Value = item.CodigoPrograma;
-                ws.Cells[row, 6].Value = item.Proveedor;
-                ws.Cells[row, 7].Value = item.Producto;
-                ws.Cells[row, 8].Value = item.Espacio;
-                ws.Cells[row, 9].Value = item.CodigoAviso;
-                ws.Cells[row, 10].Value =  item.FechaAviso.HasValue ? item.FechaAviso.Value.ToString("dd/MM/yyyy") : string.Empty;
-                ws.Cells[row, 11].Value = item.CostoUnitario;
-                ws.Cells[row, 12].Value = item.DuracionTema;
-                ws.Cells[row, 13].Value = item.CostoTotal;
-                ws.Cells[row, 14].Value = item.Estado;
-            }
-
-            return pck;
-        }
-
+    
         #region Log
 
         private void LogSyncCertificacionesDetail(List<CertificacionFcMedios> certificaciones)
@@ -281,5 +255,43 @@ namespace Irsa.PDM.Admin
         }
 
         #endregion
+
+        public ExcelPackage GetExcel(FilterCertificaciones filter)
+        {
+            var template = new FileInfo(String.Format(@"{0}\Reports\Rpt_Certificaciones.xlsx", AppDomain.CurrentDomain.BaseDirectory));
+            var pck = new ExcelPackage(template, true);
+            var ws = pck.Workbook.Worksheets[1];
+            var row = 8;
+
+            filter.CurrentPage = 1;
+            filter.PageSize = 99999999;
+            var data = GetByFilter(filter).Data;
+
+            foreach (var item in data)
+            {
+                row++;
+                ws.Cells[row, 1].Value = item.CampaniaCodigo;
+                ws.Cells[row, 2].Value = item.CampaniaNombre;
+                ws.Cells[row, 3].Value = item.PautaCodigo;
+                ws.Cells[row, 4].Value = item.PautaEjecutadaCodigo;
+                ws.Cells[row, 5].Value = item.CodigoPrograma;
+                ws.Cells[row, 6].Value = item.Proveedor;
+                ws.Cells[row, 7].Value = item.Producto;
+                ws.Cells[row, 8].Value = item.Espacio;
+                ws.Cells[row, 9].Value = item.CodigoAviso;
+                ws.Cells[row, 10].Value = item.FechaAviso.HasValue ? item.FechaAviso.Value.ToString("dd/MM/yyyy") : string.Empty;
+                ws.Cells[row, 11].Value = item.CostoUnitario;
+                ws.Cells[row, 12].Value = item.DuracionTema;
+                ws.Cells[row, 13].Value = item.CostoTotal;
+                ws.Cells[row, 14].Value = item.Estado;
+            }
+
+            return pck;
+        }
+
+        public IList<string> GetEstadosCertificaciones()
+        {
+            return Enum.GetNames(typeof(EstadoCertificacion)).OrderBy(t => t).ToList();
+        }
     }
 }

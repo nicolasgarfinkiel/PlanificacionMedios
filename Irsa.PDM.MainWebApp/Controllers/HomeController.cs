@@ -29,10 +29,10 @@ namespace Irsa.PDM.MainWebApp.Controllers
                 TarifariosPendientesAprobacion = _tarifariosAdmin.GetByFilter(new FilterTarifarios { CurrentPage = 1, PageSize = 6, Estados = new List<string> { "PendienteAprobacion" } }).Data,
                 CampaniasConInconsistencias = _campaniasAdmin.GetByFilter(new FilterCampanias { CurrentPage = 1, PageSize = 6, Estado = "InconsistenciasEnPautas" }).Data,
                 CampaniasPendientesAprobacion = _campaniasAdmin.GetByFilter(new FilterCampanias { CurrentPage = 1, PageSize = 6, Estado = "Pendiente" }).Data,
-                UltimasCertificaciones = _certificacionesAdmin.GetByFilter(new FilterBase{CurrentPage = 1, PageSize = 6}).Data,
+                UltimasCertificaciones = _certificacionesAdmin.GetByFilter(new FilterCertificaciones{CurrentPage = 1, PageSize = 6}).Data,
             };
 
-            new SapAdmin().Test();
+        //    new SapAdmin().Test();
 
             return View(model);
         }

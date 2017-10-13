@@ -14,9 +14,13 @@
     </mvcSiteMapNode>
 
     <mvcSiteMapNode   title="Campañas"                          controller="Home"                   action="index"             Class="fa fa-bookmark-o"      roles="" >
-      <mvcSiteMapNode title="Listado"                           controller="Campanias"              action="Index"                                           roles=""/>
-      <mvcSiteMapNode title="Certificaciones"                   controller="Certificaciones"        action="Index"                                           roles=""/>
+      <mvcSiteMapNode title="Listado"                           controller="Campanias"              action="Index"                                           roles=""/>      
       <mvcSiteMapNode title="Reportes"                          controller="Reportes"               action="Index"                                           roles=""/>
+    </mvcSiteMapNode>
+
+    <mvcSiteMapNode   title="Certificaciones"                   controller="Home"                   action="index"             Class="fa fa-bookmark-o"      roles="" >      
+      <mvcSiteMapNode title="Listado"                           controller="Certificaciones"        action="Index"                                           roles=""/>
+      <mvcSiteMapNode title="Aprobaciones"                      controller="Certificaciones"        action="Aprobaciones"                                    roles=""/>
     </mvcSiteMapNode>
    
   </mvcSiteMapNode>

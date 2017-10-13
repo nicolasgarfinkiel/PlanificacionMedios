@@ -1,17 +1,21 @@
 ﻿<div class="hpanel hblue">
     <div class="panel-heading hbuilt">
-        Listado de certificaciones
+        Aprobaciones de certificaciones
     </div>
-    <div class="panel-body">        
+    <div class="panel-body">
         <div class="row" style="margin-bottom: 10px;">
-            <div class="col-md-4 col-sm-12">
-                <div class="input-group m-b">
-                    <input type="text" class="input-sm form-control" placeholder="" ng-model="filter.multiColumnSearchText">
-                    <span class="input-group-addon">
-                        <i class="fa fa-search"></i>
-                    </span>
+            <div class="col-md-2 col-sm-12">
+                <div class="input-group input-append">
+                    <input type="text" ng-model="filter.fechaDesde" data-date-format="dd/mm/yyyy" bs-datepicker class="form-control" placeholder="Fecha desde" />
+                    <span class="input-group-addon" data-toggle="datepicker"><i class=" fa fa-calendar"></i></span>
                 </div>
-            </div>          
+            </div>
+            <div class="col-md-2 col-sm-12">
+                <div class="input-group input-append">
+                    <input type="text" ng-model="filter.fechaHasta" data-date-format="dd/mm/yyyy" bs-datepicker class="form-control" placeholder="Fecha hasta" />
+                    <span class="input-group-addon" data-toggle="datepicker"><i class=" fa fa-calendar"></i></span>
+                </div>
+            </div>
             <div class="col-md-4 col-sm-12">
                 <select class="form-control" ng-model="filter.estado" ng-options="estado for estado in data.estados">
                     <option value="">Estado</option>
@@ -19,65 +23,60 @@
             </div>
             <div class="col-md-4 text-right">
                 <a href="javascript:void(0)" class="btn btn-default" ng-click="clearFilter()">Limpiar</a>
-                <a href="javascript:void(0)" class="btn btn-info " ng-click="filter.currentPage = 1; find();"><i class="fa fa-search"></i> Buscar</a>
-                <form method="POST" action="/Certificaciones/GetExcel" ng-if="certificaciones.length" style="display: inline;">
-                    <input type="hidden" name="multiColumnSearchText" ng-value="filter.multiColumnSearchText" />
-                    <input type="hidden" name="estado" ng-value="filter.estado" />
-                    <button class="btn btn-success" type="submit">Exportar</button>
-                </form>
+                <a href="javascript:void(0)" class="btn btn-info " ng-click="search()"><i class="fa fa-search"></i> Buscar</a>
             </div>
         </div>       
-        
-      
-        
+
+
+
         <div id="no-more-tables">
             <table class="col-sm-12 table-bordered table-striped table-condensed cf">
                 <thead class="cf">
                     <tr>
                         <th style="width: 4%">
-                            Cod.Camp.                          
+                            Cod.Camp.
                         </th>
                         <th style="width: 6%">
                             Campaña
                         </th>
                         <th style="width: 5%">
-                            Pauta                          
+                            Pauta
                         </th>
                         <th style="width: 5%">
                             Ejecutada
                         </th>
                         <th style="width: 4%">
                             Cod.Prog.
-                        </th>                   
+                        </th>
                         <th>
                             Proveedor
-                        </th>                   
+                        </th>
                         <th>
                             Producto
-                        </th>                                           
+                        </th>
                         <th style="width: 6%">
                             Cod.Aviso
-                        </th>                   
+                        </th>
                         <th style="width: 6%">
                             Fecha
-                        </th>                   
+                        </th>
                         <th style="width: 5%">
                             Costo Unit.
-                        </th>                   
+                        </th>
                         <th style="width: 5%">
                             Cantidad
-                        </th>  
+                        </th>
                         <th style="width: 5%">
                             Total
-                        </th>   
+                        </th>
                         <th style="width: 10%">
                             Estado
-                        </th>  
+                        </th>
                         <th style="width: 8%">
                             Consumo SAP
-                        </th>                    
+                        </th>
                     </tr>
-                </thead>                                               
+                </thead>
                 <tbody style="font-size: 11px;">
                     <tr ng-repeat="certificacion in certificaciones">
                         <td data-title="Cod.Campaña">
@@ -90,10 +89,10 @@
                         <td data-title="Pauta">
                             <span ng-if="certificacion.estado == 'Aceptada'">
                                 <span ng-click="openModalPauta(certificacion)" style="color: #3276b1;cursor: pointer;position: relative; border-bottom: dot-dash;">{{certificacion.pautaCodigo}}</span>
-                            </span>                            
+                            </span>
                             <span ng-if="certificacion.estado != 'Aceptada'">
-                                <span>{{certificacion.pautaCodigo}}</span>                                
-                            </span>                            
+                                <span>{{certificacion.pautaCodigo}}</span>
+                            </span>
                         </td>
                         <td data-title="Pauta Ejecutada">
                             <span>{{certificacion.pautaEjecutadaCodigo}}</span>
@@ -103,10 +102,10 @@
                         </td>
                         <td data-title="Proveedor">
                             <span>{{certificacion.proveedor}}</span>
-                        </td>    
+                        </td>
                         <td data-title="Producto">
                             <span>{{certificacion.producto}}</span>
-                        </td>                                        
+                        </td>
                         <td data-title="Cod.Aviso">
                             <span>{{certificacion.codigoAviso}}</span>
                         </td>
@@ -153,7 +152,7 @@
         <div class="alert alert-danger" ng-if="result.hasErrors">
             <i class="fa fa-bolt"></i>
             <div ng-repeat="message in result.messages">{{message}}</div>
-        </div>                   
+        </div>
     </div>
 </div>
 
@@ -167,15 +166,15 @@
                     <div class="col-sm-4">
                         <div class="project-label"><strong>CAMPAÑA</strong></div>
                         <small>{{currentCertificacion.campaniaCodigo}} - {{currentCertificacion.campaniaNombre}} </small>
-                    </div>                   
+                    </div>
                     <div class="col-sm-3">
                         <div class="project-label"><strong>PAUTA</strong></div>
                         <small>{{currentCertificacion.pautaCodigo}} </small>
-                    </div>                   
+                    </div>
                 </div>
             </div>
             <div class="modal-body">
-                
+
                 <div id="no-more-tables">
                     <table class="col-sm-12 table-bordered table-striped table-condensed cf">
                         <thead class="cf">
@@ -188,10 +187,10 @@
                                 </th>
                                 <th style="width: 24%;">
                                     Espacio
-                                </th>                              
+                                </th>
                                 <th style="width: 16%;">
                                     Costo unit.
-                                </th>                              
+                                </th>
                             </tr>
                         </thead>
                         <tbody style="font-size: 11px;">
@@ -204,7 +203,7 @@
                                 </td>
                                 <td data-title="Espacio">
                                     <span>{{item.espacio}}</span>
-                                </td>                               
+                                </td>
                                 <td data-title="Costo unitario">
                                     <span>{{item.costoUnitario | currency}}</span>
                                 </td>
@@ -229,10 +228,10 @@
                         </div>
                     </div>
                 </div>
-             
+
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>                
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
             </div>
         </div>
     </div>

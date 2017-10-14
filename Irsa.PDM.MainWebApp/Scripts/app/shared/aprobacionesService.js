@@ -4,13 +4,12 @@
            'baseService',
            function ($http, baseService) {
                var result = angular.extend({
-                   changeEstadoPauta: function (pautaId, estado, motivo) {
-                       return $http({
-                           method: 'POST',
-                           url: '/Aprobaciones/ChangeEstadoPauta',
-                           data: { pautaId: pautaId, estado: estado, motivo: motivo }
-                       });
-                   }
+                   //aprobar: function () {
+                   //    return $http({
+                   //        method: 'POST',
+                   //        url: '/Aprobaciones/aprobar'                          
+                   //    });
+                   //}
                }, baseService);
                result.controller = 'Aprobaciones';
 

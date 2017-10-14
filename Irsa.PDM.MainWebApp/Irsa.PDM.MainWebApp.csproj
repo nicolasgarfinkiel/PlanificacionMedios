@@ -198,6 +198,7 @@
     <Content Include="Scripts\angularJs\ui-utils.min.js" />
     <Content Include="Scripts\app\aprobaciones\aprobacionesListCtrl.js" />
     <Content Include="Scripts\app\aprobaciones\aprobacionesModule.js" />
+    <Content Include="Scripts\app\aprobaciones\aprobacionesEditCtrl.js" />
     <Content Include="Scripts\app\certificaciones\certificacionesListCtrl.js" />
     <Content Include="Scripts\app\certificaciones\certificacionesModule.js" />
     <Content Include="Scripts\app\campanias\campaniasEditCtrl.js" />
@@ -363,6 +364,7 @@
     <Content Include="Views\Aprobaciones\Aprobaciones.cshtml" />
     <Content Include="Views\Aprobaciones\Index.cshtml" />
     <Content Include="Views\Aprobaciones\List.cshtml" />
+    <Content Include="Views\Aprobaciones\Edit.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

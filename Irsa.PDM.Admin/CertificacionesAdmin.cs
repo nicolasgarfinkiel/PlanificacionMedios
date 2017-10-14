@@ -58,7 +58,7 @@ namespace Irsa.PDM.Admin
                         (e.Espacio.ToLower().Contains(multiColumnSearchText)) ||
                         (e.PautaCodigo.ToLower().Contains(multiColumnSearchText)) ||
                         (e.PautaEjecutadaCodigo.ToLower().Contains(multiColumnSearchText)) ||
-                        (e.Proveedor.ToLower().Contains(multiColumnSearchText)) ||
+                        (e.ProveedorNombre.ToLower().Contains(multiColumnSearchText)) ||
                         (e.Tema.ToLower().Contains(multiColumnSearchText))
                     )).AsQueryable();
             }
@@ -117,7 +117,8 @@ namespace Irsa.PDM.Admin
                             FechaAviso = c.fecha_aviso,
                             PautaCodigo = c.nro_pauta_aprobada,
                             PautaEjecutadaCodigo = c.nro_pauta_ejecutada,
-                            Proveedor = c.des_proveedor,
+                            ProveedorCodigo = c.cod_proveedor,
+                            ProveedorNombre = c.des_proveedor,
                             Tema = c.des_tema,
                             Producto = c.des_producto
                         };
@@ -292,6 +293,6 @@ namespace Irsa.PDM.Admin
         public IList<string> GetEstadosCertificaciones()
         {
             return Enum.GetNames(typeof(EstadoCertificacion)).OrderBy(t => t).ToList();
-        }
+        }       
     }
 }

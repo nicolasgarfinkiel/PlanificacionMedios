@@ -2,9 +2,11 @@
        .controller('listCtrl', [
            '$scope',
            'aprobacionesService',
+           'campaniasService',
+           'proveedoresService',
            'baseNavigationService',
            'listBootstraperService',
-           function ($scope, aprobacionesService, baseNavigationService, listBootstraperService) {
+           function ($scope, aprobacionesService, campaniasService, proveedoresService, baseNavigationService, listBootstraperService) {
                $scope.navigationService = baseNavigationService;
                $scope.resultModal = { hasErrors: false, messages: [] };
 
@@ -14,64 +16,66 @@
                listBootstraperService.init($scope, {
                    service: aprobacionesService,
                    navigation: baseNavigationService,
-                   columns: [                       
-                       { field: 'nombre', displayName: 'Campaña' },
-                       { field: 'estado', displayName: 'Proveedor' },
+                   columns: [
+                       { field: 'id', displayName: 'Id', width: 50 },
+                       { field: 'campaniaNombre', displayName: 'Campaña' },
+                       { field: 'proveedorNombre', displayName: 'Proveedor' },
                        { field: 'createDate', displayName: 'Fecha de alta', width: 100 },
-                       { field: 'createDate', displayName: 'Estado consumo', width: 100 },
-                       { field: 'createDate', displayName: 'Estado provisión', width: 100 },
-                       { field: 'createDate', displayName: 'Estado certificacion', width: 100 },
-                       { field: 'cuit', displayName: 'Aprobar', width: 70, cellTemplate: '<div class="ng-grid-icon-container"><a ng-if="row.entity.estado == \'Pendiente\'" href="javascript:void(0)" class="btn btn-rounded btn-xs btn-icon btn-default" ng-click="confirmAprobacion(row.entity)"><i class="fa fa-thumbs-o-up"></i></a></div>' }                       
+                       { field: 'montoTotal', displayName: 'Monto total', width: 180 },
+                       { field: 'estadoConsumo', displayName: 'Estado consumo', width: 160 },
+                       { field: 'estadoProvision', displayName: 'Estado provisión', width: 160 },
+                       { field: 'estadoCertificacion', displayName: 'Estado certificacion', width: 160 },
+                       { field: 'cuit', displayName: 'Detalle', width: 70, cellTemplate: '<div class="ng-grid-icon-container"><a ng-if="row.entity.estado == \'Pendiente\'" href="javascript:void(0)" class="btn btn-rounded btn-xs btn-icon btn-default" ng-click="confirmAprobacion(row.entity)"><i class="fa fa-thumbs-o-up"></i></a></div>' }                       
                    ]
                });
 
                $scope.clearFilter = function () {
                    $scope.filter = {};
                    $scope.search();
+               };            
+
+               //#region Select UI
+
+               $scope.sources = {                                    
+                   'campania': {
+                       service: campaniasService,
+                       method: 'getByFilter',
+                       filter: { pageSize: 20 },
+                   },
+                   'proveedor': {
+                       service: proveedoresService,
+                       method: 'getByFilter',
+                       filter: { pageSize: 20 },
+                   }
                };
 
-               //$scope.changeEstadoCampania = function () {
-               //    $scope.resultModal = $scope.result = { hasErrors: false, messages: [] };
-                 
-               //    if (!$scope.isValidAprobacion()) {
-               //        return;
-               //    }
+               $scope.selectList = [];
+               $scope.currentPage = 0;
+               $scope.pageCount = 0;
 
-               //    campaniasService.changeEstadoCampania($scope.campania, 'Aprobada', $scope.motivo).then(function (response) {
-               //        $scope.resultModal = $scope.result = response.data.result;
+               $scope.getSelectSource = function ($select, $event) {
+                   if ($scope.loading) return;
 
-               //        if ($scope.resultModal.hasErrors) return;
+                   var source = $scope.sources[$select.$element.attr('name')];
 
-               //        $scope.search();
-               //        $('#aprobacionModal').modal('hide');
-               //    }, function () { throw 'Error on changeEstadoCampania'; });
-               //};
-
-               $scope.confirmAprobacion = function(campania) {
-                   $scope.campania = campania;
-                   $scope.campania.idSapDistribucion = null;
-                   $scope.campania.centro = null;
-                   $scope.campania.almacen = null;
-                   $scope.campania.orden = null;                   
-                   $scope.campania.centroDestino = null;                   
-                   $scope.campania.almacenDestino = null;
-
-                   $('#aprobacionModal').modal('show');
-               };
-
-               $scope.isValidAprobacion = function () {
-                   $scope.resultModal = { hasErrors: false, messages: [] };
-
-                   if (!$scope.campania.centro) {
-                       $scope.resultModal.messages.push('Ingrese el id centro');
+                   if (!$event) {
+                       $scope.currentPage = 1;
+                       $scope.pageCount = 0;
+                       $scope.selectList = [];
+                   } else {
+                       $event.stopPropagation();
+                       $event.preventDefault();
+                       $scope.currentPage++;
                    }
 
-                   if (!$scope.campania.almacen) {
-                       $scope.resultModal.messages.push('Ingrese el id almacen');
-                   }                 
+                   source.filter.currentPage = $scope.currentPage;
+                   source.filter.multiColumnSearchText = $select.search;
 
-                   $scope.resultModal.hasErrors = $scope.resultModal.messages.length;
-                   return !$scope.resultModal.hasErrors;
+                   source.service[source.method](source.filter).then(function (response) {
+                       $scope.selectList = $scope.selectList.concat(response.data.data);
+                       $scope.pageCount = Math.ceil(response.data.count / 20);
+                   }, function () { throw 'Error on getSelectByFilter'; });
                };
 
+               //#endregion
            }]);

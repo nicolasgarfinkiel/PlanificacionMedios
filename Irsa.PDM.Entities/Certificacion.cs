@@ -7,8 +7,9 @@ namespace Irsa.PDM.Entities
         public string PautaEjecutadaCodigo { get; set; }
         public string PautaCodigo { get; set; }
         public int CodigoPrograma { get; set; }
-        public string CodigoAviso { get; set; }              
-        public string Proveedor { get; set; }
+        public string CodigoAviso { get; set; }
+        public int ProveedorCodigo { get; set; }
+        public string ProveedorNombre { get; set; }
         public string Producto { get; set; }
         public DateTime? FechaAviso { get; set; }
         public string Espacio { get; set; }

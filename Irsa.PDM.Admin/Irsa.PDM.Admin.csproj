@@ -98,7 +98,7 @@
     <Compile Include="App.cs" />
     <Compile Include="BaseAdmin.cs" />
     <Compile Include="BootStrapper.cs" />
-    <Compile Include="AprobacionesAdmin.cs" />
+    <Compile Include="AprobacionesSapAdmin.cs" />
     <Compile Include="CertificacionesAdmin.cs" />
     <Compile Include="CampaniasAdmin.cs" />
     <Compile Include="LogAdmin.cs" />

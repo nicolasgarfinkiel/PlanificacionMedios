@@ -8,11 +8,11 @@ using Newtonsoft.Json;
 
 namespace Irsa.PDM.Admin
 {
-    public class AprobacionesAdmin : BaseAdmin<int, Entities.AprobacionSap, Dtos.AprobacionSap, FilterAprobacionesSap>
+    public class AprobacionesSapAdmin : BaseAdmin<int, Entities.AprobacionSap, Dtos.AprobacionSap, FilterAprobacionesSap>
     {               
         private readonly LogAdmin LogAdmin;
 
-        public AprobacionesAdmin()
+        public AprobacionesSapAdmin()
         {
             LogAdmin = new LogAdmin();   
         }
@@ -37,12 +37,7 @@ namespace Irsa.PDM.Admin
             if (filter.Campania != null)
             {
                 result = result.Where(e => e.Campania.Id == filter.Campania.Id).AsQueryable();
-            }
-
-            if (filter.Proveedor != null)
-            {
-                result = result.Where(e => e.Proveedor.Id == filter.Proveedor.Id).AsQueryable();
-            }
+            }           
 
             if (filter.FechaDesde.HasValue)
             {
@@ -58,7 +53,22 @@ namespace Irsa.PDM.Admin
             return result;
         }
 
-        #endregion        
+        #endregion   
+     
+        public IList<Dtos.AprobacionSap> GetAprobacionesPendientes()
+        {
+            return PdmContext.Certificaciones.Where(e => e.Estado == EstadoCertificacion.Aceptada)
+                .GroupBy(e => new { e.ProveedorNombre, e.ProveedorCodigo, e.Campania })
+                .Select(e => new Dtos.AprobacionSap
+                {
+                    CampaniaId = e.Key.Campania.Id,
+                    CampaniaNombre = e.Key.Campania.Nombre,
+                    ProveedorCodigo = e.Key.ProveedorCodigo,
+                    ProveedorNombre = e.Key.ProveedorNombre,
+                    MontoTotal = e.Sum(c => c.CostoTotal)
+                }).ToList();
+
+        }
     
         #region Log
 
@@ -128,5 +138,7 @@ namespace Irsa.PDM.Admin
         }
 
         #endregion    
+    
+       
     }
 }

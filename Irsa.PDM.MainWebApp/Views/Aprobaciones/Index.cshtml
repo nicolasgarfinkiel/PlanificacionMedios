@@ -6,14 +6,19 @@
 <div>    
     <script type="text/ng-template" id="aprobaciones/list">
         @RenderPage(Url.Content("~/Views/Aprobaciones/List.cshtml"))
-    </script>    
+    </script> 
+    <script type="text/ng-template" id="aprobaciones/edit">
+        @RenderPage(Url.Content("~/Views/Aprobaciones/Edit.cshtml"))
+    </script>
     <div ng-view></div>
 </div>
 
 @section scripts{
     @Html.IncludeVersionedJs("Scripts/app/Aprobaciones/aprobacionesModule.js")
     @Html.IncludeVersionedJs("Scripts/app/Aprobaciones/aprobacionesListCtrl.js")    
+    @Html.IncludeVersionedJs("Scripts/app/Aprobaciones/aprobacionesEditCtrl.js")    
     @Html.IncludeVersionedJs("Scripts/app/shared/certificacionesService.js")
     @Html.IncludeVersionedJs("Scripts/app/shared/campaniasService.js")
+    @Html.IncludeVersionedJs("Scripts/app/shared/proveedoresService.js")
     @Html.IncludeVersionedJs("Scripts/app/shared/aprobacionesService.js")
 }

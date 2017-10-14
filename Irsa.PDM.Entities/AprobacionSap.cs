@@ -9,7 +9,8 @@ namespace Irsa.PDM.Entities
         public EstadoAprobacionSap EstadoCertificacion { get; set; }
 
         public virtual Campania Campania { get; set; }
-        public virtual Proveedor Proveedor { get; set; }
+        public int ProveedorCodigo { get; set; }
+        public string ProveedorNombre { get; set; }
         public double MontoTotal { get; set; }
     }
 }

@@ -1,0 +1,54 @@
+﻿
+<div class="hpanel">
+    <div class="panel-body">
+        <h5 class="font-light m-b-xs">
+          Nueva aprobación de certificaciones
+        </h5>
+        <small>Detalle de certificaciones disponibles agrupadas por campaña y proveedor.</small>     
+    </div>
+</div>
+
+<div class="hpanel hblue">
+    <div class="panel-body">
+        <div class="form-horizontal">
+                      
+            <div class="alert alert-danger" ng-if="result.hasErrors">
+                <i class="fa fa-bolt"></i>
+                <div ng-repeat="message in result.messages">{{message}}</div>
+            </div>
+            
+            <h5 style="margin: 60px 0;" ng-show="!data.aprobacionesPendientes.length">No hay certificaciones disponibles. Recuerde que solamente es posible aprobar aquellas que se encuentran en estado 'ACEPTADA'.</h5>
+            <div class="gridStyleLarge" ng-grid="gridOptions" ng-show="data.aprobacionesPendientes.length"></div>
+        </div>
+      
+    </div>
+    <div class="panel-footer text-right">
+        <button type="button" class="btn btn-primary" ng-click="confirmAprobacion()" ng-if="data.aprobacionesPendientes.length">Guardar</button>
+    </div>
+</div>
+
+<div class="modal fade pdm" id="modalConfirm" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-sm" style="width: 500px;">
+        <div class="modal-content">
+            <div class="color-line"></div>
+            <div class="modal-header">
+                <h4 class="modal-title">Confirmación de operación</h4>
+            </div>
+            <div class="modal-body">
+
+                <form class="form-horizontal ng-pristine ng-valid">
+                    <h4 style="margin-bottom: 28px;">Desea continuar con la operación?</h4>
+                </form>
+
+                <div class="alert alert-danger" ng-if="resultModal.hasErrors">
+                    <i class="fa fa-bolt"></i>
+                    <div ng-repeat="message in resultModal.messages">{{message}}</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" ng-click="aprobar()">Aceptar</button>
+            </div>
+        </div>
+    </div>
+</div>

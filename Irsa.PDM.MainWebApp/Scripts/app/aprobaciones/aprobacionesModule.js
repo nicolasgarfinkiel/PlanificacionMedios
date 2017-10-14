@@ -1,6 +1,9 @@
 ﻿angular.module('irsa.pdm.aprobaciones', [
-    'irsa.pdm.aprobaciones.ctrl.list',    
+    'irsa.pdm.aprobaciones.ctrl.list',
+    'irsa.pdm.aprobaciones.ctrl.edit',
     'irsa.pdm.service.aprobaciones',
+    'irsa.pdm.service.proveedores',
+    'irsa.pdm.service.campanias',
     'irsa.pdm.navigation.base',    
     'irsa.pdm.service.base',
     'irsa.pdm.service.bootstraper.list',
@@ -10,7 +13,8 @@
     '$strap.directives',
     'irsa.pdm.directive.loading',    
     'irsa.pdm.directive.debounce',
-    'irsa.pdm.directive.int'
+    'irsa.pdm.directive.int',
+    'ui.select'
 ]).config([
     '$routeProvider',
     '$locationProvider',
@@ -20,7 +24,12 @@
         $routeProvider.when('/', {
             templateUrl: 'aprobaciones/list',
             controller: 'listCtrl'
-        });                     
+        });
+
+        $routeProvider.when('/create', {
+            templateUrl: 'aprobaciones/edit',
+            controller: 'editCtrl'
+        });
 
         $routeProvider.otherwise({
             redirectTo: '/'

@@ -9,7 +9,9 @@ namespace Irsa.PDM.Dtos
         public string EstadoProvision { get; set; }
         public string EstadoCertificacion { get; set; }
         public int CampaniaId  { get; set; }
-        public int ProveedorId { get; set; }
+        public string CampaniaNombre { get; set; }
+        public int ProveedorCodigo { get; set; }
+        public string ProveedorNombre { get; set; }
         public double MontoTotal { get; set; }
     }
 }

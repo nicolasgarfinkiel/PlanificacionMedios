@@ -32,6 +32,7 @@ namespace Irsa.PDM.Admin
 
                 var entities = PdmContext.Certificaciones.Where(e => e.Estado == EstadoCertificacion.Aceptada)
                 .GroupBy(e => new { e.ProveedorNombre, e.ProveedorCodigo, e.Campania })
+                .ToList()
                 .Select(e => new Entities.AprobacionSap
                 {
                     Campania = e.Key.Campania,
@@ -40,9 +41,11 @@ namespace Irsa.PDM.Admin
                     EstadoCertificacion = EstadoAprobacionSap.Ingresada,
                     EstadoConsumo = EstadoAprobacionSap.Ingresada,
                     EstadoProvision = EstadoAprobacionSap.Ingresada,
-                    MontoTotal = e.Sum(c => c.DuracionTema * c.CostoUnitario * 60)
+                    MontoTotal = e.Sum(c => c.DuracionTema * c.CostoUnitario * 60),
+                    CreateDate = DateTime.Now,
+                    CreatedBy = UsuarioLogged
                 }).ToList();
-
+               
 
                 #region Create
 
@@ -183,6 +186,16 @@ namespace Irsa.PDM.Admin
 
         private void LogSyncAprobacionesDetail(IList<Entities.AprobacionSap> aprobaciones)
         {
+            var data = aprobaciones.Select(e => new AprobacionSap
+            {
+                CampaniaId = e.Campania.Id,
+                CampaniaNombre = e.Campania.Nombre,
+                ProveedorCodigo = e.ProveedorCodigo,
+                ProveedorNombre = e.ProveedorNombre,
+                MontoTotal = e.MontoTotal
+                
+            }).ToList();
+
             var log = new Dtos.Log
             {
                 Accion = "AprobacionesSapAdmin.CreateAprobaciones",
@@ -191,7 +204,7 @@ namespace Irsa.PDM.Admin
                 Modulo = "Aprobaciones",
                 Tipo = App.Info,
                 UsuarioAccion = UsuarioLogged,
-                Descripcion = string.Format("DETALLE de aprobaciones a sincronizar con sap: {0}", JsonConvert.SerializeObject(aprobaciones))
+                Descripcion = string.Format("DETALLE de aprobaciones a sincronizar con sap: {0}", JsonConvert.SerializeObject(data))
             };
 
             _logAdmin.Create(log);

@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Irsa.PDM.Dtos
 {
     public class AprobacionSap
     {
         public int Id { get; set; }
+        public DateTime? CreateDate { get; set; }
         public string EstadoConsumo { get; set; }
         public string EstadoProvision { get; set; }
         public string EstadoCertificacion { get; set; }

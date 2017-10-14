@@ -2,12 +2,13 @@
        .controller('editCtrl', [
            '$scope',
            '$routeParams',
+           '$timeout',
            'aprobacionesService',
            'baseNavigationService',
            'editBootstraperService',
-           function ($scope, $routeParams, aprobacionesService, baseNavigationService, editBootstraperService) {
+           function ($scope, $routeParams, $timeout, aprobacionesService, baseNavigationService, editBootstraperService) {
                $scope.resultModal = { hasErrors: false, messages: [] };
-             //  $scope.certificacionesGrupo = [];
+               $scope.nav = baseNavigationService;
 
                $scope.onInitEnd = function () {
                               
@@ -53,7 +54,7 @@
 
                        $('#modalConfirm').modal('hide');
 
-                       setTimeout(function() {
+                       $timeout(function() {
                            baseNavigationService.goToList();
                        }, 500);
                    });                   

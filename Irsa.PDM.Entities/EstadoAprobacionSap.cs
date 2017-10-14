@@ -2,8 +2,8 @@
 {
     public enum EstadoAprobacionSap
     {
-        Ingresado = 1,
-        Enviado,
-        Confirmado
+        Ingresada = 1,
+        Enviada,
+        Confirmada
     }
 }

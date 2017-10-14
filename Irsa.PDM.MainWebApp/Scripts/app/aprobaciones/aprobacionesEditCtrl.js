@@ -18,7 +18,7 @@
                    columnDefs: [                      
                        { field: 'campaniaNombre', displayName: 'Campaña' },
                        { field: 'proveedorNombre', displayName: 'Proveedor' },                       
-                       { field: 'montoTotal', displayName: 'Monto total', width: 180 },
+                       { field: 'montoTotal', displayName: 'Monto total', cellFilter: 'currency', width: 180 },
                        { field: 'cuit', displayName: 'Detalle', width: 70, cellTemplate: '<div class="ng-grid-icon-container"><a ng-if="row.entity.estado == \'Pendiente\'" href="javascript:void(0)" class="btn btn-rounded btn-xs btn-icon btn-default" ng-click="confirmAprobacion(row.entity)"><i class="fa fa-thumbs-o-up"></i></a></div>' }
                    ],
                    showFooter: false,
@@ -46,7 +46,7 @@
                };
 
                $scope.aprobar = function () {
-                   aprobacionesService.createEntity().then(function (response) {
+                   aprobacionesService.createEntity({}).then(function (response) {
                        $scope.resultModal = response.data.result;
 
                        if ($scope.resultModal.hasErrors) return;

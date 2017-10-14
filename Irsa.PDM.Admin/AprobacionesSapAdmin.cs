@@ -1,23 +1,132 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using EntityFramework.Utilities;
+using Irsa.PDM.Admin.ServicesAdmin;
 using Irsa.PDM.Dtos;
 using Irsa.PDM.Dtos.Filters;
 using Irsa.PDM.Entities;
 using Newtonsoft.Json;
+using AprobacionSap = Irsa.PDM.Dtos.AprobacionSap;
 
 namespace Irsa.PDM.Admin
 {
     public class AprobacionesSapAdmin : BaseAdmin<int, Entities.AprobacionSap, Dtos.AprobacionSap, FilterAprobacionesSap>
     {               
-        private readonly LogAdmin LogAdmin;
+        private readonly LogAdmin _logAdmin;
+        private readonly SapAdmin _sapAdmin;
 
         public AprobacionesSapAdmin()
         {
-            LogAdmin = new LogAdmin();   
+            _logAdmin = new LogAdmin();
+            _sapAdmin = new SapAdmin();   
         }
 
         #region Base
+
+        public override AprobacionSap Create(AprobacionSap dto)
+        {         
+            try
+            {
+                LogSyncAprobacionesInit();
+
+                var entities = PdmContext.Certificaciones.Where(e => e.Estado == EstadoCertificacion.Aceptada)
+                .GroupBy(e => new { e.ProveedorNombre, e.ProveedorCodigo, e.Campania })
+                .Select(e => new Entities.AprobacionSap
+                {
+                    Campania = e.Key.Campania,
+                    ProveedorCodigo = e.Key.ProveedorCodigo,
+                    ProveedorNombre = e.Key.ProveedorNombre,
+                    EstadoCertificacion = EstadoAprobacionSap.Ingresada,
+                    EstadoConsumo = EstadoAprobacionSap.Ingresada,
+                    EstadoProvision = EstadoAprobacionSap.Ingresada,
+                    MontoTotal = e.Sum(c => c.DuracionTema * c.CostoUnitario * 60)
+                }).ToList();
+
+
+                #region Create
+
+                entities.ForEach(e =>
+                {
+                    PdmContext.AprobacionesSap.Add(e);
+                });
+
+                PdmContext.SaveChanges();
+
+                LogSyncAprobacionesDetail(entities);
+
+                entities.ForEach(aprobacion =>
+                {
+                    var certificaciones = PdmContext.Certificaciones.Where(c =>
+                        c.Estado == EstadoCertificacion.Aceptada &&
+                        c.Campania.Id == aprobacion.Campania.Id &&
+                        c.ProveedorCodigo == aprobacion.ProveedorCodigo).ToList();
+
+
+                    certificaciones.ForEach(e =>
+                    {
+                        e.Estado = EstadoCertificacion.Aprobada;
+                        e.AprobacionSap = aprobacion;
+                        e.UpdateDate = DateTime.Now;
+                        e.UpdatedBy = UsuarioLogged;
+                    });
+
+                    EFBatchOperation.For(PdmContext, PdmContext.Certificaciones).UpdateAll(certificaciones, x => x.ColumnsToUpdate(                 
+                        t => t.AprobacionSap, 
+                        t => t.UpdateDate, 
+                        t => t.UpdatedBy, 
+                        t => t.Estado));
+
+                    PdmContext.SaveChanges();
+                });
+
+
+                #endregion
+
+                #region Send SAP
+
+                _sapAdmin.CreateConsumo(entities);
+
+                entities.ForEach(e =>
+                {
+                   e.EstadoConsumo = EstadoAprobacionSap.Enviada;                
+                });
+
+                PdmContext.SaveChanges();
+
+
+                _sapAdmin.CreateProvision(entities);
+
+                entities.ForEach(e =>
+                {
+                    e.EstadoProvision = EstadoAprobacionSap.Enviada;
+                });
+
+                PdmContext.SaveChanges();
+
+
+                _sapAdmin.CreateCertificacion(entities);
+
+                entities.ForEach(e =>
+                {
+                    e.EstadoCertificacion = EstadoAprobacionSap.Enviada;
+                });
+
+                PdmContext.SaveChanges();
+
+
+                #endregion           
+
+                LogSyncAprobacionesEnd();
+            }
+            catch (Exception e)
+            {
+                LogSyncAProbacionesError(e);
+                throw;
+            }
+
+            return null;
+        }
 
         public override Entities.AprobacionSap ToEntity(Dtos.AprobacionSap dto)
         {
@@ -65,76 +174,76 @@ namespace Irsa.PDM.Admin
                     CampaniaNombre = e.Key.Campania.Nombre,
                     ProveedorCodigo = e.Key.ProveedorCodigo,
                     ProveedorNombre = e.Key.ProveedorNombre,
-                    MontoTotal = e.Sum(c => c.CostoTotal)
+                    MontoTotal = e.Sum(c => c.DuracionTema * c.CostoUnitario * 60)
                 }).ToList();
 
         }
     
         #region Log
 
-        private void LogSyncCertificacionesDetail(List<CertificacionFcMedios> certificaciones)
+        private void LogSyncAprobacionesDetail(IList<Entities.AprobacionSap> aprobaciones)
         {
             var log = new Dtos.Log
             {
-                Accion = "CertificaionesAdmin.SyncCertificaciones",
-                App = "Irsa.PDM.WindowsService",
+                Accion = "AprobacionesSapAdmin.CreateAprobaciones",
+                App = "Irsa.PDM.Web",
                 CreateDate = DateTime.Now,
-                Modulo = "Certificaciones",
+                Modulo = "Aprobaciones",
                 Tipo = App.Info,
                 UsuarioAccion = UsuarioLogged,
-                Descripcion = string.Format("DETALLE de certificaciones a ingresar: {0}", JsonConvert.SerializeObject(certificaciones))
+                Descripcion = string.Format("DETALLE de aprobaciones a sincronizar con sap: {0}", JsonConvert.SerializeObject(aprobaciones))
             };
 
-            LogAdmin.Create(log);
+            _logAdmin.Create(log);
         }      
 
-        private void LogSyncCertificacionesError(Exception ex)
+        private void LogSyncAProbacionesError(Exception ex)
         {
             var log = new Dtos.Log
             {
-                Accion = "CertificaionesAdmin.SyncCertificaciones",
-                App = "Irsa.PDM.WindowsService",
+                Accion = "CertificaionesAdmin.CreateAprobaciones",
+                App = "Irsa.PDM.Web",
                 CreateDate = DateTime.Now,
-                Modulo = "Certificaciones",
+                Modulo = "Aprobaciones",
                 Tipo = App.Error,
                 UsuarioAccion = UsuarioLogged,
                 Descripcion = "Error",
                 StackTrace = GetExceptionDetail(ex)
             };
 
-            LogAdmin.Create(log);
+            _logAdmin.Create(log);
         }
 
-        private void LogSyncCertificacionesInit()
+        private void LogSyncAprobacionesInit()
         {
             var log = new Dtos.Log
             {
-                Accion = "CertificaionesAdmin.SyncCertificaciones",
-                App = "Irsa.PDM.WindowsService",
+                Accion = "CertificaionesAdmin.CreateAprobaciones",
+                App = "Irsa.PDM.Web",
                 CreateDate = DateTime.Now,
-                Modulo = "Certificaciones",
+                Modulo = "Aprobaciones",
                 Tipo = App.Info,
                 UsuarioAccion = UsuarioLogged,
-                Descripcion = "INICIO de sincronización de certificaciones."
+                Descripcion = "INICIO de sincronización de aprobaciones."
             };
 
-            LogAdmin.Create(log);
+            _logAdmin.Create(log);
         }
 
-        private void LogSyncCertificacionesEnd()
+        private void LogSyncAprobacionesEnd()
         {
             var log = new Dtos.Log
             {
-                Accion = "CertificaionesAdmin.SyncCertificaciones",
-                App = "Irsa.PDM.WindowsService",
+                Accion = "CertificaionesAdmin.CreateAprobaciones",
+                App = "Irsa.PDM.Web",
                 CreateDate = DateTime.Now,
-                Modulo = "Certificaciones",
+                Modulo = "Aprobaciones",
                 Tipo = App.Info,
                 UsuarioAccion = UsuarioLogged,
-                Descripcion = "FIN de sincronización de certificaciones."
+                Descripcion = "FIN de sincronización de aprobaciones."
             };
 
-            LogAdmin.Create(log);
+            _logAdmin.Create(log);
         }
 
         #endregion    

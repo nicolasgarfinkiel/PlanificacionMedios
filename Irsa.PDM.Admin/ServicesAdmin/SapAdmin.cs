@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Configuration;
+using System.Linq;
 using Irsa.PDM.Admin.SI_PDM_Consumos_In_Request;
+using Irsa.PDM.Entities;
 
-
-namespace Cresud.CDP.Admin.ServicesAdmin
+namespace Irsa.PDM.Admin.ServicesAdmin
 {
     public class SapAdmin
     {
@@ -11,7 +12,7 @@ namespace Cresud.CDP.Admin.ServicesAdmin
         private static string _user = ConfigurationSettings.AppSettings["XIUser"];
         private static string _pass = ConfigurationSettings.AppSettings["XIPassword"];
 
-        public void Test()
+        public void CreateConsumo(IList<AprobacionSap> aprobaciones )
         {
             #region Init
 
@@ -24,61 +25,59 @@ namespace Cresud.CDP.Admin.ServicesAdmin
                 Url = _url                
             };
 
-//            service.clie
-
             #endregion
-
+          
             var request = new DT_PDM_Consumos_In_Request
             {
-                ZMMIM_CONMED_F001 = new List<DT_PDM_Consumos_In_RequestItem>
+                ZMMIM_CONMED_F001 = aprobaciones.Select(e => new DT_PDM_Consumos_In_RequestItem
                 {
-                    new DT_PDM_Consumos_In_RequestItem
-                    {
-                        bank = "",
-                        documentHeaderText = "",
-                        idConsume  = "",
-                        materialNumber = "",
-                        plant = "",
-                        quantity = "",
-                        storageLocation = ""
-                    }
-                }.ToArray(),
-                ZMMIM_CONMED_F002 = new List<DT_PDM_Consumos_In_RequestItem1>
+                    idConsume = e.Id.ToString(),
+                    bank = e.Campania.IdSapDistribucion.ToString(),
+                    documentHeaderText = e.Campania.Nombre,                    
+                    materialNumber = e.Campania.Pautas[0].Items[0].Tarifa.Tarifario.NumeroProveedorSap,
+                    plant = e.Campania.Centro.ToString(),
+                    quantity = e.MontoTotal.ToString(),
+                    storageLocation = e.Campania.Almacen.ToString()                    
+                }).ToArray(),
+                ZMMIM_CONMED_F002 = aprobaciones.Select(e => new DT_PDM_Consumos_In_RequestItem1
                 {
-                    new DT_PDM_Consumos_In_RequestItem1
-                    {
-                        bank = "",
-                        documentHeaderText = "",
-                        idConsume  = "",
-                        materialNumber = "",
-                        plant = "",
-                        quantity = "",
-                        storageLocation = "",
-                        orderNumber = ""
-                    }
-                }.ToArray(),
-                ZMMIM_CONMED_F003 = new List<DT_PDM_Consumos_In_RequestItem2>
+                    idConsume = e.Id.ToString(),
+                    bank = e.Campania.IdSapDistribucion.ToString(),
+                    documentHeaderText = e.Campania.Nombre,
+                    materialNumber = e.Campania.Pautas[0].Items[0].Tarifa.Tarifario.NumeroProveedorSap,
+                    plant = e.Campania.Centro.ToString(),
+                    quantity = e.MontoTotal.ToString(),
+                    storageLocation = e.Campania.Almacen.ToString(),
+                    orderNumber = e.Campania.Orden.ToString()
+                }).ToArray(),
+                ZMMIM_CONMED_F003 = aprobaciones.Select(e => new DT_PDM_Consumos_In_RequestItem2
                 {
-                    new DT_PDM_Consumos_In_RequestItem2
-                    {
-                        bank = "",
-                        documentHeaderText = "",
-                        idConsume  = "",
-                        materialNumber = "",                        
-                        quantity = "",
-                        orderNumber = "",
-                        plant_D = "",
-                        
-                        
-                    }
-                }.ToArray(), 
-               
+                    idConsume = e.Id.ToString(),
+                    bank = e.Campania.IdSapDistribucion.ToString(),
+                    documentHeaderText = e.Campania.Nombre,
+                    materialNumber = e.Campania.Pautas[0].Items[0].Tarifa.Tarifario.NumeroProveedorSap,                    
+                    quantity = e.MontoTotal.ToString(),                    
+                    orderNumber = e.Campania.Orden.ToString(),
+                    plant_D = e.Campania.CentroDestino.ToString(),
+                    plant_O = e.Campania.Centro.ToString(),
+                    purchasingDocumentType = "ZICV",
+                    purchasingGroup = "200",
+                    purchasingOrganization = "9999",
+                    storageLocation_D = e.Campania.AlmacenDestino.ToString(),
+                    storageLocation_O = e.Campania.Almacen.ToString()
+                    
+                }).ToArray(),                                                                                             
             };
 
-           service.SI_PDM_Consumos_In_Request(new DT_PDM_Consumos_In_Request());
+            service.SI_PDM_Consumos_In_Request(request);                      
+        }
 
-          
-            
-        }    
+        public void CreateProvision(List<AprobacionSap> entities)
+        {          
+        }
+
+        public void CreateCertificacion(List<AprobacionSap> entities)
+        {            
+        }
     }
 }

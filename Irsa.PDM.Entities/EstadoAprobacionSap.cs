@@ -4,6 +4,7 @@
     {
         Ingresada = 1,
         Enviada,
-        Confirmada
+        Confirmada,
+        Error
     }
 }

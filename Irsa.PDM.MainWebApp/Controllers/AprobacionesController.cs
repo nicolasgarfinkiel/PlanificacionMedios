@@ -1,6 +1,12 @@
-﻿using System.Web.Mvc;
+﻿using System;
+using System.Collections.Generic;
+using System.Net;
+using System.Web.Mvc;
 using Irsa.PDM.Admin;
+using Irsa.PDM.Dtos;
+using Irsa.PDM.Dtos.Common;
 using Irsa.PDM.Dtos.Filters;
+using Irsa.PDM.Infrastructure;
 
 namespace Irsa.PDM.MainWebApp.Controllers
 {
@@ -30,5 +36,23 @@ namespace Irsa.PDM.MainWebApp.Controllers
                 AprobacionesPendientes = _admin.GetAprobacionesPendientes()
             };
         }
+
+        [HttpPost]
+        public ActionResult ConfirmacionSap(IList<ConfirmaionSap> confirmaciones )
+        {
+            var result =  new Result() { HasErrors = false, Messages = new List<string>() } ;
+
+            try
+            {
+                _admin.ConfirmarAprobacion(confirmaciones);
+            }
+            catch (Exception ex)
+            {
+                result.HasErrors = true;
+                result.Messages.Add(ex.Message);
+            }
+
+            return this.JsonNet(result);
+        }       
     }
 }

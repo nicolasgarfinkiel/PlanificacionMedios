@@ -15,5 +15,7 @@ namespace Irsa.PDM.Dtos
         public int ProveedorCodigo { get; set; }
         public string ProveedorNombre { get; set; }
         public double MontoTotal { get; set; }
+        public string MensajeSap { get; set; }
+        public string IdReferenciaSap { get; set; }
     }
 }

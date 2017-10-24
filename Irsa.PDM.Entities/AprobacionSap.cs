@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Irsa.PDM.Entities
 {
@@ -12,5 +13,12 @@ namespace Irsa.PDM.Entities
         public int ProveedorCodigo { get; set; }
         public string ProveedorNombre { get; set; }
         public double MontoTotal { get; set; }
+        public string MensajeSap { get; set; }
+        public string IdReferenciaConsumo { get; set; }
+        public string IdReferenciaProvision { get; set; }
+        public string IdReferenciaCertificacion { get; set; }
+        public DateTime? FechaConfirmacionConsumo { get; set; }
+        public DateTime? FechaConfirmacionProvision { get; set; }
+        public DateTime? FechaConfirmacionCertificacion { get; set; }
     }
 }

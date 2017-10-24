@@ -7,6 +7,7 @@ using Irsa.PDM.Dtos;
 using Irsa.PDM.Dtos.Filters;
 using Irsa.PDM.Entities;
 using Newtonsoft.Json;
+using ServiceStack.Common.Extensions;
 using AprobacionSap = Irsa.PDM.Dtos.AprobacionSap;
 
 namespace Irsa.PDM.Admin
@@ -181,6 +182,76 @@ namespace Irsa.PDM.Admin
                 }).ToList();
 
         }
+
+        public void ConfirmarAprobacion(IList<ConfirmaionSap> confirmaciones)
+        {
+            var aprobacionesSapId = confirmaciones.Select(e => e.IdOrigen).ToList();
+            var aprobaciones = PdmContext.AprobacionesSap.Where(e => aprobacionesSapId.Contains(e.Id)).ToList();
+            var aprobacionesId = aprobaciones.Select(e => e.Id).ToList();
+            var diff = aprobacionesSapId.Except(aprobacionesId).ToList();
+
+            #region Validation
+
+            if (confirmaciones.Any(e => e.IdOrigen == 0))
+            {
+                throw new Exception(string.Format("El campo idOrigen es obligatorio "));
+            }
+
+            if (confirmaciones.Any(e => string.IsNullOrEmpty(e.Resultado)))
+            {
+                throw new Exception(string.Format("El campo resultado es obligatorio "));
+            }
+
+            if (confirmaciones.Any(e => !e.Metodo.HasValue))
+            {
+                throw new Exception(string.Format("El campo metodo es obligatorio "));
+            }      
+
+            if (diff.Any())
+            {
+                throw new Exception(string.Format("Los siguientes idOrigen no exiten en el sistema: {0}", string.Join(", ", diff)));
+            }            
+
+            if (confirmaciones.Any(e => !string.Equals(e.Resultado, "Confirmada") && !string.Equals(e.Resultado, "Error")))
+            {
+                throw new Exception(string.Format("Revise el valor ingresado en el campo resultado. Los valores posibles son: Confirmada y Error"));
+            }
+
+            if (confirmaciones.Any(e => e.Metodo != MetodoSap.Certificacion && e.Metodo != MetodoSap.Consumo && e.Metodo != MetodoSap.Provision ))
+            {
+                throw new Exception(string.Format("Revise el valor ingresado en el campo metodo. Los valores posibles son: Certificacion, Consumo y Provision"));
+            }
+
+            #endregion
+
+            confirmaciones.ForEach(confirmacion =>
+            {
+                var aprobacion = aprobaciones.Single(e => e.Id == confirmacion.IdOrigen);
+                aprobacion.MensajeSap = confirmacion.Mensaneje;
+
+                switch (confirmacion.Metodo.Value)
+                {
+                        case MetodoSap.Certificacion:
+                        aprobacion.IdReferenciaCertificacion = confirmacion.IdSap;
+                        aprobacion.FechaConfirmacionCertificacion = DateTime.Now;
+                        aprobacion.EstadoCertificacion = string.Equals(confirmacion.Resultado, "Confirmada") ? EstadoAprobacionSap.Confirmada : EstadoAprobacionSap.Error;
+                        break;
+                        case MetodoSap.Consumo:
+                        aprobacion.IdReferenciaConsumo = confirmacion.IdSap;
+                        aprobacion.FechaConfirmacionConsumo = DateTime.Now;
+                        aprobacion.EstadoConsumo = string.Equals(confirmacion.Resultado, "Confirmada") ? EstadoAprobacionSap.Confirmada : EstadoAprobacionSap.Error;
+                        break;
+                        case MetodoSap.Provision:
+                        aprobacion.IdReferenciaProvision = confirmacion.IdSap;
+                        aprobacion.FechaConfirmacionProvision = DateTime.Now;
+                        aprobacion.EstadoProvision = string.Equals(confirmacion.Resultado, "Confirmada") ? EstadoAprobacionSap.Confirmada : EstadoAprobacionSap.Error;
+                        break;
+                }
+
+            });
+
+            PdmContext.SaveChanges();
+        }
     
         #region Log
 
@@ -260,7 +331,6 @@ namespace Irsa.PDM.Admin
         }
 
         #endregion    
-    
-       
+                       
     }
 }

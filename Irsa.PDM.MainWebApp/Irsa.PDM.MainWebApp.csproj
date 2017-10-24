@@ -139,6 +139,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\AprobacionesController.cs" />
+    <Compile Include="Controllers\SapController.cs" />
     <Compile Include="Controllers\ReportesController.cs" />
     <Compile Include="Controllers\CertificacionesController.cs" />
     <Compile Include="Controllers\CampaniasController.cs" />

@@ -154,6 +154,10 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\HtmlGeneralHelper.cs" />
+    <Compile Include="PdmServices.asmx.cs">
+      <DependentUpon>PdmServices.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -180,6 +184,7 @@
     <Content Include="Content\images\logo-irsa.png" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
+    <Content Include="PdmServices.asmx" />
     <Content Include="Scripts\angularJs\angular-dragdrop.min.js" />
     <Content Include="Scripts\angularJs\angular-input-masks-standalone.min.js" />
     <Content Include="Scripts\angularJs\angular-resizable.min.js" />

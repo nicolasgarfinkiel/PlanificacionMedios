@@ -190,7 +190,7 @@ namespace Irsa.PDM.Security
         {
             if (PDMSession.Current.Usuario == null)
             {
-                username = @"IRSACORP\Sposzalski";
+                username = @"IRSACORP\Sposzalski"; //TODO: comentar esta linea en prod
                 Init(username);
             }
 

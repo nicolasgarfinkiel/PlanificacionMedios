@@ -10,7 +10,7 @@ using Irsa.PDM.Infrastructure;
 
 namespace Irsa.PDM.MainWebApp.Controllers
 {
-    //[Authorize(Roles = "Administracion")]
+    [Authorize]
     public class AprobacionesController : BaseController<AprobacionesSapAdmin, int, Entities.AprobacionSap, Dtos.AprobacionSap, FilterAprobacionesSap>
     {       
         public AprobacionesController()

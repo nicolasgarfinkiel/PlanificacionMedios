@@ -5,7 +5,7 @@ using Irsa.PDM.Entities;
 
 namespace Irsa.PDM.MainWebApp.Controllers
 {
-    //[Authorize(Roles = "Administracion")]
+    [Authorize]
     public class MediosController : BaseController<MediosAdmin, int, Entities.Medio, Dtos.Medio, FilterBase>
     {
         public ActionResult Index()

@@ -33,53 +33,110 @@ namespace Irsa.PDM.SecurityServiceTest
 
         [WebMethod]
         public List<Permission> PermissionListPerGroup(Group group)
-        {
+        {            
             return new List<Permission>
             {
                 new Permission
                 {
-                    Description = "Alta Solicitud"
+                    Description = "medios_list"
                 },
                 new Permission
                 {
-                    Description = "Visualizacion Solicitud"
+                    Description = "medios_create"
                 },
                 new Permission
                 {
-                    Description = "Administracion"
+                    Description = "medios_edit"
                 },
                 new Permission
                 {
-                    Description = "Alta PDF Lotes Cartas de Porte"
+                    Description = "plazas_list"
+                },
+                 new Permission
+                {
+                    Description = "plazas_create"
+                },
+                 new Permission
+                {
+                    Description = "plazas_edit"
                 },
                 new Permission
                 {
-                    Description = "Alta Solicitud"
+                    Description = "vehiculos_list"
                 },
                 new Permission
                 {
-                    Description = "Reservas"
+                    Description = "vehiculos_create"
                 },
                 new Permission
                 {
-                    Description = "Bandeja de Salida"
+                    Description = "vehiculos_edit"
                 },
                 new Permission
                 {
-                    Description = "Confirmar Arribo"
+                    Description = "proveedores_list"
                 },
                 new Permission
                 {
-                    Description = "Reportes"
+                    Description = "proveedores_create"
                 },
                 new Permission
                 {
-                    Description = "Imprimir Solicitud"
+                    Description = "proveedores_edit"
                 },
                 new Permission
                 {
-                    Description = "Anular Solicitud"
+                    Description = "tarifarios_list"
+                },    
+                new Permission
+                {
+                    Description = "tarifarios_create"
+                }, 
+                new Permission
+                {
+                    Description = "tarifarios_create_por_proveedor"
+                }, 
+                new Permission
+                {
+                    Description = "tarifarios_edit"
+                },      
+                new Permission
+                {
+                    Description = "tarifarios_delete"
+                },    
+                new Permission
+                {
+                    Description = "tarifarios_admin"
+                },    
+                new Permission
+                {
+                    Description = "tarifarios_aprobacion"
+                },                                    
+                new Permission
+                {
+                    Description = "campanias_list"
                 },
+               new Permission
+                {
+                    Description = "campanias_create"
+                },
+                new Permission
+                {
+                    Description = "campanias_edit"
+                },
+                new Permission
+                {
+                    Description = "campanias_reports"
+                },                
+                new Permission
+                {
+                    Description = "certificaciones_list"
+                },
+                new Permission
+                {
+                    Description = "certificaciones_aprobaciones"
+                },
+               
             };
         }
     }

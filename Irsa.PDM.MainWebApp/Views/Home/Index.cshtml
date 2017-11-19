@@ -1,4 +1,5 @@
-﻿@model Irsa.PDM.Dtos.Dashboard
+﻿@using Irsa.PDM.MainWebApp.Security
+@model Irsa.PDM.Dtos.Dashboard
 <div class="row">
     <div class="col-lg-12 text-center m-t-md">
         <h2 class="dashboard-title">
@@ -50,10 +51,8 @@
                                         <td data-title="Vehículo">
                                            @tarifario.Id
                                         </td>
-                                        <td data-title="Ver">                                            
-                                            <a href="@Url.Action("Index", "Tarifarios")#/edit/@tarifario.Id">
-                                                <i class="fa fa-external-link text-success"></i>
-                                            </a>
+                                        <td data-title="Ver">
+                                            @Html.SecureControl(SecureControlType.TarifariosEditDashboard, tarifario)                                            
                                         </td>
                                     </tr>
                                 }
@@ -61,9 +60,7 @@
                                 {
                                     <tr>
                                         <td colspan="5">
-                                            <a href="@Url.Action("Index", "Tarifarios")">
-                                                Ver más...
-                                            </a>
+                                            @Html.SecureControl(SecureControlType.TarifariosListDashboard)                                                                                        
                                         </td>
                                     </tr>
                                 }
@@ -116,9 +113,7 @@
                                             @tarifario.Id
                                         </td>
                                         <td data-title="Ver">
-                                            <a href="@Url.Action("Index", "Tarifarios")#/edit/@tarifario.Id">
-                                                <i class="fa fa-external-link text-success"></i>
-                                            </a>
+                                            @Html.SecureControl(SecureControlType.TarifariosEditDashboard, tarifario)                                                                                       
                                         </td>
                                     </tr>
                                 }
@@ -126,9 +121,7 @@
                                 {
                                     <tr>
                                         <td colspan="5">
-                                            <a href="@Url.Action("Index", "Tarifarios")">
-                                                Ver más...
-                                            </a>
+                                            @Html.SecureControl(SecureControlType.TarifariosListDashboard)                                            
                                         </td>
                                     </tr>
                                 }
@@ -181,9 +174,7 @@
                                         @campania.Estado
                                     </td>                                    
                                     <td data-title="Ver">
-                                        <a href="@Url.Action("Index", "Campanias")#/edit/@campania.Id">
-                                            <i class="fa fa-external-link text-success"></i>
-                                        </a>
+                                        @Html.SecureControl(SecureControlType.CampaniasEditDashboard, campania)                                           
                                     </td>
                                 </tr>
                             }
@@ -191,9 +182,7 @@
                             {
                                 <tr>
                                     <td colspan="5">
-                                        <a href="@Url.Action("Index", "Campanias")">
-                                            Ver más...
-                                        </a>
+                                        @Html.SecureControl(SecureControlType.CampaniasListDashboard)                                                                               
                                     </td>
                                 </tr>
                             }
@@ -246,9 +235,7 @@
                                         @campania.Estado
                                     </td>
                                     <td data-title="Ver">
-                                        <a href="@Url.Action("Index", "Campanias")#/edit/@campania.Id">
-                                            <i class="fa fa-external-link text-success"></i>
-                                        </a>
+                                        @Html.SecureControl(SecureControlType.CampaniasEditDashboard, campania)
                                     </td>
                                 </tr>
                             }
@@ -256,9 +243,7 @@
                             {
                                 <tr>
                                     <td colspan="5">
-                                        <a href="@Url.Action("Index", "Campanias")">
-                                            Ver más...
-                                        </a>
+                                        @Html.SecureControl(SecureControlType.CampaniasListDashboard)                                        
                                     </td>
                                 </tr>
                             }
@@ -340,9 +325,7 @@
                                 {
                                     <tr>
                                         <td colspan="8">
-                                            <a href="@Url.Action("Index", "Certificaciones")">
-                                                Ver más...
-                                            </a>
+                                            @Html.SecureControl(SecureControlType.CertificacionesListDashboard)                                                                                      
                                         </td>
                                     </tr>
                                 }

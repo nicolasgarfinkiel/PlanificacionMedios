@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Security.Principal;
 using System.Web.Mvc;
+using System.Web.Security;
 using Irsa.PDM.Admin;
 using Irsa.PDM.Dtos;
 using Irsa.PDM.Dtos.Common;
@@ -7,6 +9,7 @@ using Irsa.PDM.Dtos.Filters;
 
 namespace Irsa.PDM.MainWebApp.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {     
         private readonly TarifariosAdmin _tarifariosAdmin;
@@ -20,8 +23,10 @@ namespace Irsa.PDM.MainWebApp.Controllers
             _certificacionesAdmin = new CertificacionesAdmin();
         }
 
-        public ActionResult Index()
+        public ActionResult Index()        
         {
+            Membership.ValidateUser(WindowsIdentity.GetCurrent().Name, null);       
+
             var model = new Dashboard
             {
                 TarifariosEditables = _tarifariosAdmin.GetByFilter(new FilterTarifarios { CurrentPage = 1, PageSize = 6, Estados = new List<string> { "Editable" } }).Data,

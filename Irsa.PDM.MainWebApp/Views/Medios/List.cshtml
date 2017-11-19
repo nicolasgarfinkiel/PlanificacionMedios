@@ -1,4 +1,5 @@
-﻿<div class="hpanel hblue">
+﻿@using Irsa.PDM.MainWebApp.Security
+<div class="hpanel hblue">
     <div class="panel-heading hbuilt">
         Listado de medios
     </div>
@@ -12,8 +13,8 @@
                     </span>
                 </div>
             </div>
-            <div class="col-sm-2 text-right">
-                <a href="javascript:void(0)" class="btn btn-success " ng-click="create()"><i class="fa fa-plus"></i> Nuevo</a>
+            <div class="col-sm-2 text-right">                
+                @Html.SecureControl(SecureControlType.MediosCreate)                
             </div>
         </div>
         <div class="alert alert-danger" ng-if="result.hasErrors">

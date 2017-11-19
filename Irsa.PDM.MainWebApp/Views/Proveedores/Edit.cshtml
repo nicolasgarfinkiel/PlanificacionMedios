@@ -1,4 +1,5 @@
-﻿<div class="hpanel hblue">
+﻿@using Irsa.PDM.MainWebApp.Security
+<div class="hpanel hblue">
     <div class="panel-heading hbuilt">
         {{operation}}
     </div>
@@ -36,7 +37,7 @@
         </form>
     </div>
     <div class="panel-footer text-right">
-        <button type="button" class="btn btn-primary" ng-click="save()">Aceptar</button>
+        @Html.SecureControl(SecureControlType.ProveedoresSave)    
         <button type="button" class="btn btn-default" ng-click="list()">Volver</button>
     </div>
 </div>

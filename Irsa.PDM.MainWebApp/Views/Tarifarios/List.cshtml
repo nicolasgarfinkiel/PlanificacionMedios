@@ -1,7 +1,8 @@
-﻿<div class="hpanel hblue">
+﻿@using Irsa.PDM.MainWebApp.Security
+<div class="hpanel hblue">
     <div class="panel-heading hbuilt">
         Tarifarios
-        <button style="float: right; margin-right: 10px;" title="Aplicar tarifas por proveedor" class="btn btn-primary btn-xs" ng-click="openProveedoresModal()"><i class="fa fa-star-o"></i> Tarifas por proveedor</button>
+        @Html.SecureControl(SecureControlType.TarifariosCreatePorProveedor)                
     </div>
     <div class="panel-body">
         <div class="row" style="margin-bottom: 10px;">
@@ -35,7 +36,7 @@
             <div class="col-md-4 text-right">
                 <a href="javascript:void(0)" class="btn btn-default" ng-click="clearFilter()">Limpiar</a>
                 <a href="javascript:void(0)" class="btn btn-info " ng-click="search()"><i class="fa fa-search"></i> Buscar</a>
-                <a href="javascript:void(0)" class="btn btn-success " ng-click="setCreate()"><i class="fa fa-plus"></i> Nuevo</a>
+                @Html.SecureControl(SecureControlType.TarifariosCreate)                                
             </div>           
         </div>
         <div class="alert alert-danger" ng-if="result.hasErrors">

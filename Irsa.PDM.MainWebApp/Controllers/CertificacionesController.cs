@@ -11,7 +11,7 @@ using OfficeOpenXml.FormulaParsing.Excel.Functions.DateTime;
 
 namespace Irsa.PDM.MainWebApp.Controllers
 {
-    //[Authorize(Roles = "Administracion")]
+    [Authorize]
     public class CertificacionesController : BaseController<CertificacionesAdmin, int, Entities.Certificacion, Dtos.Certificacion, FilterCertificaciones>
     {
 

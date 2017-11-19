@@ -14,7 +14,7 @@ using OfficeOpenXml.ConditionalFormatting;
 
 namespace Irsa.PDM.MainWebApp.Controllers
 {
-    //[Authorize(Roles = "Administracion")]
+    [Authorize]
     public class TarifariosController : BaseController<TarifariosAdmin, int, Entities.Tarifario, Dtos.Tarifario, FilterTarifarios>
     {
         private readonly MediosAdmin _mediosAdmin;

@@ -8,7 +8,7 @@ using Irsa.PDM.Infrastructure;
 
 namespace Irsa.PDM.MainWebApp.Controllers
 {
-    //[Authorize(Roles = "Administracion")]
+    [Authorize]
     public class TarifasController : BaseController<TarifasAdmin, int, Entities.Tarifa, Dtos.Tarifa, FilterTarifas>
     {       
         public ActionResult Index()

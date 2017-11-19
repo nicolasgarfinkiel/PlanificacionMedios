@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Irsa.PDM.Dtos;
 
@@ -62,7 +63,7 @@ namespace Irsa.PDM.Security
 
         public override string[] GetRolesForUser(string username)
         {
-            if (PDMSession.Current.Usuario == null || PDMSession.Current.Usuario.Roles == null ) return null;
+            if (PDMSession.Current.Usuario == null || PDMSession.Current.Usuario.Roles == null ) return new List<string>().ToArray();
 
             return PDMSession.Current.Usuario.Roles.ToArray();
         }

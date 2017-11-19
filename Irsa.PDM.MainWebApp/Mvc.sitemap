@@ -5,22 +5,22 @@
 
   <mvcSiteMapNode title="Home" controller="Home" action="Index">
 
-    <mvcSiteMapNode   title="Tarifario"                         controller="Home"                   action="index"           Class="fa fa-bookmark-o"      roles="" >
-      <mvcSiteMapNode title="Medios"                            controller="Medios"                 action="Index"                                           roles=""/>
-      <mvcSiteMapNode title="Plazas"                            controller="Plazas"                 action="Index"                                           roles=""/>
-      <mvcSiteMapNode title="Vehículos"                         controller="Vehiculos"              action="Index"                                           roles=""/>
-      <mvcSiteMapNode title="Proveedores"                       controller="Proveedores"            action="Index"                                           roles=""/>
-      <mvcSiteMapNode title="Tarifarios"                        controller="Tarifarios"             action="Index"                                           roles=""/>
+    <mvcSiteMapNode   title="Tarifario"                         controller="Tarifarios"             action="index"           Class="fa fa-bookmark-o"        roles="medios_list, plazas_list, vehiculos_list, proveedores_list, tarifarios_list" >
+      <mvcSiteMapNode title="Medios"                            controller="Medios"                 action="Index"                                           roles="medios_list"/>
+      <mvcSiteMapNode title="Plazas"                            controller="Plazas"                 action="Index"                                           roles="plazas_list"/>
+      <mvcSiteMapNode title="Vehículos"                         controller="Vehiculos"              action="Index"                                           roles="vehiculos_list"/>
+      <mvcSiteMapNode title="Proveedores"                       controller="Proveedores"            action="Index"                                           roles="proveedores_list"/>
+      <mvcSiteMapNode title="Tarifarios"                        controller="Tarifarios"             action="Index"                                           roles="tarifarios_list"/>
     </mvcSiteMapNode>
 
-    <mvcSiteMapNode   title="Campañas"                          controller="Home"                   action="index"             Class="fa fa-bookmark-o"      roles="" >
-      <mvcSiteMapNode title="Listado"                           controller="Campanias"              action="Index"                                           roles=""/>      
-      <mvcSiteMapNode title="Reportes"                          controller="Reportes"               action="Index"                                           roles=""/>
+    <mvcSiteMapNode   title="Campañas"                          controller="Campanias"                   action="index"             Class="fa fa-bookmark-o"      roles="campanias_list, campanias_reports" >
+      <mvcSiteMapNode title="Listado"                           controller="Campanias"              action="Index"                                           roles="campanias_list"/>      
+      <mvcSiteMapNode title="Reportes"                          controller="Reportes"               action="Index"                                           roles="campanias_reportes"/>
     </mvcSiteMapNode>
 
-    <mvcSiteMapNode   title="Certificaciones"                   controller="Home"                   action="index"             Class="fa fa-bookmark-o"      roles="" >      
-      <mvcSiteMapNode title="Listado"                           controller="Certificaciones"        action="Index"                                           roles=""/>
-      <mvcSiteMapNode title="Aprobaciones"                      controller="Aprobaciones"           action="Index"                                    roles=""/>
+    <mvcSiteMapNode   title="Certificaciones"                   controller="Certificaciones"                   action="index"             Class="fa fa-bookmark-o"      roles="certificaciones_list, certificaciones_aprobaciones" >      
+      <mvcSiteMapNode title="Listado"                           controller="Certificaciones"        action="Index"                                           roles="certificaciones_list"/>
+      <mvcSiteMapNode title="Aprobaciones"                      controller="Aprobaciones"           action="Index"                                           roles="certificaciones_aprobaciones"/>
     </mvcSiteMapNode>
    
   </mvcSiteMapNode>

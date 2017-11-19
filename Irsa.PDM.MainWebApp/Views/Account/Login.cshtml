@@ -1,0 +1,21 @@
+﻿@{
+    Layout = "../Shared/_Blank.cshtml";
+}
+
+<div class="text-center m-t-lg clearfix wrapper-lg " id="galleryLoading">    
+    <h3 class="text-muted">Ingresando a la aplicación</h3>
+    <p class="m-t-lg"><i class="fa fa-spinner fa fa-spin fa fa-2x"></i></p>
+</div>
+<script>
+    $(function() {
+        setTimeout(function() {
+            var form = document.createElement("form");
+                       
+            form.method = "POST";
+            form.action = "/account/Login";                                                
+            document.body.appendChild(form);
+
+            form.submit();
+        }, 1000);
+    });
+</script>

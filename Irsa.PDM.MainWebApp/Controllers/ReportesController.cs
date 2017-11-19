@@ -5,7 +5,7 @@ using System;
 
 namespace Irsa.PDM.MainWebApp.Controllers
 {
-    //[Authorize(Roles = "Administracion")]
+    [Authorize]
     public class ReportesController : Controller
     {
         private readonly CampaniasAdmin _campaniasAdmin;

@@ -4,7 +4,7 @@ using Irsa.PDM.Dtos.Common;
 
 namespace Irsa.PDM.MainWebApp.Controllers
 {
-    //[Authorize(Roles = "Administracion")]
+    [Authorize]
     public class VehiculosController : BaseController<VehiculosAdmin, int, Entities.Vehiculo, Dtos.Vehiculo, FilterBase>
     {
         public ActionResult Index()

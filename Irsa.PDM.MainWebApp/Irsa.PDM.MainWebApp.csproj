@@ -159,6 +159,9 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Security\HtmlSecureControlHelper.cs" />
+    <Compile Include="Security\SecureControl.cs" />
+    <Compile Include="Security\SecureControlType.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\css\animate.min.css" />
@@ -278,6 +281,7 @@
     <Folder Include="App_Data\" />
     <Folder Include="Documents\Tarifarios\" />
     <Folder Include="Reports\Templates\" />
+    <Folder Include="Views\Shared\DefaultControls\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
@@ -371,6 +375,17 @@
     <Content Include="Views\Aprobaciones\Index.cshtml" />
     <Content Include="Views\Aprobaciones\List.cshtml" />
     <Content Include="Views\Aprobaciones\Edit.cshtml" />
+    <Content Include="Views\Account\Login.cshtml" />
+    <Content Include="Views\Account\NotienePermisos.cshtml" />
+    <Content Include="Views\Shared\SecuredControls\TarifariosEditDashboard.cshtml" />
+    <Content Include="Views\Shared\SecuredControls\TarifariosListDashboard.cshtml" />
+    <Content Include="Views\Shared\SecuredControls\CampaniasEditDashboard.cshtml" />
+    <Content Include="Views\Shared\SecuredControls\CampaniasListDashboard.cshtml" />
+    <Content Include="Views\Shared\SecuredControls\CertificacionesListDashboard.cshtml" />
+    <Content Include="Views\Shared\SecuredControls\BaseCreate.cshtml" />
+    <Content Include="Views\Shared\SecuredControls\BaseSave.cshtml" />
+    <Content Include="Views\Shared\SecuredControls\TarifariosCreate.cshtml" />
+    <Content Include="Views\Shared\SecuredControls\TarifariosCreatePorProveedor.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

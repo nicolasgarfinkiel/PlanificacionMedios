@@ -5,7 +5,7 @@ using Irsa.PDM.Entities;
 
 namespace Irsa.PDM.MainWebApp.Controllers
 {
-    //[Authorize(Roles = "Administracion")]
+    [Authorize]
     public class PlazasController : BaseController<PlazasAdmin, int, Entities.Plaza, Dtos.Plaza, FilterBase>
     {
         public ActionResult Index()

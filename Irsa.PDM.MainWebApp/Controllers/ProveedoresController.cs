@@ -4,7 +4,7 @@ using Irsa.PDM.Dtos.Common;
 
 namespace Irsa.PDM.MainWebApp.Controllers
 {
-    //[Authorize(Roles = "Administracion")]
+    [Authorize]
     public class ProveedoresController : BaseController<ProveedoresAdmin, int, Entities.Proveedor, Dtos.Proveedor, FilterBase>
     {
         public ActionResult Index()
